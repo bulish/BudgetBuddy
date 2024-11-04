@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "493590791335",
+    "project_id": "passkeeper-fe52d",
+    "storage_bucket": "passkeeper-fe52d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493590791335:android:24137d669bd44dc3240782",
+        "android_client_info": {
+          "package_name": "com.example.budgetbuddy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsD9RUKOCEiG9ewD-gBGP0WCkAAARKftk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,8 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceHolderScreen
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceholderScreenContent
+import com.example.budgetbuddy.ui.elements.shared.navigation.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,9 +24,15 @@ fun BaseScreen(
     showLoading: Boolean = false,
     floatingActionButton: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
+    navigation: INavigationRouter,
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
 
     Scaffold(
+        bottomBar = {
+            BottomAppBar(modifier = Modifier) {
+                BottomNavigationBar(navigation = navigation)
+            }
+        },
         floatingActionButton = floatingActionButton,
         topBar = {
             TopAppBar(
