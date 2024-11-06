@@ -8,13 +8,17 @@ import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             BudgetBuddyTheme {
-                NavGraph(startDestination = Destination.HomeScreen.route)
+                NavGraph(startDestination = Destination.LoginScreen.route)
             }
         }
     }

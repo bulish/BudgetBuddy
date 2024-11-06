@@ -18,19 +18,24 @@ import com.example.budgetbuddy.ui.elements.shared.navigation.BottomNavigationBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScreen(
+    topBar: (@Composable () -> Unit)? = null,
     topBarText: String? = null,
     onBackClick: (() -> Unit)? = null,
     placeholderScreenContent: PlaceholderScreenContent? = null,
     showLoading: Boolean = false,
     floatingActionButton: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
+    hideNavigation: Boolean? = false,
     navigation: INavigationRouter,
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
 
     Scaffold(
+        modifier = Modifier.padding(top = if (hideNavigation == true) 48.dp else 0.dp),
         bottomBar = {
-            BottomAppBar(modifier = Modifier) {
-                BottomNavigationBar(navigation = navigation)
+            if (hideNavigation == false) {
+                BottomAppBar(modifier = Modifier) {
+                    BottomNavigationBar(navigation = navigation)
+                }
             }
         },
         floatingActionButton = floatingActionButton,
@@ -46,7 +51,10 @@ fun BaseScreen(
                             modifier = Modifier
                                 .padding(start = 0.dp)
                         )
+                    } else if (topBar != null) {
+                        topBar()
                     }
+
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background

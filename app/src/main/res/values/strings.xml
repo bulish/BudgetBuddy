@@ -1,4 +1,63 @@
 <resources>
     <string name="app_name">BudgetBuddy</string>
     <string name="back">Back</string>
+    <string name="network_error">Connection error</string>
+    <string name="cannot_be_empty">This field is required</string>
+
+    <string name="error_argument_error">Argument error</string>
+    <string name="error_app_not_authorized01">App not authorized</string>
+    <string name="error_email_already_in_use">The email address is already in use</string>
+    <string name="error_email_not_found">The email address is invalid</string>
+    <string name="error_invalid_email">The email address is invalid</string>
+    <string name="error_missing_email">The email address is required</string>
+    <string name="error_operation_not_allowed">The operation is not allowed</string>
+    <string name="error_password_login_disabled">Password login is disabled</string>
+    <string name="error_too_many_attempts_try_later">Too many attempts, try again later</string>
+    <string name="error_user_disabled">The user account has been disabled</string>
+    <string name="error_user_not_found">No user corresponding to this email</string>
+    <string name="error_weak_password">The password is too weak</string>
+    <string name="error_invalid_credentials">The credentials are invalid</string>
+
+    <string name="signup_title">Create Account</string>
+    <string name="signup_subtitle">Sign up for a new account</string>
+    <string name="signup_submit">Sign Up</string>
+    <string name="signup_form_title">Sign Up</string>
+    <string name="signup_success">Sign Up was successful</string>
+    <string name="signup_already_have_aacount">Already have account?</string>
+
+    <string name="login_submit">Login</string>
+    <string name="login_success">Login was successful</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="login_subtitle">Login back into your account</string>
+    <string name="login_form_title">Login</string>
+    <string name="login_new_user">Are you new user?</string>
+    <string name="login_forgotten_password">Forgotten password?</string>
+
+    <string name="reset_password_title">Forgotten password</string>
+    <string name="reset_password_subtitle">Enter your email</string>
+    <string name="reset_back">Back to login</string>
+    <string name="reset_form_title">New password</string>
+    <string name="reset_submit">Submit</string>
+    <string name="reset_success">Sending email was successful</string>
+
+    <string name="settings">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_dark_mode">Dark mode</string>
+    <string name="settings_show_icons">Show website icons</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_activeLanguage">english</string>
+    <string name="settings_application_info">Application info</string>
+    <string name="settings_version">Version</string>
+
+    <string name="sign_out">Sign Out</string>
+
+    <string name="edit_add_icon">Add icon</string>
+    <string name="edit_change_icon">Change icon</string>
+    <string name="edit_delete_icon">Delete icon</string>
+    <string name="placeholder_password">Password\n</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="passwords_dont_match">Passwords do not match</string>
+    <string name="placeholder_username">Username</string>
+
 </resources>

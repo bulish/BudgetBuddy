@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 
     alias(libs.plugins.com.google.services)
+    alias(libs.plugins.org.jetbrains.kotlin.kapt)
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -73,4 +75,22 @@ dependencies {
     implementation(libs.firebase.auth)
 
     implementation(libs.navigation.compose)
+
+    implementation(libs.room.ktx)
+    implementation(libs.room.viewmodel)
+    implementation(libs.room.lifecycle)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler.kapt)
+
+    implementation(libs.hilt)
+    implementation(libs.hilt.compose)
+    kapt(libs.hilt.compiler.kapt)
+
+    implementation(libs.moshi)
+    kapt(libs.moshi.kapt)
+    implementation(libs.moshi.kotlin)
+
+    implementation(libs.datastore)
+
+    implementation(libs.image.cropper)
 }

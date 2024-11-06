@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import com.example.budgetbuddy.ui.theme.basicMargin
-import com.example.budgetbuddy.ui.theme.imageSize
+import com.example.budgetbuddy.ui.theme.BasicMargin
+import com.example.budgetbuddy.ui.theme.ImageSize
 
 @Composable
 fun PlaceHolderScreen(
@@ -33,18 +33,18 @@ fun PlaceHolderScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .padding(basicMargin())) {
+                .padding(BasicMargin())) {
 
             if (content.image != null) {
                 Image(
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.width(imageSize()),
+                    modifier = Modifier.width(ImageSize()),
                     painter = painterResource(id = content.image),
                     contentDescription = null)
             }
 
             if (content.title != null){
-                Spacer(modifier = Modifier.height(basicMargin()))
+                Spacer(modifier = Modifier.height(BasicMargin()))
                 Text(text = content.title,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
@@ -52,14 +52,14 @@ fun PlaceHolderScreen(
             }
 
             if (content.text != null){
-                Spacer(modifier = Modifier.height(basicMargin()))
+                Spacer(modifier = Modifier.height(BasicMargin()))
                 Text(text = content.text,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     color = Color.Gray)
             }
             if (content.buttonText != null && content.onButtonClick != null){
-                Spacer(modifier = Modifier.height(basicMargin()))
+                Spacer(modifier = Modifier.height(BasicMargin()))
                 OutlinedButton(
                     onClick = content.onButtonClick,
                 ) {
