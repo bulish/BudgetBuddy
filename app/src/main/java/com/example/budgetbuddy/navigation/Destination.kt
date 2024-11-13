@@ -12,7 +12,7 @@ sealed class Destination(val route: String, val icon: ImageVector? = null, val t
     object MapScreen : Destination("map", Icons.Default.Place, "Map")
     object AddEditPlaceScreen : Destination("add_edit_place", null, "Add/Edit Place")
     object SettingsScreen : Destination("settings", Icons.Default.Settings, "Settings")
-    object TransactionsList : Destination("transactions_list", Icons.Default.List, "Transactions")
+    object TransactionsList : Destination("transactions_list", Icons.Default.List, "Money")
     object AddEditTransaction : Destination("add_edit_transaction", null, "Add/Edit Transaction")
     object TransactionDetail : Destination("transaction_detail", null, "Transaction Detail")
 }
