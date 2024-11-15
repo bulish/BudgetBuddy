@@ -2,7 +2,7 @@ package com.example.budgetbuddy.ui.theme
 
 import androidx.compose.ui.unit.dp
 
-fun TripleMargin() = 28.dp
+fun TripleMargin() = 48.dp
 fun DoubleMargin() = 32.dp
 fun BasicMargin() = 16.dp
 fun HalfMargin() = 8.dp

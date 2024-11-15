@@ -44,15 +44,15 @@ val Typography = Typography(
     ),
     headlineSmall = TextStyle(
         fontFamily = roboto,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 20.sp,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.15.sp,
         color = Grey
     ),
     bodyMedium = TextStyle(
         fontFamily = roboto,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,

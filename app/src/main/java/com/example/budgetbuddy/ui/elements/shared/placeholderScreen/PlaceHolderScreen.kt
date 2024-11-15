@@ -46,7 +46,7 @@ fun PlaceHolderScreen(
             if (content.title != null){
                 Spacer(modifier = Modifier.height(BasicMargin()))
                 Text(text = content.title,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     color = Color.Black)
             }

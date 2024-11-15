@@ -20,7 +20,7 @@ interface TransactionsDao {
     @Delete
     suspend fun delete(transaction: Transaction)
 
-    @Query("SELECT * FROM places WHERE id = :id AND userId = :userId")
+    @Query("SELECT * FROM transactions WHERE id = :id AND userId = :userId")
     fun getTransaction(id: Long, userId: String): Flow<Transaction>
 
     @Update

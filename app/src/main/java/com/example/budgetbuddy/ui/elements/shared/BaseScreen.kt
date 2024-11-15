@@ -40,39 +40,41 @@ fun BaseScreen(
         },
         floatingActionButton = floatingActionButton,
         topBar = {
-            TopAppBar(
-                title = {
-                    if (topBarText != null) {
-                        Text(
-                            text = topBarText,
-                            style = MaterialTheme.typography.titleLarge,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .padding(start = 0.dp)
-                        )
-                    } else if (topBar != null) {
-                        topBar()
-                    }
-
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                ),
-                actions = actions,
-                navigationIcon = {
-                    if (onBackClick != null) {
-                        IconButton(onClick = onBackClick) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = stringResource(
-                                    R.string.back
-                                ),
+            if (topBar != null) {
+                TopAppBar(
+                    title = {
+                        if (topBarText != null) {
+                            Text(
+                                text = topBarText,
+                                style = MaterialTheme.typography.titleLarge,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .padding(start = 0.dp)
                             )
+                        } else if (topBar != null) {
+                            topBar()
+                        }
+
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    ),
+                    actions = actions,
+                    navigationIcon = {
+                        if (onBackClick != null) {
+                            IconButton(onClick = onBackClick) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = stringResource(
+                                        R.string.back
+                                    ),
+                                )
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     ) {
         if (placeholderScreenContent != null) {

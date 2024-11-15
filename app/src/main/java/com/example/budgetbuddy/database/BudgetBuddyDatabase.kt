@@ -8,8 +8,9 @@ import androidx.room.TypeConverters
 import com.example.budgetbuddy.database.places.PlacesDao
 import com.example.budgetbuddy.database.transactions.TransactionsDao
 import com.example.budgetbuddy.model.db.Place
+import com.example.budgetbuddy.model.db.Transaction
 
-@Database(entities = [Place::class], version = 1, exportSchema = true)
+@Database(entities = [Place::class, Transaction::class], version = 1, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class BudgetBuddyDatabase : RoomDatabase() {
 

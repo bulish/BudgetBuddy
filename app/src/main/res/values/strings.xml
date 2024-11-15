@@ -59,5 +59,7 @@
     <string name="cancel">Cancel</string>
     <string name="passwords_dont_match">Passwords do not match</string>
     <string name="placeholder_username">Username</string>
+    <string name="list_no_data_title">No transactions available</string>
+    <string name="list_no_data_subtitle">Start by adding your first transaction to see them here!</string>
 
 </resources>
