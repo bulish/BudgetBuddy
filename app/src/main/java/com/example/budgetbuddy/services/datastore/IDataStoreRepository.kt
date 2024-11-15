@@ -12,6 +12,10 @@ interface IDataStoreRepository {
 
     suspend fun getIsDarkTheme(): Flow<Boolean>
 
+    suspend fun setCurrency(currency: String)
+
+    suspend fun getCurrency(): Flow<String>
+
     suspend fun saveNotificationData(data: NotificationData)
 
     suspend fun getNotificationData() : Flow<NotificationData?>

@@ -93,4 +93,5 @@ dependencies {
     implementation(libs.datastore)
 
     implementation(libs.image.cropper)
+    implementation(libs.accompanist)
 }

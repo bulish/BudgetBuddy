@@ -20,19 +20,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun CurrencyDropdown() {
+fun CurrencyDropdown(
+    currency: String,
+    onChange: (currency: String) -> Unit,
+    isDark: Boolean? = false
+) {
     val isDropDownExpanded = remember {
         mutableStateOf(false)
     }
 
-    val itemPosition = remember {
-        mutableStateOf(0)
-    }
-
     val currencies = listOf("CZK (Kč)", "USD ($)", "EUR (€)", "GBP (£)")
 
+    val itemPosition = remember {
+        mutableStateOf(currencies.indexOf(currency).takeIf { it >= 0 } ?: 0)
+    }
+
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.then(
+            if (isDark == false) Modifier.fillMaxWidth() else Modifier
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -47,12 +53,12 @@ fun CurrencyDropdown() {
             ) {
                 Text(
                     text = currencies[itemPosition.value],
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = if (isDark == false) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "Dropdown",
-                    tint = MaterialTheme.colorScheme.tertiary
+                    tint = if (isDark == false) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
                 )
             }
             DropdownMenu(
@@ -62,11 +68,15 @@ fun CurrencyDropdown() {
                 }) {
                 currencies.forEachIndexed { index, currency ->
                     DropdownMenuItem(text = {
-                        Text(text = currency)
+                        Text(
+                            text =
+                            currency, color = MaterialTheme.colorScheme.secondary
+                        )
                     },
                         onClick = {
                             isDropDownExpanded.value = false
                             itemPosition.value = index
+                            onChange(currency)
                         })
                 }
             }

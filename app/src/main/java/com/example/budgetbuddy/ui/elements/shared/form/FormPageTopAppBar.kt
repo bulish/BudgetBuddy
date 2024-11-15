@@ -6,6 +6,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.budgetbuddy.ui.theme.DoubleMargin
@@ -25,5 +26,9 @@ fun FormPageTopAppBar(title: String, subtitle: String) {
                 style = MaterialTheme.typography.headlineSmall,
             )
         }
-    }, modifier = Modifier.padding(vertical = DoubleMargin()))
+    },
+        colors = MaterialTheme.colorScheme.run {
+            TopAppBarDefaults.smallTopAppBarColors(containerColor = background)
+        },
+        modifier = Modifier.padding(vertical = DoubleMargin()))
 }

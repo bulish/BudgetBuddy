@@ -1,7 +1,9 @@
 package com.example.budgetbuddy.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,7 +27,9 @@ fun NavGraph(
     navigationRouter: INavigationRouter = remember {
         NavigationRouterImpl(navController)
     },
-    startDestination: String){
+    startDestination: String,
+    context: Context = LocalContext.current
+){
 
     NavHost(navController = navController, startDestination = startDestination){
 
@@ -61,7 +65,10 @@ fun NavGraph(
         }
 
         composable(Destination.SettingsScreen.route){
-            SettingsScreen(navigationRouter = navigationRouter)
+            SettingsScreen(
+                navigationRouter = navigationRouter,
+                context = context
+            )
         }
 
         composable(Destination.TransactionsList.route){

@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.elements.shared
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,7 +31,9 @@ fun BaseScreen(
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
 
     Scaffold(
-        modifier = Modifier.padding(top = if (hideNavigation == true) 48.dp else 0.dp),
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .padding(top = if (hideNavigation == true) 48.dp else 0.dp),
         bottomBar = {
             if (hideNavigation == false) {
                 BottomAppBar(modifier = Modifier) {
@@ -40,7 +43,7 @@ fun BaseScreen(
         },
         floatingActionButton = floatingActionButton,
         topBar = {
-            if (topBar != null) {
+            if (topBar != null || topBarText != null ) {
                 TopAppBar(
                     title = {
                         if (topBarText != null) {

@@ -17,9 +17,13 @@ import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.TripleMargin
+import com.example.budgetbuddy.ui.theme.White
 
 @Composable
-fun BalanceBox() {
+fun BalanceBox(
+    currency: String,
+    onCurrencyChange: (String) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,11 +32,15 @@ fun BalanceBox() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        CurrencyDropdown()
+        CurrencyDropdown(
+            currency = currency,
+            onChange = { newCurrency ->
+                onCurrencyChange(newCurrency)
+            }
+        )
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Balance amount
         Text(
             text = "5 562 Kč",
             color = MaterialTheme.colorScheme.tertiary,
@@ -40,7 +48,6 @@ fun BalanceBox() {
             fontWeight = FontWeight.Bold
         )
 
-        // Balance label
         Text(
             text = "Available balance",
             color = MaterialTheme.colorScheme.tertiary,
@@ -49,10 +56,11 @@ fun BalanceBox() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Add Money button
         Button(
             onClick = { /* Add Money action */ },
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary
+            )
         ) {
             Text(text = "Add Money", color = Green)
         }

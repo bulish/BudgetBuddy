@@ -13,6 +13,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,6 +38,7 @@ fun HomeScreen(
 
     val viewModel = hiltViewModel<HomeScreenViewModel>()
     val state = viewModel.homeScreenUIState.collectAsState()
+    val currency = viewModel.activeCurrency.collectAsState()
     val transactions: MutableList<Transaction> = mutableListOf()
 
     BaseScreen(
@@ -68,7 +71,9 @@ fun HomeScreen(
             paddingValues = it,
             actions = viewModel,
             navigationRouter = navigationRouter,
-            transactions = transactions
+            transactions = transactions,
+            currency = currency.value,
+
         )
     }
 }
@@ -78,11 +83,21 @@ fun HomeScreenContent(
     paddingValues: PaddingValues,
     actions: HomeScreenActions,
     navigationRouter: INavigationRouter,
-    transactions: List<Transaction>
+    transactions: List<Transaction>,
+    currency: String
 ) {
+
+    val updatedCurrency = remember { mutableStateOf(currency) }
+
     Column {
 
-        BalanceBox()
+        BalanceBox(
+            currency = updatedCurrency.value,
+            onCurrencyChange = { newCurrency ->
+                updatedCurrency.value = newCurrency
+                actions.changeCurrency(newCurrency)
+            }
+        )
 
         Spacer(modifier = Modifier.height(BasicMargin()))
 

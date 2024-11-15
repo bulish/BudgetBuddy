@@ -30,12 +30,14 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
     companion object {
         const val DATA = "Data"
         private const val IS_DARK_THEME = "IsDarkTheme"
+        private const val CURRENCY = "CZK (Kč)"
         private const val NOTIFICATION_DATA = "notificationDAta"
         private const val FIRST_RUN = "firstRun"
 
         val isDarkTheme = booleanPreferencesKey(IS_DARK_THEME)
         val notificationData = stringPreferencesKey(NOTIFICATION_DATA)
         val firstRun = booleanPreferencesKey(FIRST_RUN)
+        var currencyData = stringPreferencesKey(CURRENCY)
     }
 
     override suspend fun getIsDarkTheme(): Flow<Boolean> {
@@ -46,6 +48,23 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
             .catch { e ->
                 e.printStackTrace()
                 emit(true)
+            }
+    }
+
+    override suspend fun setCurrency(currency: String) {
+        context.dataStore.edit { preferences ->
+            preferences[currencyData] = currency
+        }
+    }
+
+    override suspend fun getCurrency(): Flow<String> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[currencyData] ?: "CZK (Kč)"
+            }
+            .catch { e ->
+                e.printStackTrace()
+                emit("CZK (Kč)")
             }
     }
 

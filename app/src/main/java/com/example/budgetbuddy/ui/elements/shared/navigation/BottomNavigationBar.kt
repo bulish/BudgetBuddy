@@ -7,10 +7,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.HalfMargin
+import com.example.budgetbuddy.ui.theme.White
 
 @Composable
 fun BottomNavigationBar(navigation: INavigationRouter) {
@@ -21,13 +23,12 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
         Destination.SettingsScreen
     )
 
-    var selectedItem by remember { mutableStateOf(0) }
-    var currentRoute by remember { mutableStateOf(Destination.HomeScreen.route) }
+    val navController = navigation.getNavController()
 
-    items.forEachIndexed { index, navigationItem ->
-        if (navigationItem.route == currentRoute) {
-            selectedItem = index
-        }
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val selectedItem = remember(currentRoute) {
+        items.indexOfFirst { it.route == currentRoute }
     }
 
     NavigationBar {
@@ -39,7 +40,7 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
                         Icon(
                             item.icon ?: Icons.Default.Home,
                             contentDescription = item.title,
-                            tint = if (selectedItem == index) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                            tint = if (selectedItem == index) White else MaterialTheme.colorScheme.secondary
                         )
 
                     }
@@ -47,22 +48,20 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
                 label = {
                     Text(
                         item.title,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.offset(y = HalfMargin())
                     )
                 },
                 selected = selectedItem == index,
                 onClick = {
-                    selectedItem = index
-                    currentRoute = item.route
                     navigation.navigateTabs(item.route)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = if (selectedItem == index) Green else MaterialTheme.colorScheme.background,
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    unselectedIconColor = MaterialTheme.colorScheme.onBackground,
-                    selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                    unselectedTextColor = MaterialTheme.colorScheme.onBackground
+                    indicatorColor = if (selectedItem == index) Green else White,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    unselectedIconColor = MaterialTheme.colorScheme.background,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.background
                 )
             )
         }

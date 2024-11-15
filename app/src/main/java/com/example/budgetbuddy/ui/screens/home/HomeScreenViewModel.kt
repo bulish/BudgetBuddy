@@ -26,10 +26,19 @@ class HomeScreenViewModel @Inject constructor(
 
     val homeScreenUIState = _homeScreenUIState.asStateFlow()
 
+    private var _activeCurrency = MutableStateFlow<String>("")
+    val activeCurrency: StateFlow<String> = _activeCurrency
+
     init {
         if (authService.getCurrentUser() == null) {
             _homeScreenUIState.update {
                 HomeScreenUIState.UserNotAuthorized
+            }
+        }
+
+        viewModelScope.launch {
+            dataStoreRepository.getCurrency().collect {
+                _activeCurrency.value = it
             }
         }
     }
@@ -46,6 +55,16 @@ class HomeScreenViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+
+    override fun changeCurrency(currency: String) {
+        viewModelScope.launch {
+            _activeCurrency.update {
+                currency
+            }
+
+            dataStoreRepository.setCurrency(activeCurrency.value)
         }
     }
 }

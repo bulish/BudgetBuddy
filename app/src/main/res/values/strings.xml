@@ -61,5 +61,7 @@
     <string name="placeholder_username">Username</string>
     <string name="list_no_data_title">No transactions available</string>
     <string name="list_no_data_subtitle">Start by adding your first transaction to see them here!</string>
+    <string name="logout_success">Logout was successfull</string>
+    <string name="currency">Currency</string>
 
 </resources>
