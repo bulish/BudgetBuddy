@@ -97,6 +97,16 @@ class LoginAuthViewModel @Inject constructor(
                                     )
                                 )
                             }
+                        } else {
+                            viewModelScope.launch {
+                                dataStoreRepository.saveNotificationData(
+                                    NotificationData(
+                                        show = true,
+                                        message = R.string.network_error,
+                                        isSuccess = false
+                                    )
+                                )
+                            }
                         }
                     }
                 }

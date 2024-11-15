@@ -63,5 +63,11 @@
     <string name="list_no_data_subtitle">Start by adding your first transaction to see them here!</string>
     <string name="logout_success">Logout was successfull</string>
     <string name="currency">Currency</string>
+    <string name="add_edit_place_success">Place was saved successfully</string>
+    <string name="add_place_title">Add place</string>
+    <string name="edit_place_title">Edit place</string>
+    <string name="not_set">Not set</string>
+    <string name="location">Location</string>
+    <string name="name_label">Name</string>
 
 </resources>

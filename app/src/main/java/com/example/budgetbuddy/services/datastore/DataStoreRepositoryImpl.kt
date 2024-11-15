@@ -31,7 +31,7 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
         const val DATA = "Data"
         private const val IS_DARK_THEME = "IsDarkTheme"
         private const val CURRENCY = "CZK (Kč)"
-        private const val NOTIFICATION_DATA = "notificationDAta"
+        private const val NOTIFICATION_DATA = "notificationData"
         private const val FIRST_RUN = "firstRun"
 
         val isDarkTheme = booleanPreferencesKey(IS_DARK_THEME)
@@ -107,12 +107,9 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
     override suspend fun getNotificationData(): Flow<NotificationData?> {
         return context.dataStore.data
             .map { preferences ->
-                if (!preferences.contains(notificationData)) {
-                    val serializedData = preferences[notificationData]
-                    jsonAdapter.fromJson(serializedData)
-                } else {
-                    null
-                }
+                val serializedData = preferences[notificationData]
+                val data = if (serializedData != null) jsonAdapter.fromJson(serializedData) else null
+                data
             }
             .catch { e ->
                 e.printStackTrace()

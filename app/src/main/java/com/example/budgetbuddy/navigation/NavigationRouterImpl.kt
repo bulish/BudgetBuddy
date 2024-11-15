@@ -1,6 +1,9 @@
 package com.example.budgetbuddy.navigation
 
 import androidx.navigation.NavController
+import com.example.budgetbuddy.model.Location
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
 
 class NavigationRouterImpl(private val navController: NavController) : INavigationRouter {
 
@@ -20,8 +23,26 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
         navController.navigate(Destination.HomeScreen.route)
     }
 
-    override fun navigateToMapScreen() {
-        navController.navigate(Destination.MapScreen.route)
+    override fun navigateToMapScreen(latitude: Double?, longitude: Double?) {
+        if (latitude != null && longitude != null){
+            val moshi: Moshi = Moshi.Builder().build()
+            val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
+            navController.navigate(Destination.MapScreen.route + "/" +
+                    jsonAdapter.toJson(Location(latitude, longitude))
+            )
+        } else {
+            navController.navigate(Destination.MapScreen.route)
+        }
+    }
+
+    override fun returnFromMapScreen(latitude: Double, longitude: Double) {
+        val moshi: Moshi = Moshi.Builder().build()
+        val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
+        navController
+            .previousBackStackEntry
+            ?.savedStateHandle
+            ?.set("location", jsonAdapter.toJson(Location(latitude, longitude)))
+        returnBack()
     }
 
     override fun navigateToAddEditPlaceScreen(id: Long?) {

@@ -1,4 +1,4 @@
-package com.example.budgetbuddy.ui.elements.shared
+package com.example.budgetbuddy.ui.elements.shared.basescreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -6,15 +6,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.INavigationRouter
+import com.example.budgetbuddy.ui.elements.shared.LoadingScreen
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceHolderScreen
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceholderScreenContent
 import com.example.budgetbuddy.ui.elements.shared.navigation.BottomNavigationBar
+import com.example.budgetbuddy.ui.elements.shared.notification.Notification
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +32,11 @@ fun BaseScreen(
     actions: @Composable RowScope.() -> Unit = {},
     hideNavigation: Boolean? = false,
     navigation: INavigationRouter,
+
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
+
+    val viewModel = hiltViewModel<BaseScreenViewModel>()
+    val notificationData = viewModel.notificationData.collectAsState()
 
     Scaffold(
         modifier = Modifier
@@ -89,5 +97,7 @@ fun BaseScreen(
         } else {
             content(it)
         }
+
+        Notification(data = notificationData.value)
     }
 }

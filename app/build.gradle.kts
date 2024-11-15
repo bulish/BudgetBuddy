@@ -94,4 +94,10 @@ dependencies {
 
     implementation(libs.image.cropper)
     implementation(libs.accompanist)
+
+    implementation(libs.lifecycle)
+    implementation(libs.googlemap)
+    implementation(libs.googlemap.compose)
+    implementation(libs.googlemap.foundation)
+
 }

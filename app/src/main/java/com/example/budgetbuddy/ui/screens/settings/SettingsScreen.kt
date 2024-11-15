@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.INavigationRouter
-import com.example.budgetbuddy.ui.elements.shared.BaseScreen
+import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.google.firebase.auth.FirebaseUser
 import androidx.compose.runtime.getValue
@@ -39,7 +39,6 @@ import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.elements.shared.SectionTitle
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
-import com.example.budgetbuddy.ui.elements.shared.form.CustomSwitch
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 

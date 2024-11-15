@@ -23,6 +23,12 @@ datastore = "1.0.0"
 image-cropper = "4.5.0"
 
 accompanist = "0.27.0"
+lifecycle = "2.7.0"
+
+googlemap = "2.7.2"
+googlemap_compose = "18.2.0"
+googlemap_foundation = "1.6.7"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -63,6 +69,12 @@ moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.re
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 image-cropper = { group = "com.vanniktech", name = "android-image-cropper", version.ref = "image-cropper" }
 accompanist = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
+
+lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+
+googlemap = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlemap" }
+googlemap-compose = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlemap_compose" }
+googlemap-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "googlemap_foundation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.budgetbuddy.model.Location
 import com.example.budgetbuddy.ui.screens.auth.login.LoginScreen
 import com.example.budgetbuddy.ui.screens.auth.resetPassword.ResetPasswordScreen
 import com.example.budgetbuddy.ui.screens.auth.signUp.SignUpScreen
@@ -20,6 +21,8 @@ import com.example.budgetbuddy.ui.screens.settings.SettingsScreen
 import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionScreen
 import com.example.budgetbuddy.ui.screens.transactions.detail.DetailTransactionScreen
 import com.example.budgetbuddy.ui.screens.transactions.list.TransactionsListScreen
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
 
 @Composable
 fun NavGraph(
@@ -50,10 +53,31 @@ fun NavGraph(
         }
 
         composable(Destination.MapScreen.route){
-            MapScreen(navigationRouter = navigationRouter)
+            MapScreen(navigationRouter = navigationRouter, null, null)
         }
 
-        composable(Destination.AddEditTransaction.route + "/{id}",
+        composable(Destination.MapScreen.route + "/{location}",
+            arguments = listOf(
+                navArgument(name = "location"){
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )){
+            val locationString = it.arguments?.getString("location")
+            if (!locationString.isNullOrEmpty()) {
+                val moshi: Moshi = Moshi.Builder().build()
+                val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
+                val location = jsonAdapter.fromJson(locationString)
+                MapScreen(
+                    navigationRouter = navigationRouter,
+                    latitude = location!!.latitude,
+                    longitude = location!!.longitude)
+            } else {
+                MapScreen(navigationRouter = navigationRouter, null, null)
+            }
+        }
+
+        composable(Destination.AddEditPlaceScreen.route + "/{id}",
             arguments = listOf(
                 navArgument(name = "id"){
                     type = NavType.LongType
@@ -62,6 +86,10 @@ fun NavGraph(
             )){
             val id = it.arguments?.getLong("id")
             AddEditPlaceScreen(navigationRouter = navigationRouter, id = id)
+        }
+
+        composable(Destination.AddEditPlaceScreen.route){
+            AddEditPlaceScreen(navigationRouter = navigationRouter, id = null)
         }
 
         composable(Destination.SettingsScreen.route){
@@ -84,6 +112,10 @@ fun NavGraph(
             )) {
             val id = it.arguments?.getLong("id")
             AddEditTransactionScreen(navigationRouter = navigationRouter, id = id)
+        }
+
+        composable(Destination.AddEditTransaction.route){
+            AddEditTransactionScreen(navigationRouter = navigationRouter, id = null)
         }
 
         composable(Destination.TransactionDetail.route + "/{id}",
