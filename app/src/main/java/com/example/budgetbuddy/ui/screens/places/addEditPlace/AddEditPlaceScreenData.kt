@@ -5,7 +5,7 @@ import com.example.budgetbuddy.model.db.PlaceCategory
 import java.time.LocalDateTime
 
 class AddEditPlaceScreenData {
-    var place: Place = Place("", "", PlaceCategory.FOOD, null, null, "", LocalDateTime.now())
+    var place: Place = Place("", "", PlaceCategory.FOOD, null, null, "", LocalDateTime.now(), null)
     var placeNameError: Int? = null
     var placeAddressError: Int? = null
     var placeCategoryError: Int? = null

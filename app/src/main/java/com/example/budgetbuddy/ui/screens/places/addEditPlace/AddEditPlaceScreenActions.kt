@@ -7,6 +7,7 @@ interface AddEditPlaceScreenActions {
     fun onPlaceAddressChanged(address: String)
     fun onPlaceCategoryChanged(category: PlaceCategory)
     fun onLocationChanged(latitude: Double?, longitude: Double?)
+    fun onPlaceImageChanged(icon: String)
     fun savePlace()
     fun loadPlace(id: Long?)
     fun deletePlace()

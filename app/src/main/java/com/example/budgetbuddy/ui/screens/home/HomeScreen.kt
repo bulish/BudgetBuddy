@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.homescreen.BalanceBox
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.transactions.TransactionList
+import com.example.budgetbuddy.ui.screens.auth.signUp.SignUpUIState
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.White
@@ -35,6 +37,23 @@ fun HomeScreen(
     val state = viewModel.homeScreenUIState.collectAsState()
     val currency = viewModel.activeCurrency.collectAsState()
     val transactions: MutableList<Transaction> = mutableListOf()
+
+    state.value.let {
+        when (it) {
+            is HomeScreenUIState.Loading -> {
+                //loading = true
+            }
+
+            is HomeScreenUIState.Success -> {
+                loading = false
+                // TODO
+            }
+
+            is HomeScreenUIState.UserNotAuthorized -> {
+                navigationRouter.navigateToLoginScreen()
+            }
+        }
+    }
 
     BaseScreen(
         navigation = navigationRouter,

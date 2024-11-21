@@ -32,7 +32,7 @@ fun TextInput(
             .fillMaxWidth(),
         maxLines = 1,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondary,
+            focusedBorderColor = Grey,
             unfocusedBorderColor = Grey,
         ),
         textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary),

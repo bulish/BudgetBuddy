@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,6 +9,13 @@ plugins {
     alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").reader())
+
+var versionMajor = 1
+var versionMinor = 0
+var versionPatch = 0
+
 android {
     namespace = "com.example.budgetbuddy"
     compileSdk = 34
@@ -15,8 +24,9 @@ android {
         applicationId = "com.example.budgetbuddy"
         minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+
+        versionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,8 +41,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "MAP_API_KEY", properties.getProperty("google_maps_api_key"))
+        }
+        debug {
+            buildConfigField("String", "MAP_API_KEY", properties.getProperty("google_maps_api_key"))
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -42,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -100,4 +116,7 @@ dependencies {
     implementation(libs.googlemap.compose)
     implementation(libs.googlemap.foundation)
 
+    implementation(libs.places)
+    implementation(libs.glide)
+    implementation(libs.lottie)
 }

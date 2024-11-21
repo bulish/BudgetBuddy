@@ -57,7 +57,7 @@ fun ResetPasswordScreen(
                 subtitle = stringResource(id = R.string.reset_password_subtitle)
             )
         },
-        hideNavigation = true,
+        isAuth = true,
         navigation = navigationRouter
     ) {
         ResetPasswordContent(

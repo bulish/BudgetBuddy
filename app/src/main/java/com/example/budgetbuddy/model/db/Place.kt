@@ -14,6 +14,7 @@ data class Place(
     var longitude: Double?,
     var userId: String,
     var created: LocalDateTime = LocalDateTime.now(),
+    var imageName: String?
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

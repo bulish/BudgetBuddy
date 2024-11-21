@@ -40,7 +40,7 @@ fun LoginScreen(navigationRouter: INavigationRouter) {
     state.value.let {
         when (it) {
             LoginUIState.Default -> {
-
+                loading = true
             }
 
             is LoginUIState.UserChanged -> {
@@ -63,7 +63,7 @@ fun LoginScreen(navigationRouter: INavigationRouter) {
                 subtitle = stringResource(id = R.string.login_subtitle)
             )
         },
-        hideNavigation = true,
+        isAuth = true,
         navigation = navigationRouter,
         showLoading = loading
     ) {

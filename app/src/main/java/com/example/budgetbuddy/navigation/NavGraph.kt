@@ -85,11 +85,11 @@ fun NavGraph(
                 }
             )){
             val id = it.arguments?.getLong("id")
-            AddEditPlaceScreen(navigationRouter = navigationRouter, id = id)
+            AddEditPlaceScreen(navigationRouter = navigationRouter, id = id, context = context)
         }
 
         composable(Destination.AddEditPlaceScreen.route){
-            AddEditPlaceScreen(navigationRouter = navigationRouter, id = null)
+            AddEditPlaceScreen(navigationRouter = navigationRouter, id = null, context = context)
         }
 
         composable(Destination.SettingsScreen.route){

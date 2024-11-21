@@ -31,6 +31,7 @@ fun BaseScreen(
     floatingActionButton: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     hideNavigation: Boolean? = false,
+    isAuth: Boolean? = false,
     navigation: INavigationRouter,
 
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
@@ -41,9 +42,9 @@ fun BaseScreen(
     Scaffold(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
-            .padding(top = if (hideNavigation == true) 48.dp else 0.dp),
+            .padding(top = if (isAuth == true) 48.dp else 0.dp),
         bottomBar = {
-            if (hideNavigation == false) {
+            if (hideNavigation == false && isAuth == false) {
                 BottomAppBar(modifier = Modifier) {
                     BottomNavigationBar(navigation = navigation)
                 }

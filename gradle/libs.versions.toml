@@ -28,7 +28,10 @@ lifecycle = "2.7.0"
 googlemap = "2.7.2"
 googlemap_compose = "18.2.0"
 googlemap_foundation = "1.6.7"
+places = "2.7.0"
+glide = "1.3.7"
 
+lottie = "6.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,6 +78,10 @@ lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", 
 googlemap = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googlemap" }
 googlemap-compose = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googlemap_compose" }
 googlemap-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "googlemap_foundation" }
+
+places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
+glide = { group = "com.github.skydoves", name = "landscapist-glide", version.ref = "glide" }
+lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

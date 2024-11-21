@@ -55,7 +55,7 @@ fun SignUpScreen(
                 subtitle = stringResource(id = R.string.signup_subtitle)
             )
         },
-        hideNavigation = true,
+        isAuth = true,
         navigation = navigationRouter
     ) {
         SignUpScreenContent(

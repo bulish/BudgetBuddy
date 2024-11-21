@@ -30,6 +30,14 @@ class AddEditPlaceViewModel @Inject constructor(
 
     private var data = AddEditPlaceScreenData()
 
+    init {
+        if (authService.getCurrentUser() == null) {
+            _addEditPlacekUIState.update {
+                AddEditPlaceUIState.UserNotAuthorized
+            }
+        }
+    }
+
     override fun savePlace(){
         data.place.name = data.place.name.trim()
         data.place.address = data.place.address.trim()
@@ -120,6 +128,13 @@ class AddEditPlaceViewModel @Inject constructor(
     override fun onLocationChanged(latitude: Double?, longitude: Double?) {
         data.place.latitude = latitude
         data.place.longitude = longitude
+        _addEditPlacekUIState.update {
+            AddEditPlaceUIState.PlaceChanged(data)
+        }
+    }
+
+    override fun onPlaceImageChanged(icon: String) {
+        data.place.imageName = icon
         _addEditPlacekUIState.update {
             AddEditPlaceUIState.PlaceChanged(data)
         }
