@@ -91,4 +91,6 @@
     <string name="category_other">Other</string>
     <string name="no_category_selected">No category selected</string>
     <string name="address">Address</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

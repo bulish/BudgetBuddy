@@ -115,8 +115,12 @@ dependencies {
     implementation(libs.googlemap)
     implementation(libs.googlemap.compose)
     implementation(libs.googlemap.foundation)
+    implementation(libs.googlemap.utils)
+    implementation(libs.googlemap.widgets)
+    implementation(libs.googlemap.compose.utils)
 
     implementation(libs.places)
     implementation(libs.glide)
     implementation(libs.lottie)
+
 }

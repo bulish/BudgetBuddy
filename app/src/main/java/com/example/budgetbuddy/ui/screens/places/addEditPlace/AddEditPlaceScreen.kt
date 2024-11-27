@@ -63,20 +63,6 @@ fun AddEditPlaceScreen(
         mutableStateOf<Boolean>(false)
     }
 
-    LifecycleEventEffect(event = Lifecycle.Event.ON_RESUME) {
-        val mapLocationResult = navigationRouter.getNavController().getValue<String>("location")
-        mapLocationResult?.value?.let {
-            val moshi: Moshi = Moshi.Builder().build()
-            val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
-            val location = jsonAdapter.fromJson(it)
-            navigationRouter.getNavController().removeValue<String>("location")
-            location?.let {
-                Log.d("latitude", "${it.latitude}")
-                viewModel.onLocationChanged(it.latitude, it.longitude)
-            }
-        }
-    }
-
     state.value.let {
         when(it){
             AddEditPlaceUIState.Loading -> {

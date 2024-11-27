@@ -2,55 +2,76 @@ package com.example.budgetbuddy.ui.screens.places.map
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.navigation.INavigationRouter
+import com.example.budgetbuddy.ui.elements.map.CustomMapRenderer
+import com.example.budgetbuddy.ui.elements.map.PlaceDetail
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.White
-import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.algo.GridBasedAlgorithm
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
-import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
     navigationRouter: INavigationRouter,
-    latitude: Double?,
-    longitude: Double?
 ){
 
     val viewModel = hiltViewModel<MapViewModel>()
 
+    val mapData = remember {
+        mutableListOf<Place>()
+    }
+
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
+    var loading = true
+
+    state.value.let {
+        when(it){
+            is MapScreenUIState.DataLoaded -> {
+                mapData.addAll(it.data)
+            }
+
+            MapScreenUIState.Loading -> {
+
+            }
+
+            MapScreenUIState.UserNotAuthorized -> {
+                loading = true
+                navigationRouter.navigateToLoginScreen()
+            }
+
+        }
+    }
+
     BaseScreen(
         topBar = null,
-        actions = {
-            IconButton(onClick = {
-                if (viewModel.locationChanged){
-                    navigationRouter.returnFromMapScreen(viewModel.latitude!!, viewModel.longitude!!)
-                } else {
-                    navigationRouter.returnBack()
-                }
-            }) {
-                Icon(imageVector = Icons.Default.Done, contentDescription = null)
-            }
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -66,60 +87,98 @@ fun MapScreen(
     ) {
         MapScreenContent(
             paddingValues = it,
-            actions = viewModel,
-            latitude = if (latitude != null) latitude else 49.0,
-            longitude = longitude ?: 16.0,
-            navigation = navigationRouter
+            navigation = navigationRouter,
+            data = mapData,
+            actions = viewModel
         )
     }
 }
 
+@OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun MapScreenContent(
     paddingValues: PaddingValues,
-    actions: MapViewModel,
-    latitude: Double,
-    longitude: Double,
-    navigation: INavigationRouter
-){
-
+    navigation: INavigationRouter,
+    data: List<Place>,
+    actions: MapActions
+) {
+    val mapUiSettings by remember {
+        mutableStateOf(
+            MapUiSettings(
+                zoomControlsEnabled = false,
+                mapToolbarEnabled = false
+            )
+        )
+    }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(latitude, longitude), 10.0f)
+        position = CameraPosition.fromLatLngZoom(LatLng(49.194830191037845, 16.600317076466016), 9f)
     }
 
-    val markerState = rememberMarkerState(position = LatLng(latitude, longitude))
+    val context = LocalContext.current
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(paddingValues)){
+    var clusterRender by remember { mutableStateOf<CustomMapRenderer?>(null) }
+    var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
+    var clusterManager by remember { mutableStateOf<ClusterManager<Place>?>(null) }
+    var selectedPlace by remember { mutableStateOf<Place?>(null) }
 
-        GoogleMap (
+    if (data.isNotEmpty()) {
+        clusterManager?.addItems(data)
+        clusterManager?.cluster()
+    }
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        GoogleMap(
+            modifier = Modifier.fillMaxHeight(),
+            uiSettings = mapUiSettings,
             cameraPositionState = cameraPositionState
         ) {
-
-            MapEffect {
-                it.setOnMarkerDragListener(object : OnMarkerDragListener {
-                    override fun onMarkerDrag(p0: Marker) {
-
+            if (data.isNotEmpty()) {
+                MapEffect { map ->
+                    if (googleMap == null) {
+                        googleMap = map
                     }
 
-                    override fun onMarkerDragEnd(p0: Marker) {
-                        actions.onLocationChanged(p0.position.latitude, p0.position.longitude)
-                        navigation.returnBack()
+                    if (clusterManager == null) {
+                        clusterManager = ClusterManager(context, googleMap)
+                        clusterManager?.apply {
+                            algorithm = GridBasedAlgorithm()
+                            renderer = CustomMapRenderer(context, googleMap!!, this)
+                            addItems(data)
+                            setOnClusterItemClickListener { place ->
+                                selectedPlace = place
+                                true
+                            }
+                        }
                     }
 
-                    override fun onMarkerDragStart(p0: Marker) {
-
+                    googleMap?.setOnCameraIdleListener {
+                        clusterManager?.cluster()
                     }
-                })
+                }
             }
-
-            Marker(
-                state = markerState,
-                draggable = true
-            )
-
         }
 
+        selectedPlace?.let { place ->
+            PlaceDetail(
+                place = place,
+                onEdit = {
+                    navigation.navigateToAddEditPlaceScreen(place.id)
+                },
+                onDelete = {
+                    actions.deletePlace(place.id)
+                },
+                onClose = {
+                    selectedPlace = null
+                },
+                context = LocalContext.current,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopCenter)
+            )
+        }
     }
 }

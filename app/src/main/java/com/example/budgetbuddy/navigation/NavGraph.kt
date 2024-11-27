@@ -53,28 +53,7 @@ fun NavGraph(
         }
 
         composable(Destination.MapScreen.route){
-            MapScreen(navigationRouter = navigationRouter, null, null)
-        }
-
-        composable(Destination.MapScreen.route + "/{location}",
-            arguments = listOf(
-                navArgument(name = "location"){
-                    type = NavType.StringType
-                    defaultValue = ""
-                }
-            )){
-            val locationString = it.arguments?.getString("location")
-            if (!locationString.isNullOrEmpty()) {
-                val moshi: Moshi = Moshi.Builder().build()
-                val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
-                val location = jsonAdapter.fromJson(locationString)
-                MapScreen(
-                    navigationRouter = navigationRouter,
-                    latitude = location!!.latitude,
-                    longitude = location!!.longitude)
-            } else {
-                MapScreen(navigationRouter = navigationRouter, null, null)
-            }
+            MapScreen(navigationRouter = navigationRouter)
         }
 
         composable(Destination.AddEditPlaceScreen.route + "/{id}",

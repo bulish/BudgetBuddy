@@ -8,8 +8,6 @@ interface INavigationRouter {
     fun navigateToResetPasswordScreen()
     fun navigateToHomeScreen()
     fun navigateToMapScreen(latitude: Double?, longitude: Double?)
-    fun returnFromMapScreen(latitude: Double, longitude: Double)
-
     fun navigateToAddEditPlaceScreen(id: Long?)
     fun navigateToSettingsScreen()
     fun navigateToTransactionsListScreen()

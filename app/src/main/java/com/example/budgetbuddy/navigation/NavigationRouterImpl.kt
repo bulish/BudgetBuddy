@@ -35,16 +35,6 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
         }
     }
 
-    override fun returnFromMapScreen(latitude: Double, longitude: Double) {
-        val moshi: Moshi = Moshi.Builder().build()
-        val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
-        navController
-            .previousBackStackEntry
-            ?.savedStateHandle
-            ?.set("location", jsonAdapter.toJson(Location(latitude, longitude)))
-        returnBack()
-    }
-
     override fun navigateToAddEditPlaceScreen(id: Long?) {
         if (id != null) {
             navController.navigate(Destination.AddEditPlaceScreen.route + "/" + id)
