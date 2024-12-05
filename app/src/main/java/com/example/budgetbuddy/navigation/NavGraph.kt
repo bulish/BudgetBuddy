@@ -16,6 +16,7 @@ import com.example.budgetbuddy.ui.screens.auth.resetPassword.ResetPasswordScreen
 import com.example.budgetbuddy.ui.screens.auth.signUp.SignUpScreen
 import com.example.budgetbuddy.ui.screens.home.HomeScreen
 import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditPlaceScreen
+import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditTransactionScreen
 import com.example.budgetbuddy.ui.screens.places.map.MapScreen
 import com.example.budgetbuddy.ui.screens.settings.SettingsScreen
 import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionScreen
@@ -90,11 +91,11 @@ fun NavGraph(
                 }
             )) {
             val id = it.arguments?.getLong("id")
-            AddEditTransactionScreen(navigationRouter = navigationRouter, id = id)
+            AddEditTransactionScreen(navigationRouter = navigationRouter, context = context, id = id)
         }
 
         composable(Destination.AddEditTransaction.route){
-            AddEditTransactionScreen(navigationRouter = navigationRouter, id = null)
+            AddEditTransactionScreen(navigationRouter = navigationRouter, context = context, id = null)
         }
 
         composable(Destination.TransactionDetail.route + "/{id}",

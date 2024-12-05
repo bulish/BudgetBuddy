@@ -28,14 +28,19 @@ import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.White
 
 @Composable
-fun TransactionList(transactions: List<Transaction>) {
+fun TransactionList(
+    displayTitle: Boolean = true,
+    transactions: List<Transaction>
+) {
     Column {
-        Text(
-            text = "Transactions",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.padding(vertical = HalfMargin())
-        )
+        if (displayTitle) {
+            Text(
+                text = "Transactions",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(vertical = HalfMargin())
+            )
+        }
 
         if (transactions.isEmpty()) {
             Column(

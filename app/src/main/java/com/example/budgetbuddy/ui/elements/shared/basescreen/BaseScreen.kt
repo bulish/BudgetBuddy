@@ -58,7 +58,7 @@ fun BaseScreen(
                         if (topBarText != null) {
                             Text(
                                 text = topBarText,
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.headlineLarge,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier

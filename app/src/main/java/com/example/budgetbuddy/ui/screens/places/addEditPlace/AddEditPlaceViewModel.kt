@@ -23,16 +23,16 @@ class AddEditPlaceViewModel @Inject constructor(
     private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel(), AddEditPlaceScreenActions {
 
-    private val _addEditPlacekUIState: MutableStateFlow<AddEditPlaceUIState> =
+    private val _addEditPlaceUIState: MutableStateFlow<AddEditPlaceUIState> =
         MutableStateFlow(AddEditPlaceUIState.Loading)
 
-    val addEditPlaceUIState = _addEditPlacekUIState.asStateFlow()
+    val addEditPlaceUIState = _addEditPlaceUIState.asStateFlow()
 
     private var data = AddEditPlaceScreenData()
 
     init {
         if (authService.getCurrentUser() == null) {
-            _addEditPlacekUIState.update {
+            _addEditPlaceUIState.update {
                 AddEditPlaceUIState.UserNotAuthorized
             }
         }
@@ -71,12 +71,12 @@ class AddEditPlaceViewModel @Inject constructor(
                 )
             }
 
-            _addEditPlacekUIState.update {
+            _addEditPlaceUIState.update {
                 AddEditPlaceUIState.PlaceSaved
             }
         }
         else {
-            _addEditPlacekUIState.update {
+            _addEditPlaceUIState.update {
                 AddEditPlaceUIState.PlaceChanged(data)
             }
 
@@ -104,14 +104,14 @@ class AddEditPlaceViewModel @Inject constructor(
 
     override fun onPlaceAddressChanged(address: String) {
         data.place.address = address
-        _addEditPlacekUIState.update {
+        _addEditPlaceUIState.update {
             AddEditPlaceUIState.PlaceChanged(data)
         }
     }
 
     override fun onPlaceCategoryChanged(category: PlaceCategory) {
         data.place.category = category
-        _addEditPlacekUIState.update {
+        _addEditPlaceUIState.update {
             AddEditPlaceUIState.PlaceChanged(data)
         }
     }
@@ -119,7 +119,7 @@ class AddEditPlaceViewModel @Inject constructor(
     override fun deletePlace() {
         viewModelScope.launch {
             repository.delete(data.place)
-            _addEditPlacekUIState.update {
+            _addEditPlaceUIState.update {
                 AddEditPlaceUIState.PlaceChanged(data)
             }
         }
@@ -128,21 +128,21 @@ class AddEditPlaceViewModel @Inject constructor(
     override fun onLocationChanged(latitude: Double?, longitude: Double?) {
         data.place.latitude = latitude
         data.place.longitude = longitude
-        _addEditPlacekUIState.update {
+        _addEditPlaceUIState.update {
             AddEditPlaceUIState.PlaceChanged(data)
         }
     }
 
     override fun onPlaceImageChanged(icon: String) {
         data.place.imageName = icon
-        _addEditPlacekUIState.update {
+        _addEditPlaceUIState.update {
             AddEditPlaceUIState.PlaceChanged(data)
         }
     }
 
     override fun onPlaceNameChanged(name: String) {
         data.place.name = name
-        _addEditPlacekUIState.update {
+        _addEditPlaceUIState.update {
             AddEditPlaceUIState.PlaceChanged(data)
         }
     }
@@ -154,7 +154,7 @@ class AddEditPlaceViewModel @Inject constructor(
                     repository.getPlace(id, userId).collect { place ->
                         if (place != null) {
                             data.place = place
-                            _addEditPlacekUIState.update {
+                            _addEditPlaceUIState.update {
                                 AddEditPlaceUIState.PlaceChanged(data)
                             }
                         }
@@ -163,5 +163,4 @@ class AddEditPlaceViewModel @Inject constructor(
             }
         }
     }
-
 }

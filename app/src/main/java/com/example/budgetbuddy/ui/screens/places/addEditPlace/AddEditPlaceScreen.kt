@@ -2,7 +2,6 @@ package com.example.budgetbuddy.ui.screens.places.addEditPlace
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -21,13 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.extensions.getValue
-import com.example.budgetbuddy.extensions.removeValue
-import com.example.budgetbuddy.model.Location
 import com.example.budgetbuddy.model.db.PlaceCategory
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.map.AddressInputField
@@ -40,8 +34,6 @@ import com.example.budgetbuddy.ui.elements.shared.form.SaveCancelButtons
 import com.example.budgetbuddy.ui.elements.shared.form.TextInput
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 import java.io.File
 
 @Composable

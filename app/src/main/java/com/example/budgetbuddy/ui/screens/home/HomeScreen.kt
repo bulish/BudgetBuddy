@@ -71,15 +71,6 @@ fun HomeScreen(
         },
         placeholderScreenContent = null,
         topBar = null
-        /*
-        placeholderScreenContent = if (transactions.size == 0) {
-            PlaceholderScreenContent(
-                image = R.drawable.list,
-                title = stringResource(id = R.string.list_no_data_title),
-                text = stringResource(id = R.string.list_no_data_subtitle)
-            )
-        } else null*/
-
     ) {
         HomeScreenContent(
             paddingValues = it,
@@ -118,7 +109,10 @@ fun HomeScreenContent(
         Box(modifier = Modifier
             .padding(paddingValues)
             .padding(horizontal = BasicMargin())) {
-            TransactionList(transactions)
+            TransactionList(
+                displayTitle = true,
+                transactions = transactions
+            )
         }
 
     }

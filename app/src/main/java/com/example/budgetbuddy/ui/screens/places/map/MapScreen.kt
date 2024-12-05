@@ -42,7 +42,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun MapScreen(
     navigationRouter: INavigationRouter,
 ){
-
     val viewModel = hiltViewModel<MapViewModel>()
 
     val mapData = remember {
