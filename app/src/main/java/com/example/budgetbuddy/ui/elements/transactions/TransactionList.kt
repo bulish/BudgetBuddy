@@ -52,7 +52,8 @@ fun TransactionList(transactions: List<Transaction>) {
                 Text(
                     text = stringResource(id = R.string.list_no_data_title),
                     style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.secondary),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(id = R.string.list_no_data_subtitle),
