@@ -2,6 +2,7 @@ package com.example.budgetbuddy.ui.screens.transactions.addEdit
 
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
+import com.example.budgetbuddy.model.db.TransactionType
 
 interface AddEditTransactionActions {
     fun onReceiptChange()
@@ -12,8 +13,10 @@ interface AddEditTransactionActions {
     fun onTransactionNoteChange(note: String)
     fun onTransactionDateChange(date: Long?)
     fun onTransactionPlaceChange(place: Place)
+    fun onTransactionTypeChange(type: TransactionType)
 
     fun saveTransaction()
     fun loadTransaction(id: Long?)
+    fun loadPlaces()
     fun deleteTransaction()
 }

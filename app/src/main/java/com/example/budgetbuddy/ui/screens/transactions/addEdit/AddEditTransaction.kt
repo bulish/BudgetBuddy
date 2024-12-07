@@ -1,7 +1,9 @@
-package com.example.budgetbuddy.ui.screens.places.addEditPlace
+package com.example.budgetbuddy.ui.screens.transactions.addEdit
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -22,24 +24,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.model.db.PlaceCategory
+import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.navigation.INavigationRouter
-import com.example.budgetbuddy.ui.elements.map.AddressInputField
-import com.example.budgetbuddy.ui.elements.map.PlaceIcon
 import com.example.budgetbuddy.ui.elements.shared.CustomAlertDialog
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
+import com.example.budgetbuddy.ui.elements.shared.form.CustomDatePicker
+import com.example.budgetbuddy.ui.elements.shared.form.CustomRadioButton
 import com.example.budgetbuddy.ui.elements.shared.form.Dropdown
 import com.example.budgetbuddy.ui.elements.shared.form.ImageInput
 import com.example.budgetbuddy.ui.elements.shared.form.SaveCancelButtons
 import com.example.budgetbuddy.ui.elements.shared.form.TextInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionActions
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionScreenData
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionUIState
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionViewModel
 import com.example.budgetbuddy.ui.theme.BasicMargin
-import com.example.budgetbuddy.ui.theme.HalfMargin
-import java.io.File
 
 @Composable
 fun AddEditTransactionScreen(
@@ -56,6 +52,10 @@ fun AddEditTransactionScreen(
         mutableStateOf(AddEditTransactionScreenData())
     }
 
+    val places = remember {
+        mutableListOf<Place>()
+    }
+
     var dialogIsVisible by remember {
         mutableStateOf<Boolean>(false)
     }
@@ -64,6 +64,7 @@ fun AddEditTransactionScreen(
         when(it){
             AddEditTransactionUIState.Loading -> {
                 viewModel.loadTransaction(id)
+                viewModel.loadPlaces()
             }
             is AddEditTransactionUIState.TransactionChanged -> {
                 data = it.data
@@ -80,6 +81,10 @@ fun AddEditTransactionScreen(
             }
             AddEditTransactionUIState.UserNotAuthorized -> {
                 navigationRouter.returnBack()
+            }
+
+            is AddEditTransactionUIState.PlacesLoaded -> {
+                places.addAll(it.data)
             }
         }
     }
@@ -115,8 +120,8 @@ fun AddEditTransactionScreen(
             onDialogConfirmation = {
                 dialogIsVisible = false
                 navigationRouter.returnBack()
-            }
-
+            },
+            places = places
         )
     }
 }
@@ -131,10 +136,22 @@ fun AddEditTransactionContent(
     context: Context,
     dialogIsVisible: Boolean,
     onDialogDismiss: () -> Unit,
-    onDialogConfirmation: () -> Unit
-
+    onDialogConfirmation: () -> Unit,
+    places: List<Place>
 ){
-    var selectedCategory by remember { mutableStateOf<TransactionCategory?>(data.transaction.category) }
+    val currencies = listOf("CZK (Kč)", "USD ($)", "EUR (€)", "GBP (£)")
+
+    var selectedCategory by remember {
+        mutableStateOf<TransactionCategory?>(data.transaction.category)
+    }
+
+    var selectedCurrency by remember {
+        mutableStateOf<String?>(currencies[0])
+    }
+
+    var selectedPlace by remember {
+        mutableStateOf<Place?>(places.find { p -> p.id == data.transaction.placeId })
+    }
 
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -146,66 +163,104 @@ fun AddEditTransactionContent(
 
     LazyColumn(modifier = Modifier
         .padding(paddingValues)
-        .padding(horizontal = BasicMargin())
+        .padding(horizontal = BasicMargin()),
     )
     {
 
         item {
-            ImageInput(
-                onChangeHandler = {
-                    actions.onReceiptChange()
-                },
-                context = context,
-                selectedImageUri = selectedImageUri,
-                changeSelectedImageUri = {
-                    selectedImageUri = it
-                }
-            )
-
-            TextInput(
-                label = stringResource(id = R.string.name_label),
-                value = data.place.name,
-                error = data.placeNameError,
-                onChange = { actions.onPlaceNameChanged(it) }
-            )
-
-            Dropdown(
-                value = selectedCategory,
-                noValueMessage = stringResource(id = R.string.no_category_selected),
-                data = PlaceCategory.entries,
-                toStringRepresentation = {category ->
-                    stringResource(id = category.getStringResource())
-                },
-                onChange = {category ->
-                    selectedCategory = category
-                    actions.onPlaceCategoryChanged(category)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(HalfMargin()))
-
-            AddressInputField(
-                onAddressSelected = {address, lat, long ->
-                    actions.onPlaceAddressChanged(address)
-                    actions.onLocationChanged(lat, long)
-                },
-                context = context,
-                addressError = data.placeAddressError
-            )
-
-            SaveCancelButtons(
-                onCancel = { onCancel() },
-                onSave = { actions.savePlace() }
-            )
-
-            if (dialogIsVisible) {
-                CustomAlertDialog(
-                    onDismissRequest = { onDialogDismiss() },
-                    onConfirmation = { onDialogConfirmation() },
-                    dialogTitle = stringResource(id = R.string.alert_dialog_add_edit_title) ,
-                    dialogText = stringResource(id = R.string.alert_dialog_add_edit_subtitle),
-                    icon = Icons.Default.Delete
+            Column(verticalArrangement = Arrangement.spacedBy(BasicMargin())) {
+                ImageInput(
+                    onChangeHandler = {
+                        actions.onReceiptChange()
+                    },
+                    context = context,
+                    selectedImageUri = selectedImageUri,
+                    changeSelectedImageUri = {
+                        selectedImageUri = it
+                    }
                 )
+
+                Dropdown(
+                    value = selectedCategory,
+                    noValueMessage = stringResource(id = R.string.no_category_selected),
+                    data = TransactionCategory.entries,
+                    toStringRepresentation = {category ->
+                        stringResource(id = category.getStringResource())
+                    },
+                    onChange = {category ->
+                        selectedCategory = category
+                        actions.onTransactionCategoryChanged(category)
+                    }
+                )
+
+                TextInput(
+                    label = stringResource(id = R.string.price_label),
+                    value = data.transaction.price.toString(),
+                    error = data.transactionPriceError,
+                    onChange = { actions.onTransactionPriceChange(it.toDouble()) },
+                    isNumber = true
+                )
+
+                TextInput(
+                    label = stringResource(id = R.string.note_label),
+                    value = data.transaction.note.toString(),
+                    error = data.transactionNoteError ,
+                    onChange = { actions.onTransactionNoteChange(it) }
+                )
+
+                CustomRadioButton(
+                    label = stringResource(id = R.string.transaction_type_label),
+                    value = data.transaction.type,
+                    onChange = { actions.onTransactionTypeChange(it) }
+                )
+
+                Dropdown(
+                    value = selectedCurrency,
+                    noValueMessage = stringResource(id = R.string.no_currency_selected),
+                    data = currencies,
+                    toStringRepresentation = {currency ->
+                        currency.toString()
+                    },
+                    onChange = {currency ->
+                        selectedCurrency = currency.toString()
+                        actions.onTransactionCurrencyChange(currency.toString())
+                    }
+                )
+
+                CustomDatePicker(
+                    value = data.transaction.date,
+                    onChange = { actions.onTransactionDateChange(it) }
+                )
+
+                Dropdown(
+                    value = selectedPlace,
+                    noValueMessage = stringResource(id = R.string.no_place_selected),
+                    data = places,
+                    toStringRepresentation = {place ->
+                        place.name
+                    },
+                    onChange = {place ->
+                        selectedPlace = place
+                        actions.onTransactionPlaceChange(place)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(BasicMargin()))
+
+                SaveCancelButtons(
+                    onCancel = { onCancel() },
+                    onSave = { actions.saveTransaction() }
+                )
+
+                if (dialogIsVisible) {
+                    CustomAlertDialog(
+                        onDismissRequest = { onDialogDismiss() },
+                        onConfirmation = { onDialogConfirmation() },
+                        dialogTitle = stringResource(id = R.string.alert_dialog_add_edit_title) ,
+                        dialogText = stringResource(id = R.string.alert_dialog_add_edit_subtitle),
+                        icon = Icons.Default.Delete
+                    )
+                }
             }
         }
 

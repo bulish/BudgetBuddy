@@ -1,6 +1,7 @@
 package com.example.budgetbuddy.ui.elements.shared.form
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -8,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import com.example.budgetbuddy.ui.theme.Grey
 
 @Composable
@@ -15,7 +17,8 @@ fun TextInput(
     label: String,
     value: String,
     error: Int?,
-    onChange: (String) -> Unit
+    onChange: (String) -> Unit,
+    isNumber: Boolean = false
 ) {
     OutlinedTextField(
         placeholder = { Text(text = label, color = MaterialTheme.colorScheme.secondary) },
@@ -35,6 +38,7 @@ fun TextInput(
             focusedBorderColor = Grey,
             unfocusedBorderColor = Grey,
         ),
+        keyboardOptions = if (isNumber)KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
         textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary),
     )
 }

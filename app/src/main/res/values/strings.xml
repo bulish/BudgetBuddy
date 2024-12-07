@@ -98,12 +98,11 @@
     <string name="edit_transaction_title">Edit transaction</string>
     <string name="add_transaction_title">New transaction</string>
     <string name="category_salary">Salary</string>
-    <string name="category_business_income">Business income</string>
-    <string name="category_investment_income">Investment income</string>
+    <string name="category_business">Business</string>
+    <string name="category_investment">Investment</string>
     <string name="category_gift">Gift</string>
     <string name="category_bonus">Bonus</string>
     <string name="category_load_received">Load received</string>
-    <string name="category_other_income">Other income</string>
     <string name="category_restaurants">Restaurants</string>
     <string name="category_coffee">Coffee</string>
     <string name="category_rent">Rent</string>
@@ -113,5 +112,12 @@
     <string name="category_insurance">Insurance</string>
     <string name="category_bank_fees">Bank fees</string>
     <string name="category_loan_payment">Loan payment</string>
-    <string name="category_other_expense">Other expense</string>
+    <string name="price_label">Price</string>
+    <string name="note_label">Note</string>
+    <string name="transaction_type_label">Transaction type</string>
+    <string name="select_date">Select date</string>
+    <string name="date_label">Date</string>
+    <string name="confirm">Confirm</string>
+    <string name="no_currency_selected">Select currency</string>
+    <string name="no_place_selected">Select place</string>
 </resources>

@@ -3,12 +3,15 @@ package com.example.budgetbuddy.ui.screens.transactions.addEdit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
 import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
+import com.example.budgetbuddy.ui.screens.places.map.MapScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTransactionViewModel @Inject constructor(
     private val repository: ILocalTransactionsRepository,
+    private val placeRepository: ILocalPlacesRepository,
     private val authService: AuthService,
     private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel(), AddEditTransactionActions {
@@ -99,6 +103,19 @@ class AddEditTransactionViewModel @Inject constructor(
         }
     }
 
+    override fun loadPlaces() {
+        val userID = authService.getUserID()
+        if (userID != null) {
+            viewModelScope.launch {
+                placeRepository.getAllByUser(userID).collect {data ->
+                    _addEditTransactionUIState.update {
+                        AddEditTransactionUIState.PlacesLoaded(data)
+                    }
+                }
+            }
+        }
+    }
+
     override fun deleteTransaction() {
         // TODO
     }
@@ -147,6 +164,13 @@ class AddEditTransactionViewModel @Inject constructor(
 
     override fun onTransactionPlaceChange(place: Place) {
         data.transaction.placeId = place.id
+        _addEditTransactionUIState.update {
+            AddEditTransactionUIState.TransactionChanged(data)
+        }
+    }
+
+    override fun onTransactionTypeChange(type: TransactionType) {
+        data.transaction.type = type
         _addEditTransactionUIState.update {
             AddEditTransactionUIState.TransactionChanged(data)
         }

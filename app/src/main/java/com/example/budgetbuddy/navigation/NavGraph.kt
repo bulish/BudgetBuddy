@@ -10,20 +10,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.budgetbuddy.model.Location
 import com.example.budgetbuddy.ui.screens.auth.login.LoginScreen
 import com.example.budgetbuddy.ui.screens.auth.resetPassword.ResetPasswordScreen
 import com.example.budgetbuddy.ui.screens.auth.signUp.SignUpScreen
 import com.example.budgetbuddy.ui.screens.home.HomeScreen
 import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditPlaceScreen
-import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditTransactionScreen
 import com.example.budgetbuddy.ui.screens.places.map.MapScreen
 import com.example.budgetbuddy.ui.screens.settings.SettingsScreen
 import com.example.budgetbuddy.ui.screens.transactions.addEdit.AddEditTransactionScreen
 import com.example.budgetbuddy.ui.screens.transactions.detail.DetailTransactionScreen
 import com.example.budgetbuddy.ui.screens.transactions.list.TransactionsListScreen
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 
 @Composable
 fun NavGraph(

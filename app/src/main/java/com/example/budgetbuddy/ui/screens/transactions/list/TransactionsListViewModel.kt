@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,13 +33,23 @@ class TransactionsListViewModel @Inject constructor(
                 TransactionsListUIState.UserNotAuthorized
             }
         }
+    }
 
+    fun getAllTransactions() {
         val userID = authService.getUserID()
         if (userID != null) {
             viewModelScope.launch {
                 repository.getAllByUser(userID).collect {data ->
+                    val totalSum = data.sumOf { transaction ->
+                        when (transaction.type) {
+                            TransactionType.INCOME -> transaction.price
+                            TransactionType.EXPENSE -> -transaction.price
+                            else -> 0.0
+                        }
+                    }
+
                     _uiState.update {
-                        TransactionsListUIState.DataLoaded(data)
+                        TransactionsListUIState.DataLoaded(data, totalSum)
                     }
                 }
             }

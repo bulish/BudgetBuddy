@@ -1,15 +1,20 @@
 package com.example.budgetbuddy.ui.screens.transactions.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -23,14 +28,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +55,7 @@ import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceholderS
 import com.example.budgetbuddy.ui.elements.transactions.TransactionList
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.Green
+import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.QuarterMargin
 import com.example.budgetbuddy.ui.theme.White
 
@@ -56,13 +69,23 @@ fun TransactionsListScreen(
         mutableListOf<Transaction>()
     }
 
+    val transactionSum = remember {
+        mutableDoubleStateOf(0.0)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getAllTransactions()
+    }
+
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     var loading = true
 
     state.value.let {
         when (it) {
             is TransactionsListUIState.DataLoaded -> {
+                transactions.clear()
                 transactions.addAll(it.data)
+                transactionSum.doubleValue = it.sum
             }
 
             TransactionsListUIState.Loading -> {
@@ -76,6 +99,7 @@ fun TransactionsListScreen(
 
         }
     }
+
     BaseScreen(
         topBar = null,
         floatingActionButton = {
@@ -101,7 +125,8 @@ fun TransactionsListScreen(
     ) {
         TransactionsListScreenContent(
             transactions = transactions,
-            paddingValues = it
+            paddingValues = it,
+            sum = transactionSum.doubleValue
         )
     }
 }
@@ -109,15 +134,18 @@ fun TransactionsListScreen(
 @Composable
 fun TransactionsListScreenContent(
     transactions: List<Transaction>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    sum: Double
 ) {
-    var selectedFilter by remember { mutableStateOf(TransactionCategory.SALARY) }
+    var selectedFilter by remember { mutableIntStateOf(TransactionCategory.SALARY.getStringResource()) }
     val filters = TransactionCategory.entries
     var dropdownExpanded by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .padding(paddingValues)
-        .padding(horizontal = BasicMargin())) {
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(horizontal = BasicMargin())
+    ) {
 
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -126,50 +154,63 @@ fun TransactionsListScreenContent(
                 .clickable {
                     dropdownExpanded = true
                 }
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(BasicMargin())
         ) {
             Text(
-                text = selectedFilter.value,
-                color = MaterialTheme.colorScheme.secondary,
+                text = stringResource(id = selectedFilter),
+                color = Color.White,
                 modifier = Modifier.weight(1f)
             )
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Dropdown",
-                tint = MaterialTheme.colorScheme.secondary
+                tint = Color.White
             )
         }
 
         DropdownMenu(
             expanded = dropdownExpanded,
             onDismissRequest = { dropdownExpanded = false },
-            modifier = Modifier.background(MaterialTheme.colorScheme.tertiary)
+            modifier = Modifier
+                .width(200.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.tertiary)
         ) {
             filters.forEach { filter ->
                 DropdownMenuItem(onClick = {
-                    selectedFilter = filter
+                    selectedFilter = filter.getStringResource()
                     dropdownExpanded = false
                 },  text = {
-                    Text(text = filter.value)
+                    Text(text = stringResource(id = filter.getStringResource()))
                 })
             }
         }
 
-        Text(
-            text = "Sum: -2,565 Kč",
-            modifier = Modifier.padding(BasicMargin()),
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
-        )
-
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = BasicMargin())
+        Row(modifier = Modifier
+            .padding(vertical = BasicMargin())
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TransactionList(
-                displayTitle = false,
-                transactions = transactions
+            Text(
+                text = "Sum:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.secondary
+            )
+
+            Text(
+                text = "$sum Kč",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
+
+        TransactionList(
+            displayTitle = false,
+            transactions = transactions
+        )
     }
 }

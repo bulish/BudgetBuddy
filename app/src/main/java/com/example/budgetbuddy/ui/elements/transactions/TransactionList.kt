@@ -1,7 +1,6 @@
 package com.example.budgetbuddy.ui.elements.transactions
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +31,7 @@ fun TransactionList(
     displayTitle: Boolean = true,
     transactions: List<Transaction>
 ) {
-    Column {
+    Column(modifier = Modifier.fillMaxWidth()) {
         if (displayTitle) {
             Text(
                 text = "Transactions",
@@ -74,7 +73,7 @@ fun TransactionList(
                 }
             }
         } else {
-            LazyColumn {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(BasicMargin())) {
                 items(transactions) { transaction ->
                     TransactionItem(transaction)
                 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -52,7 +53,7 @@ fun <T> Dropdown(
                 }
         ) {
             Text(
-                text = value?.let { toStringRepresentation(it) } ?: noValueMessage,
+                text = value?.let { toStringRepresentation?.let { it1 -> it1(it) } } ?: noValueMessage,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.weight(1f)
             )
@@ -67,7 +68,7 @@ fun <T> Dropdown(
             expanded = isDropdownExpanded,
             onDismissRequest = { isDropdownExpanded = false },
             modifier = Modifier
-                .padding(horizontal = BasicMargin()) // Adds padding inside the menu
+                .padding(horizontal = BasicMargin())
                 .align(Alignment.TopStart)
                 .width(200.dp)
         ) {
@@ -79,7 +80,7 @@ fun <T> Dropdown(
                     },
                     text = {
                         Text(
-                            text = toStringRepresentation(item)
+                            text = toStringRepresentation(item) ?: value.toString()
                         )
                     }
                 )

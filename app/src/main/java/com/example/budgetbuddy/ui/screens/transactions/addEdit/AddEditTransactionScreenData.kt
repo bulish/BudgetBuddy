@@ -20,4 +20,5 @@ class AddEditTransactionScreenData {
 
     var transactionReceiptError: Int? = null
     var transactionPriceError: Int? = null
+    var transactionNoteError: Int? = null
 }
