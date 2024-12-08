@@ -120,4 +120,9 @@
     <string name="confirm">Confirm</string>
     <string name="no_currency_selected">Select currency</string>
     <string name="no_place_selected">Select place</string>
+    <string name="delete_success">Delete was successfull</string>
+    <string name="detail_subtitle">Detail information</string>
+    <string name="detail_delete">Delete</string>
+    <string name="place_label">Place</string>
+    <string name="category_placeholder">Category</string>
 </resources>

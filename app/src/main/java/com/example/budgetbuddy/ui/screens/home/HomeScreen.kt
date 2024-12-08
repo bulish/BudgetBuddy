@@ -111,9 +111,9 @@ fun HomeScreenContent(
             .padding(horizontal = BasicMargin())) {
             TransactionList(
                 displayTitle = true,
-                transactions = transactions
+                transactions = transactions,
+                navigation = navigationRouter
             )
         }
-
     }
 }

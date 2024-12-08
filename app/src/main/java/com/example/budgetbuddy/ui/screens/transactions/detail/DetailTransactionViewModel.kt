@@ -1,0 +1,110 @@
+package com.example.budgetbuddy.ui.screens.transactions.detail
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.budgetbuddy.R
+import com.example.budgetbuddy.database.places.ILocalPlacesRepository
+import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.extensions.formatToDisplayString
+import com.example.budgetbuddy.model.NotificationData
+import com.example.budgetbuddy.model.db.Place
+import com.example.budgetbuddy.model.db.Transaction
+import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.datastore.IDataStoreRepository
+import com.example.budgetbuddy.ui.elements.shared.labeledelement.LabeledElementData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class DetailTransactionViewModel @Inject constructor(
+    private val repository: ILocalTransactionsRepository,
+    private val authService: AuthService,
+    private val dataStoreRepository: IDataStoreRepository,
+    private val placesRepository: ILocalPlacesRepository
+) : ViewModel(), DetailTransactionAction {
+
+    private val _detailUIState: MutableStateFlow<DetailTransactionUIState> =
+        MutableStateFlow(value = DetailTransactionUIState.Loading)
+
+    val detailUIState = _detailUIState.asStateFlow()
+
+    private val transactionData: MutableStateFlow<Transaction?> = MutableStateFlow(null)
+    private val place: MutableStateFlow<Place?> = MutableStateFlow(null)
+
+    init {
+        if (authService.getCurrentUser() == null) {
+            _detailUIState.update {
+                DetailTransactionUIState.UserNotAuthorized
+            }
+        }
+    }
+
+    override fun loadTransaction(id: Long) {
+        val userID = authService.getUserID()
+
+        if (userID != null) {
+            viewModelScope.launch {
+                val transaction = repository.getTransaction(id, userID).firstOrNull()
+                if (transaction != null) {
+                    val placeName = if (transaction.placeId != null) {
+                        placesRepository.getPlace(userId = userID, id = transaction.placeId!!)
+                            .firstOrNull()?.name ?: "-"
+                    } else {
+                        "-"
+                    }
+
+                    val modifierData = listOf(
+                        LabeledElementData(
+                            label = R.string.category_placeholder,
+                            data = transaction.category.name,
+                        ),
+                        LabeledElementData(
+                            label = R.string.price_label,
+                            data = "${transaction.price} ${transaction.currency}",
+                        ),
+                        LabeledElementData(
+                            label = R.string.date_label,
+                            data = transaction.date.formatToDisplayString(),
+                        ),
+                        LabeledElementData(
+                            label = R.string.note_label,
+                            data = transaction.note ?: "-",
+                        ),
+                        LabeledElementData(
+                            label = R.string.place_label,
+                            data = placeName,
+                        )
+                    )
+
+                    _detailUIState.update {
+                        DetailTransactionUIState.Success(modifierData)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun deleteTransaction(id: Long?) {
+       if (id != null && transactionData.value != null) {
+           viewModelScope.launch {
+               repository.delete(transactionData.value!!)
+               dataStoreRepository.saveNotificationData(
+                   NotificationData(
+                       show = true,
+                       message = R.string.delete_success,
+                       isSuccess = true
+                   )
+               )
+           }
+
+           _detailUIState.update {
+               DetailTransactionUIState.TransactionDeleted
+           }
+       }
+    }
+}

@@ -126,7 +126,8 @@ fun TransactionsListScreen(
         TransactionsListScreenContent(
             transactions = transactions,
             paddingValues = it,
-            sum = transactionSum.doubleValue
+            sum = transactionSum.doubleValue,
+            navigation = navigationRouter
         )
     }
 }
@@ -135,7 +136,8 @@ fun TransactionsListScreen(
 fun TransactionsListScreenContent(
     transactions: List<Transaction>,
     paddingValues: PaddingValues,
-    sum: Double
+    sum: Double,
+    navigation: INavigationRouter
 ) {
     var selectedFilter by remember { mutableIntStateOf(TransactionCategory.SALARY.getStringResource()) }
     val filters = TransactionCategory.entries
@@ -210,7 +212,8 @@ fun TransactionsListScreenContent(
 
         TransactionList(
             displayTitle = false,
-            transactions = transactions
+            transactions = transactions,
+            navigation = navigation
         )
     }
 }

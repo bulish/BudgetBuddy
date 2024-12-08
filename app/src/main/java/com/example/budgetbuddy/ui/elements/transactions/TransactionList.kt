@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.model.db.Transaction
+import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
@@ -29,7 +30,8 @@ import com.example.budgetbuddy.ui.theme.White
 @Composable
 fun TransactionList(
     displayTitle: Boolean = true,
-    transactions: List<Transaction>
+    transactions: List<Transaction>,
+    navigation: INavigationRouter
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         if (displayTitle) {
@@ -67,7 +69,7 @@ fun TransactionList(
 
                 Spacer(modifier = Modifier.height(BasicMargin()))
 
-                Button(onClick = { /* Maybe add a transaction action */ }, modifier = Modifier.align(
+                Button(onClick = { navigation.navigateToAddEditTransactionScreen(null) }, modifier = Modifier.align(
                     Alignment.CenterHorizontally)) {
                     Text(text = "Add Transaction", color = White)
                 }
@@ -75,7 +77,10 @@ fun TransactionList(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(BasicMargin())) {
                 items(transactions) { transaction ->
-                    TransactionItem(transaction)
+                    TransactionItem(
+                        transaction,
+                        navigation
+                    )
                 }
             }
         }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,16 +26,23 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.theme.BasicMargin
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(
+    transaction: Transaction,
+    navigation: INavigationRouter
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.tertiary)
-            .padding(BasicMargin()),
+            .padding(BasicMargin())
+            .clickable {
+                navigation.navigateToTransactionDetailScreen(transaction.id)
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
