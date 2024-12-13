@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.places.map
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,14 +53,21 @@ fun MapScreen(
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     var loading = true
 
+    LaunchedEffect(Unit) {
+        viewModel.loadPlaces()
+    }
+
     state.value.let {
         when(it){
             is MapScreenUIState.DataLoaded -> {
+                Log.d("delete place", "loaded")
+                mapData.clear()
                 mapData.addAll(it.data)
             }
 
             MapScreenUIState.Loading -> {
-
+                Log.d("delete place", "hello")
+                viewModel.loadPlaces()
             }
 
             MapScreenUIState.UserNotAuthorized -> {
@@ -125,6 +134,11 @@ fun MapScreenContent(
         clusterManager?.cluster()
     }
 
+    fun deleteFromCluster(place: Place) {
+        clusterManager?.removeItem(place)
+        clusterManager?.cluster()
+    }
+
     Box(
         Modifier
             .fillMaxSize()
@@ -135,7 +149,7 @@ fun MapScreenContent(
             uiSettings = mapUiSettings,
             cameraPositionState = cameraPositionState
         ) {
-            if (data.isNotEmpty()) {
+            //if (data.isNotEmpty()) {
                 MapEffect { map ->
                     if (googleMap == null) {
                         googleMap = map
@@ -143,6 +157,7 @@ fun MapScreenContent(
 
                     if (clusterManager == null) {
                         clusterManager = ClusterManager(context, googleMap)
+
                         clusterManager?.apply {
                             algorithm = GridBasedAlgorithm()
                             renderer = CustomMapRenderer(context, googleMap!!, this)
@@ -157,7 +172,12 @@ fun MapScreenContent(
                     googleMap?.setOnCameraIdleListener {
                         clusterManager?.cluster()
                     }
-                }
+
+                    if (data.isNotEmpty() && clusterManager != null) {
+                        clusterManager?.addItems(data)
+                        clusterManager?.cluster()  // Re-cluster the items
+                    }
+               // }
             }
         }
 
@@ -168,7 +188,9 @@ fun MapScreenContent(
                     navigation.navigateToAddEditPlaceScreen(place.id)
                 },
                 onDelete = {
-                    actions.deletePlace(place.id)
+                    actions.deletePlace(place)
+                    deleteFromCluster(place)
+                    selectedPlace = null
                 },
                 onClose = {
                     selectedPlace = null

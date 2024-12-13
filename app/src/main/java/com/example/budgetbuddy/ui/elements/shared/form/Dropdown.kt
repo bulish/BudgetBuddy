@@ -24,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.budgetbuddy.R
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.Grey
 
@@ -72,18 +74,27 @@ fun <T> Dropdown(
                 .align(Alignment.TopStart)
                 .width(200.dp)
         ) {
-            data.forEach { item ->
+            if (data.isEmpty()) {
                 DropdownMenuItem(
-                    onClick = {
-                        onChange(item)
-                        isDropdownExpanded = false
-                    },
+                    onClick = {},
                     text = {
-                        Text(
-                            text = toStringRepresentation(item) ?: value.toString()
-                        )
+                        Text(text = stringResource(id = R.string.no_places_available))
                     }
                 )
+            } else {
+                data.forEach { item ->
+                    DropdownMenuItem(
+                        onClick = {
+                            onChange(item)
+                            isDropdownExpanded = false
+                        },
+                        text = {
+                            Text(
+                                text = toStringRepresentation(item)
+                            )
+                        }
+                    )
+                }
             }
         }
     }

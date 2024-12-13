@@ -9,5 +9,6 @@ sealed class HomeScreenUIState {
 
     class Success(
         val transactions: List<Transaction>,
+        val totalSum: Double
     ) : HomeScreenUIState()
 }

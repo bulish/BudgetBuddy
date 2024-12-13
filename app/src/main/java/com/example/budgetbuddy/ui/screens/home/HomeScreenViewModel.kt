@@ -3,6 +3,7 @@ package com.example.budgetbuddy.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,8 +50,16 @@ class HomeScreenViewModel @Inject constructor(
         if (userID != null) {
             viewModelScope.launch {
                 repository.getAllByUser(userId = userID).collect {transactions ->
+                    val totalSum = transactions.sumOf { transaction ->
+                        when (transaction.type) {
+                            TransactionType.INCOME.value -> transaction.price
+                            TransactionType.EXPENSE.value -> -transaction.price
+                            else -> 0.0
+                        }
+                    }
+
                     _homeScreenUIState.update {
-                        HomeScreenUIState.Success(transactions = transactions)
+                        HomeScreenUIState.Success(transactions, totalSum)
                     }
                 }
 

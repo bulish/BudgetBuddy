@@ -25,10 +25,10 @@ import com.example.budgetbuddy.ui.theme.BasicMargin
 @Composable
 fun CustomRadioButton(
     label: String,
-    value: TransactionType,
-    onChange: (TransactionType) -> Unit,
+    value: String,
+    onChange: (String) -> Unit,
 ) {
-    val radioOptions = listOf(TransactionType.EXPENSE, TransactionType.INCOME)
+    val radioOptions = listOf(TransactionType.EXPENSE.value, TransactionType.INCOME.value)
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(value ?: TransactionType.EXPENSE) }
 
     Column(
@@ -52,7 +52,10 @@ fun CustomRadioButton(
                     .fillMaxWidth()
                     .selectable(
                         selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) }
+                        onClick = {
+                            onOptionSelected(text)
+                            onChange(text)
+                        }
                     ),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically

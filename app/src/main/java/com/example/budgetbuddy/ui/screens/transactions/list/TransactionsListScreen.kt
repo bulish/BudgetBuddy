@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.navigation.INavigationRouter
@@ -203,7 +204,7 @@ fun TransactionsListScreenContent(
             )
 
             Text(
-                text = "$sum Kč",
+                text = "${sum.toFormattedString()} Kč",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.secondary

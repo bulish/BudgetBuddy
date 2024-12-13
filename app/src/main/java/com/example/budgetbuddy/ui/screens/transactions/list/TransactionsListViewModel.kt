@@ -42,8 +42,8 @@ class TransactionsListViewModel @Inject constructor(
                 repository.getAllByUser(userID).collect {data ->
                     val totalSum = data.sumOf { transaction ->
                         when (transaction.type) {
-                            TransactionType.INCOME -> transaction.price
-                            TransactionType.EXPENSE -> -transaction.price
+                            TransactionType.INCOME.value -> transaction.price
+                            TransactionType.EXPENSE.value -> -transaction.price
                             else -> 0.0
                         }
                     }

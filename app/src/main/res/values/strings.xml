@@ -51,17 +51,17 @@
 
     <string name="sign_out">Sign Out</string>
 
-    <string name="edit_add_icon">Add icon</string>
-    <string name="edit_change_icon">Change icon</string>
-    <string name="edit_delete_icon">Delete icon</string>
-    <string name="placeholder_password">Password\n</string>
+    <string name="edit_add_icon">Add photo</string>
+    <string name="edit_change_icon">Change photo</string>
+    <string name="edit_delete_icon">Delete photo</string>
+    <string name="placeholder_password">Password</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="passwords_dont_match">Passwords do not match</string>
     <string name="placeholder_username">Username</string>
     <string name="list_no_data_title">No transactions available</string>
     <string name="list_no_data_subtitle">Start by adding your first transaction to see them here!</string>
-    <string name="logout_success">Logout was successfull</string>
+    <string name="logout_success">Logout was successful</string>
     <string name="currency">Currency</string>
     <string name="add_edit_place_success">Place was saved successfully</string>
     <string name="add_place_title">Add place</string>
@@ -120,9 +120,10 @@
     <string name="confirm">Confirm</string>
     <string name="no_currency_selected">Select currency</string>
     <string name="no_place_selected">Select place</string>
-    <string name="delete_success">Delete was successfull</string>
+    <string name="delete_success">Delete was successful</string>
     <string name="detail_subtitle">Detail information</string>
     <string name="detail_delete">Delete</string>
     <string name="place_label">Place</string>
     <string name="category_placeholder">Category</string>
+    <string name="no_places_available">No places available</string>
 </resources>

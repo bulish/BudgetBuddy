@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.transactions.addEdit
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
@@ -169,7 +170,7 @@ class AddEditTransactionViewModel @Inject constructor(
         }
     }
 
-    override fun onTransactionTypeChange(type: TransactionType) {
+    override fun onTransactionTypeChange(type: String) {
         data.transaction.type = type
         _addEditTransactionUIState.update {
             AddEditTransactionUIState.TransactionChanged(data)

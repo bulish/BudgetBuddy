@@ -13,7 +13,7 @@ interface AddEditTransactionActions {
     fun onTransactionNoteChange(note: String)
     fun onTransactionDateChange(date: Long?)
     fun onTransactionPlaceChange(place: Place)
-    fun onTransactionTypeChange(type: TransactionType)
+    fun onTransactionTypeChange(type: String)
 
     fun saveTransaction()
     fun loadTransaction(id: Long?)

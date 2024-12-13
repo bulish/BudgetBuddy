@@ -29,16 +29,18 @@ import kotlinx.coroutines.tasks.await
 fun AddressInputField(
     onAddressSelected: (String, Double, Double) -> Unit,
     context: Context,
-    addressError: Int?
+    addressError: Int?,
+    address: String,
+    onAddressChange: (String) -> Unit
 ) {
-    var address by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf<List<String>>(emptyList()) }
     var selectedPlaceId by remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
     var isItemSelected by remember { mutableStateOf(false) }
+    var isUserEditing by remember { mutableStateOf(false) }
 
     LaunchedEffect(address) {
-        if (address.isNotEmpty() && !isItemSelected) {
+        if (address.isNotEmpty() && !isItemSelected  && isUserEditing) {
             coroutineScope.launch {
                 suggestions = getAutocompleteSuggestions(address, context)
             }
@@ -54,7 +56,8 @@ fun AddressInputField(
                 value = address,
                 error = addressError,
                 onChange = { newAddress ->
-                    address = newAddress
+                    isUserEditing = true
+                    onAddressChange(newAddress)
                 }
             )
         }
@@ -74,7 +77,7 @@ fun AddressInputField(
                                     coroutineScope.launch {
                                         val placeId = getPlaceIdFromSuggestion(suggestion, context)
                                         selectedPlaceId = placeId
-                                        address = suggestion
+                                        onAddressChange(address)
 
                                         selectedPlaceId?.let {
                                             coroutineScope.launch {

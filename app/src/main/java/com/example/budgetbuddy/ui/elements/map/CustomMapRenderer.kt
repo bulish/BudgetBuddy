@@ -32,10 +32,12 @@ class CustomMapRenderer(
         super.onBeforeClusterItemRendered(item, markerOptions)
 
         val iconResId = PlaceCategory.fromString(item.category.name).icon
+        val backgroundColor = PlaceCategory.fromString(item.category.name).itemColor.toArgb()
+
         val bitmap = getBitmapFromVectorDrawable(
             context,
             iconResId,
-            PlaceCategory.fromString(item.category.name).itemColor.toArgb() ?: Color.WHITE
+            backgroundColor
         )
 
         if (bitmap != null) {
@@ -51,32 +53,39 @@ class CustomMapRenderer(
         context: Context,
         vectorResId: Int,
         backgroundColor: Int = Color.WHITE
-    ): Bitmap {
-        Log.d("vectorResId", "${vectorResId}")
-        val drawable = VectorDrawableCompat.create(context.resources, vectorResId, null)
-        val padding = 8F
-        val diameter = maxOf(drawable!!.intrinsicWidth, drawable.intrinsicHeight) + (padding * 2)
+    ): Bitmap? {
+        try {
+            val drawable = VectorDrawableCompat.create(context.resources, vectorResId, null)
 
-        val bitmap =
-            Bitmap.createBitmap(diameter.toInt(), diameter.toInt(), Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
+            if (drawable == null) {
+                return null
+            }
 
-        val paint = Paint()
-        paint.color = backgroundColor
-        paint.isAntiAlias = true
+            val padding = 10F
+            val diameter = maxOf(drawable.intrinsicWidth, drawable.intrinsicHeight) + (padding * 2)
 
-        val center = diameter / 2
-        canvas.drawCircle(center, center, diameter / 2, paint)
+            val bitmap = Bitmap.createBitmap(diameter.toInt(), diameter.toInt(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
 
-        val drawableSize = maxOf(drawable.intrinsicWidth, drawable.intrinsicHeight)
-        val left = (diameter - drawableSize) / 2
-        val top = (diameter - drawableSize) / 2
-        val right = left + drawableSize
-        val bottom = top + drawableSize
+            val paint = Paint()
+            paint.color = backgroundColor
+            paint.isAntiAlias = true
 
-        drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
-        drawable.draw(canvas)
+            val center = diameter / 2
+            canvas.drawCircle(center, center, diameter / 2, paint)
 
-        return bitmap
+            val drawableSize = maxOf(drawable.intrinsicWidth, drawable.intrinsicHeight)
+            val left = (diameter - drawableSize) / 2
+            val top = (diameter - drawableSize) / 2
+            val right = left + drawableSize
+            val bottom = top + drawableSize
+
+            drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+            drawable.draw(canvas)
+
+            return bitmap
+        } catch (e: Exception) {
+            return null
+        }
     }
 }

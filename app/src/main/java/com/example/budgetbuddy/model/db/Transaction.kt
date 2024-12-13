@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter
     )]
 )
 data class Transaction(
-    var type: TransactionType,
+    var type: String,
     var receipt: String? = null,
     var category: TransactionCategory,
     var price: Double,

@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.places.addEditPlace
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
@@ -153,6 +154,7 @@ class AddEditPlaceViewModel @Inject constructor(
                 viewModelScope.launch {
                     repository.getPlace(id, userId).collect { place ->
                         if (place != null) {
+                            Log.d("edited place", "$place")
                             data.place = place
                             _addEditPlaceUIState.update {
                                 AddEditPlaceUIState.PlaceChanged(data)

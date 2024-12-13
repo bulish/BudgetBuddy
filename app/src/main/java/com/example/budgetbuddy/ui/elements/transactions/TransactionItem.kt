@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.example.budgetbuddy.extensions.toFormattedString
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.theme.BasicMargin
 
@@ -39,10 +41,10 @@ fun TransactionItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(MaterialTheme.colorScheme.tertiary)
-            .padding(BasicMargin())
             .clickable {
                 navigation.navigateToTransactionDetailScreen(transaction.id)
-            },
+            }
+            .padding(BasicMargin()),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -72,8 +74,8 @@ fun TransactionItem(
             )
 
             Text(
-                text = "${transaction.price} Kč",
-                color = if (transaction.price < 0) Color.Red else MaterialTheme.colorScheme.primary,
+                text = "${if (transaction.type == TransactionType.EXPENSE.value) "- " else ""}${transaction.price.toFormattedString()} Kč",
+                color = if (transaction.type == TransactionType.EXPENSE.value) Color.Red else MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )

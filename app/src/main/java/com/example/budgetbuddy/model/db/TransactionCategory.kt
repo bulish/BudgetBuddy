@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.model.db
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.example.budgetbuddy.R
 import kotlin.random.Random
 

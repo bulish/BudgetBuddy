@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -38,15 +39,25 @@ fun HomeScreen(
     val currency = viewModel.activeCurrency.collectAsState()
     val transactions: MutableList<Transaction> = mutableListOf()
 
+    val transactionSum = remember {
+        mutableDoubleStateOf(0.0)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadTransactions()
+    }
+
     state.value.let {
         when (it) {
             is HomeScreenUIState.Loading -> {
-                //loading = true
+                viewModel.loadTransactions()
             }
 
             is HomeScreenUIState.Success -> {
                 loading = false
-                // TODO
+                transactions.clear()
+                transactions.addAll(it.transactions)
+                transactionSum.doubleValue = it.totalSum
             }
 
             is HomeScreenUIState.UserNotAuthorized -> {
@@ -78,7 +89,7 @@ fun HomeScreen(
             navigationRouter = navigationRouter,
             transactions = transactions,
             currency = currency.value,
-
+            sum = transactionSum.doubleValue
         )
     }
 }
@@ -89,9 +100,9 @@ fun HomeScreenContent(
     actions: HomeScreenActions,
     navigationRouter: INavigationRouter,
     transactions: List<Transaction>,
-    currency: String
+    currency: String,
+    sum: Double
 ) {
-
     val updatedCurrency = remember { mutableStateOf(currency) }
 
     Column {
@@ -101,7 +112,8 @@ fun HomeScreenContent(
             onCurrencyChange = { newCurrency ->
                 updatedCurrency.value = newCurrency
                 actions.changeCurrency(newCurrency)
-            }
+            },
+            sum = sum
         )
 
         Spacer(modifier = Modifier.height(BasicMargin()))

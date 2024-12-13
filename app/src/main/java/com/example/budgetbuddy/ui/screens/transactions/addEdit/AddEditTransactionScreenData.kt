@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 class AddEditTransactionScreenData {
     var transaction: Transaction = Transaction(
-        TransactionType.INCOME,
+        TransactionType.INCOME.value,
         "",
         TransactionCategory.SALARY,
         0.0,

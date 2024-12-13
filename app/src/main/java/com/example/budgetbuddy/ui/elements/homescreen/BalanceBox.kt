@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.Green
@@ -22,7 +23,8 @@ import com.example.budgetbuddy.ui.theme.White
 @Composable
 fun BalanceBox(
     currency: String,
-    onCurrencyChange: (String) -> Unit
+    onCurrencyChange: (String) -> Unit,
+    sum: Double
 ) {
     Column(
         modifier = Modifier
@@ -42,7 +44,7 @@ fun BalanceBox(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = "5 562 Kč",
+            text = "${sum.toFormattedString()} Kč",
             color = MaterialTheme.colorScheme.tertiary,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold

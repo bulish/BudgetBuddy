@@ -1,10 +1,13 @@
 package com.example.budgetbuddy.ui.screens.places.map
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
+import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
+import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditPlaceUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +34,9 @@ class MapViewModel @Inject constructor(
                 MapScreenUIState.UserNotAuthorized
             }
         }
+    }
 
+    override fun loadPlaces() {
         val userID = authService.getUserID()
         if (userID != null) {
             viewModelScope.launch {
@@ -44,8 +49,13 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    override fun deletePlace(id: Long?) {
-        // TODO
+    override fun deletePlace(place: Place) {
+        viewModelScope.launch {
+            repository.delete(place)
+            _uiState.update {
+                MapScreenUIState.Loading
+            }
+        }
     }
 
 }

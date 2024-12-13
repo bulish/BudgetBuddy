@@ -1,14 +1,18 @@
 package com.example.budgetbuddy.ui.screens.transactions.detail
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
 import com.example.budgetbuddy.extensions.formatToDisplayString
+import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.Transaction
+import com.example.budgetbuddy.model.db.TransactionCategory
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.ui.elements.shared.labeledelement.LabeledElementData
@@ -57,15 +61,23 @@ class DetailTransactionViewModel @Inject constructor(
                     } else {
                         "-"
                     }
+                    val transactionCategory = MutableStateFlow<TransactionCategory?>(null)
+
+                    val category = TransactionCategory.valueOf(transaction.category.value.uppercase())
+                    transactionCategory.value = category
 
                     val modifierData = listOf(
                         LabeledElementData(
                             label = R.string.category_placeholder,
-                            data = transaction.category.name,
+                            data = category.name.lowercase(),
                         ),
                         LabeledElementData(
                             label = R.string.price_label,
-                            data = "${transaction.price} ${transaction.currency}",
+                            data = "${if (transaction.type == TransactionType.EXPENSE.value) "- " else ""}${transaction.price.toFormattedString()} ${transaction.currency}",
+                        ),
+                        LabeledElementData(
+                            label = R.string.transaction_type_label,
+                            data = TransactionType.valueOf(transaction.type.uppercase()).name.lowercase() ?: "-",
                         ),
                         LabeledElementData(
                             label = R.string.date_label,

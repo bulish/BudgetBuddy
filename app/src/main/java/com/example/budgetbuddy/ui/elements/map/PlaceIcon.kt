@@ -53,6 +53,8 @@ fun PlaceIcon(
                     onClick = { onClickHandler() },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
+                        .padding(top = BasicMargin())
+                        .padding(end = BasicMargin())
                         .background(Color.White, shape = CircleShape)
                 ) {
                     Icon(

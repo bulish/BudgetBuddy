@@ -91,6 +91,7 @@ fun AddEditPlaceScreen(
             if (id != null){
                 IconButton(onClick = {
                     viewModel.deletePlace()
+                    navigationRouter.returnBack()
                 }) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                 }
@@ -199,7 +200,11 @@ fun AddEditPlaceScreenContent(
                     actions.onLocationChanged(lat, long)
                 },
                 context = context,
-                addressError = data.placeAddressError
+                addressError = data.placeAddressError,
+                address = data.place.address,
+                onAddressChange = { address ->
+                    actions.onPlaceAddressChanged(address)
+                }
             )
 
             SaveCancelButtons(
