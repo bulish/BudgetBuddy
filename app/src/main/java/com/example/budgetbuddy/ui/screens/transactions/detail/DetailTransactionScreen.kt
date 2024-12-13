@@ -116,7 +116,6 @@ fun DetailScreenContent(
 ) {
     var dialogIsVisible by remember { mutableStateOf(false) }
 
-    Log.d("detail data", "$data")
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)

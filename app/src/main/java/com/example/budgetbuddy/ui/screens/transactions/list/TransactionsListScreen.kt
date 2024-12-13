@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -132,6 +133,14 @@ fun TransactionsListScreenContent(
     val filters = TransactionCategory.entries
     var dropdownExpanded by remember { mutableStateOf(false) }
 
+    val filteredTransactions by remember(selectedFilter, transactions) {
+        derivedStateOf {
+            transactions.filter {
+                it.category.getStringResource() == selectedFilter
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -204,7 +213,7 @@ fun TransactionsListScreenContent(
 
         TransactionList(
             displayTitle = false,
-            transactions = transactions,
+            transactions = filteredTransactions,
             navigation = navigation
         )
     }
