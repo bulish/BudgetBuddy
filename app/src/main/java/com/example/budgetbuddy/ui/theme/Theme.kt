@@ -15,16 +15,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 private val DarkColorScheme = darkColorScheme(
     primary = Green,
+    onPrimary = Green,
     secondary = White,
     tertiary = Black,
-    background = BlackBg,
+    background = BlackBg
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Green,
+    onPrimary = Green,
     secondary = Black,
     tertiary = White,
-    background = LightBg,
+    background = LightBg
 )
 
 @Composable
@@ -34,7 +36,13 @@ fun BudgetBuddyTheme(
 
     val viewModel = hiltViewModel<ThemeViewModel>()
     val darkTheme by viewModel.isDarkMode.collectAsState()
-    val colorScheme = if(darkTheme) DarkColorScheme else LightColorScheme
+    val mainColor by viewModel.primaryColor.collectAsState()
+
+    val colorScheme = if (darkTheme) {
+        DarkColorScheme.copy(primary = mainColor.color)
+    } else {
+        LightColorScheme.copy(primary = mainColor.color)
+    }
 
    val view = LocalView.current
     if (!view.isInEditMode) {

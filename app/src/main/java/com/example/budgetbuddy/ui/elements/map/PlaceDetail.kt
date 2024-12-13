@@ -25,6 +25,7 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
+import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 
@@ -54,7 +55,7 @@ fun PlaceDetail(
                     Row(modifier = Modifier.weight(1.0f),
                         verticalAlignment = Alignment.CenterVertically) {
                         PlaceDetailIcon(place = place.category)
-                        Text(text = place.category.name)
+                        Text(text = place.category.name, color = MaterialTheme.colorScheme.secondary)
                     }
                     IconButton(onClick = { onClose() }) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
@@ -66,15 +67,19 @@ fun PlaceDetail(
                     iconName = place.imageName
                 )
 
-                Column(modifier = Modifier.padding(BasicMargin()).fillMaxWidth()) {
+                Column(modifier = Modifier
+                    .padding(BasicMargin())
+                    .fillMaxWidth()) {
                     Text(
                         text = place.name,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.secondary
                     )
 
                     Text(
                         text = place.address,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
                     )
 
                     Row(
@@ -84,7 +89,7 @@ fun PlaceDetail(
                         verticalAlignment = Alignment.Bottom
                     ) {
                         CustomButton(
-                            type = CustomButtonType.Outlined,
+                            type = getCustomButtonType(buttonType = CustomButtonType.Outlined),
                             text = stringResource(id = R.string.edit),
                             onClickAction = {
                                 onEdit()
@@ -94,7 +99,7 @@ fun PlaceDetail(
                         Spacer(modifier = Modifier.width(HalfMargin()))
 
                         CustomButton(
-                            type = CustomButtonType.Basic,
+                            type = getCustomButtonType(buttonType = CustomButtonType.Basic),
                             text = stringResource(id = R.string.delete),
                             onClickAction = { onDelete() }
                         )

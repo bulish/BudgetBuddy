@@ -59,12 +59,14 @@ fun TransactionList(
                     text = stringResource(id = R.string.list_no_data_title),
                     style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.secondary),
                     modifier = Modifier.padding(bottom = 8.dp),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
                     text = stringResource(id = R.string.list_no_data_subtitle),
                     style = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.secondary),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.secondary
                 )
 
                 Spacer(modifier = Modifier.height(BasicMargin()))

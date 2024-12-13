@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.transactions.detail
 
+import android.util.Log
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,6 +56,8 @@ class DetailTransactionViewModel @Inject constructor(
             viewModelScope.launch {
                 val transaction = repository.getTransaction(id, userID).firstOrNull()
                 if (transaction != null) {
+                    transactionData.value = transaction
+
                     val placeName = if (transaction.placeId != null) {
                         placesRepository.getPlace(userId = userID, id = transaction.placeId!!)
                             .firstOrNull()?.name ?: "-"
@@ -102,6 +105,8 @@ class DetailTransactionViewModel @Inject constructor(
     }
 
     override fun deleteTransaction(id: Long?) {
+        Log.d("transaction id", "$id")
+        Log.d("transaction value", "${transactionData.value}")
        if (id != null && transactionData.value != null) {
            viewModelScope.launch {
                repository.delete(transactionData.value!!)

@@ -43,7 +43,6 @@ fun <T> Dropdown(
     Box(modifier = Modifier
         .fillMaxWidth()
         .border(1.dp, Grey, RoundedCornerShape(4.dp))
-        .padding(BasicMargin())
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -53,6 +52,7 @@ fun <T> Dropdown(
                 .clickable {
                     isDropdownExpanded = true
                 }
+                .padding(BasicMargin())
         ) {
             Text(
                 text = value?.let { toStringRepresentation?.let { it1 -> it1(it) } } ?: noValueMessage,

@@ -32,6 +32,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import com.example.budgetbuddy.model.PrimaryColor
+import com.example.budgetbuddy.ui.elements.settings.ColorDropdown
 import com.example.budgetbuddy.ui.elements.settings.settingsItem.SettingsItem
 import com.example.budgetbuddy.ui.elements.settings.userIcon.UserIcon
 import com.example.budgetbuddy.ui.elements.settings.userIcon.UserIconType
@@ -39,6 +41,7 @@ import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.elements.shared.SectionTitle
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
+import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 
@@ -51,6 +54,7 @@ fun SettingsScreen(
     val state = viewModel.settingsUIState.collectAsState()
     val currency = viewModel.activeCurrency.collectAsState()
     val isDarkMode = viewModel.isDarkMode.collectAsState()
+    val primaryColor = viewModel.primaryColor.collectAsState()
 
     var version = ""
     var userData: MutableState<FirebaseUser?> = remember {
@@ -96,7 +100,8 @@ fun SettingsScreen(
             actions = viewModel,
             version = version,
             currency = currency.value,
-            isDarkMode = isDarkMode.value
+            isDarkMode = isDarkMode.value,
+            primaryColor = primaryColor.value
         )
     }
 }
@@ -108,7 +113,8 @@ fun SettingsScreenContent(
     actions: SettingsActions,
     version: String,
     currency: String,
-    isDarkMode: Boolean
+    isDarkMode: Boolean,
+    primaryColor: PrimaryColor
 ) {
     LazyColumn(
         modifier = Modifier
@@ -165,6 +171,28 @@ fun SettingsScreenContent(
                     )
                 }
 
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = HalfMargin())
+                        .height(DoubleMargin()),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.main_color),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.secondary
+                        ),
+                        modifier = Modifier.weight(1.0f)
+                    )
+
+                    ColorDropdown(
+                        color = primaryColor,
+                        onChange = { selectedColor ->
+                            actions.changePrimaryColor(selectedColor)
+                        },
+                    )
+                }
+
                 SettingsItem(
                     title = stringResource(id = R.string.settings_language),
                     content = stringResource(id = R.string.settings_activeLanguage)
@@ -191,7 +219,7 @@ fun SettingsScreenContent(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 CustomButton(
-                    type = CustomButtonType.OutlinedMaxSize,
+                    type = getCustomButtonType(buttonType = CustomButtonType.OutlinedMaxSize),
                     text = stringResource(id = R.string.sign_out),
                     onClickAction = { actions.signOut() }
                 )

@@ -126,4 +126,9 @@
     <string name="place_label">Place</string>
     <string name="category_placeholder">Category</string>
     <string name="no_places_available">No places available</string>
+    <string name="green_color">Green</string>
+    <string name="red_color">Red</string>
+    <string name="blue_color">Blue</string>
+    <string name="no_color_selected">No color selected</string>
+    <string name="main_color">Main color</string>
 </resources>

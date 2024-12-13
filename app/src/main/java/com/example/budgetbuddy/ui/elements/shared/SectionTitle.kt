@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.example.budgetbuddy.ui.theme.BasicMargin
-import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.QuarterMargin
 
@@ -33,7 +32,7 @@ fun SectionTitle(
                 text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f),
-                color = Green
+                color = MaterialTheme.colorScheme.primary
             )
 
             if (amount != null) {

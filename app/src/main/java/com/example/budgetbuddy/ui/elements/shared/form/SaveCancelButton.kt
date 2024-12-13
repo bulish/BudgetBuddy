@@ -11,6 +11,7 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.ui.elements.shared.CustomDivider
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
+import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
 import com.example.budgetbuddy.ui.theme.HalfMargin
 
 @Composable
@@ -22,7 +23,7 @@ fun SaveCancelButtons(
 
     Row(modifier = Modifier.padding(top = HalfMargin())) {
         CustomButton(
-            type = CustomButtonType.Basic,
+            type = getCustomButtonType(buttonType = CustomButtonType.Basic),
             text = stringResource(id = R.string.save),
             onClickAction = { onSave() }
         )
@@ -30,7 +31,7 @@ fun SaveCancelButtons(
         Spacer(modifier = Modifier.width(HalfMargin()))
 
         CustomButton(
-            type = CustomButtonType.Outlined,
+            type = getCustomButtonType(buttonType = CustomButtonType.Outlined),
             text = stringResource(id = R.string.cancel),
             onClickAction = { onCancel() }
         )

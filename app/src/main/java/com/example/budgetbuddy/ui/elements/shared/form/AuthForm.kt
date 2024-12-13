@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
+import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.BorderWidth
 import com.example.budgetbuddy.ui.theme.DoubleMargin
@@ -74,7 +75,7 @@ fun AuthForm(
                     inputs()
 
                     CustomButton(
-                        type = CustomButtonType.Basic,
+                        type = getCustomButtonType(buttonType = CustomButtonType.Basic),
                         text = buttonText,
                         onClickAction = {
                             onSubmit()

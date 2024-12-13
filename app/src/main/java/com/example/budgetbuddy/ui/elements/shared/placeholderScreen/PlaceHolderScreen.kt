@@ -48,7 +48,8 @@ fun PlaceHolderScreen(
                 Text(text = content.title,
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
-                    color = Color.Black)
+                    color = MaterialTheme.colorScheme.secondary
+                )
             }
 
             if (content.text != null){
@@ -56,7 +57,8 @@ fun PlaceHolderScreen(
                 Text(text = content.text,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
-                    color = Color.Gray)
+                    color = Color.Gray
+                )
             }
             if (content.buttonText != null && content.onButtonClick != null){
                 Spacer(modifier = Modifier.height(BasicMargin()))

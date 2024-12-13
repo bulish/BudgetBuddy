@@ -12,7 +12,7 @@ import com.example.budgetbuddy.ui.theme.BorderWidth
 
 @Composable
 fun CustomButton(
-    type: CustomButtonType,
+    type: CustomButtonStyle,
     text: String,
     onClickAction: () -> Unit
 ) {

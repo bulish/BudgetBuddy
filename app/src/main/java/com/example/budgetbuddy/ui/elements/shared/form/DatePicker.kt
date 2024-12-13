@@ -2,20 +2,28 @@ package com.example.budgetbuddy.ui.elements.shared.form
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,8 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.example.budgetbuddy.R
@@ -34,6 +46,14 @@ import com.example.budgetbuddy.extensions.toEpochMillis
 import com.example.budgetbuddy.extensions.toIntTimestamp
 import com.example.budgetbuddy.extensions.toLocalDateTime
 import com.example.budgetbuddy.ui.theme.BasicMargin
+import com.example.budgetbuddy.ui.theme.BluePrimary
+import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
+import com.example.budgetbuddy.ui.theme.Green
+import com.example.budgetbuddy.ui.theme.Grey
+import com.example.budgetbuddy.ui.theme.LightGreen
+import com.example.budgetbuddy.ui.theme.Pink40
+import com.example.budgetbuddy.ui.theme.Purple40
+import com.example.budgetbuddy.ui.theme.White
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +78,12 @@ fun CustomDatePicker(
         OutlinedTextField(
             value = selectedDate,
             onValueChange = { },
-            label = { Text(stringResource(id = R.string.date_label)) },
+            label = {
+                Text(
+                    stringResource(id = R.string.date_label),
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                    },
             readOnly = true,
             trailingIcon = {
                 IconButton(onClick = { showDatePicker = !showDatePicker }) {
@@ -68,9 +93,10 @@ fun CustomDatePicker(
                     )
                 }
             },
+            textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(64.dp)
+                .height(64.dp),
         )
 
         if (showDatePicker) {
@@ -83,27 +109,56 @@ fun CustomDatePicker(
                         .fillMaxWidth()
                         .offset(y = 64.dp)
                         .shadow(elevation = 4.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(BasicMargin())
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = false
-                    )
 
-                    TextButton(
-                        onClick = {
-                            val newDateMillis = datePickerState.selectedDateMillis
-                            if (newDateMillis != null) {
-                                onChange(newDateMillis)
-                            }
-                            showDatePicker = false
-                        }
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                            .padding()
+
                     ) {
-                        Text(stringResource(id = R.string.confirm))
+
+                        MaterialTheme(
+                            colorScheme = MaterialTheme.colorScheme
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.secondary,
+                                contentColor = MaterialTheme.colorScheme.tertiary,
+
+                            ) {
+                                DatePicker(
+                                    state = datePickerState,
+                                    showModeToggle = false,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+
+                        TextButton(
+                            onClick = {
+                                val newDateMillis = datePickerState.selectedDateMillis
+                                if (newDateMillis != null) {
+                                    onChange(newDateMillis)
+                                }
+                                showDatePicker = false
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .clip(RoundedCornerShape(8.dp))
+                                .padding(horizontal = 2.dp)
+                                .padding(vertical = 2.dp)
+
+                        ) {
+                            Text(
+                                stringResource(id = R.string.confirm),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+

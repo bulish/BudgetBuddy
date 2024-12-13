@@ -41,7 +41,7 @@ fun CustomAlertDialog(
                 text = dialogText,
                 style = MaterialTheme.typography.bodySmall.copy (
                     fontWeight = FontWeight.Normal,
-                    color = Green
+                    color = MaterialTheme.colorScheme.primary
                 ),
                 textAlign = TextAlign.Center
             )

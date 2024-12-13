@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.INavigationRouter
-import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.White
 
@@ -57,7 +56,7 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
                     navigation.navigateTabs(item.route)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = if (selectedItem == index) Green else White,
+                    indicatorColor = if (selectedItem == index) MaterialTheme.colorScheme.primary else White,
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = MaterialTheme.colorScheme.background,
                     selectedTextColor = MaterialTheme.colorScheme.primary,

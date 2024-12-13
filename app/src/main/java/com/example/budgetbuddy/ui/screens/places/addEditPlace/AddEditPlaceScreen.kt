@@ -2,8 +2,10 @@ package com.example.budgetbuddy.ui.screens.places.addEditPlace
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -152,65 +154,75 @@ fun AddEditPlaceScreenContent(
     {
 
         item {
-            ImageInput(
-                onChangeHandler = {
-                    actions.onPlaceImageChanged(it)
-                },
-                context = context,
-                selectedImageUri = selectedImageUri,
-                changeSelectedImageUri = {
-                    selectedImageUri = it
-                }
-            )
+            Column {
+                ImageInput(
+                    onChangeHandler = {
+                        actions.onPlaceImageChanged(it)
+                    },
+                    context = context,
+                    selectedImageUri = selectedImageUri,
+                    changeSelectedImageUri = {
+                        selectedImageUri = it
+                    }
+                )
 
-            PlaceIcon(
-                filesDir = context.filesDir,
-                iconName = data.place.imageName,
-                onClickHandler = {
-                    selectedImageUri = null
-                    data.place.imageName = null
-                }
-            )
+                Spacer(modifier = Modifier.height(BasicMargin()))
 
-            TextInput(
-                label = stringResource(id = R.string.name_label),
-                value = data.place.name,
-                error = data.placeNameError,
-                onChange = { actions.onPlaceNameChanged(it) }
-            )
+                PlaceIcon(
+                    filesDir = context.filesDir,
+                    iconName = data.place.imageName,
+                    onClickHandler = {
+                        selectedImageUri = null
+                        data.place.imageName = null
+                    }
+                )
 
-            Dropdown(
-                value = selectedCategory,
-                noValueMessage = stringResource(id = R.string.no_category_selected),
-                data = PlaceCategory.entries,
-                toStringRepresentation = {category ->
-                    stringResource(id = category.getStringResource())
-                },
-                onChange = {category ->
-                    selectedCategory = category
-                    actions.onPlaceCategoryChanged(category)
-                }
-            )
+                Spacer(modifier = Modifier.height(BasicMargin()))
 
-            Spacer(modifier = Modifier.height(HalfMargin()))
+                TextInput(
+                    label = stringResource(id = R.string.name_label),
+                    value = data.place.name,
+                    error = data.placeNameError,
+                    onChange = { actions.onPlaceNameChanged(it) }
+                )
 
-            AddressInputField(
-                onAddressSelected = {address, lat, long ->
-                    actions.onPlaceAddressChanged(address)
-                    actions.onLocationChanged(lat, long)
-                },
-                context = context,
-                addressError = data.placeAddressError,
-                address = data.place.address,
-                onAddressChange = { address ->
-                    actions.onPlaceAddressChanged(address)
-                }
-            )
+                Spacer(modifier = Modifier.height(BasicMargin()))
 
-            SaveCancelButtons(
-                onCancel = { onCancel() },
-                onSave = { actions.savePlace() }
-            )
+                Dropdown(
+                    value = selectedCategory,
+                    noValueMessage = stringResource(id = R.string.no_category_selected),
+                    data = PlaceCategory.entries,
+                    toStringRepresentation = {category ->
+                        stringResource(id = category.getStringResource())
+                    },
+                    onChange = {category ->
+                        selectedCategory = category
+                        actions.onPlaceCategoryChanged(category)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(BasicMargin()))
+
+                AddressInputField(
+                    onAddressSelected = {address, lat, long ->
+                        actions.onPlaceAddressChanged(address)
+                        actions.onLocationChanged(lat, long)
+                    },
+                    context = context,
+                    addressError = data.placeAddressError,
+                    address = data.place.address,
+                    onAddressChange = { address ->
+                        actions.onPlaceAddressChanged(address)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(BasicMargin()))
+
+                SaveCancelButtons(
+                    onCancel = { onCancel() },
+                    onSave = { actions.savePlace() }
+                )
+            }
 
             if (dialogIsVisible) {
                 CustomAlertDialog(

@@ -33,9 +33,6 @@ fun TextInput(
         label = { Text(text = label, color = MaterialTheme.colorScheme.secondary) },
         value = value,
         isError = error != null,
-        supportingText = {
-            if (error != null) InputError(error = error)
-        },
         onValueChange = {
             onChange(it)
         },
@@ -53,5 +50,10 @@ fun TextInput(
             KeyboardOptions.Default
         },
         textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary),
+        trailingIcon = {
+            if (error != null) {
+                InputError(error = error)
+            }
+        }
     )
 }

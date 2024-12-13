@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,9 +24,7 @@ import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.homescreen.BalanceBox
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.transactions.TransactionList
-import com.example.budgetbuddy.ui.screens.auth.signUp.SignUpUIState
 import com.example.budgetbuddy.ui.theme.BasicMargin
-import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.White
 
 @Composable
@@ -74,7 +73,7 @@ fun HomeScreen(
                 onClick = {
                     navigationRouter.navigateToAddEditTransactionScreen(null)
                 },
-                containerColor = Green,
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = White
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
@@ -113,7 +112,10 @@ fun HomeScreenContent(
                 updatedCurrency.value = newCurrency
                 actions.changeCurrency(newCurrency)
             },
-            sum = sum
+            sum = sum,
+            addNewTransaction = {
+                navigationRouter.navigateToAddEditTransactionScreen(null)
+            }
         )
 
         Spacer(modifier = Modifier.height(BasicMargin()))

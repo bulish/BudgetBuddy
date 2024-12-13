@@ -12,6 +12,8 @@ val LightGreen = Color(0xFFB4FCD2)
 val Red = Color(0xFFFF0000)
 val LightRed = Color(0xFFFFCFCF)
 val LightBg = Color(0xFFEEEEEE)
+val RedPrimary = Color(0xFFD22027)
+val BluePrimary = Color(0xFF207CD2)
 
 val Yellow40 = Color(0xFFFFEB3B)
 val Orange40 = Color(0xFFFF9800)

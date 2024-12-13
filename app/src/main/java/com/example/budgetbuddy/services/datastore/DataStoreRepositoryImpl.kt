@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.budgetbuddy.model.NotificationData
+import com.example.budgetbuddy.model.PrimaryColor
 import com.squareup.moshi.JsonAdapter
 import javax.inject.Inject
 import com.squareup.moshi.Moshi
@@ -33,11 +34,13 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
         private const val CURRENCY = "CZK (Kč)"
         private const val NOTIFICATION_DATA = "notificationData"
         private const val FIRST_RUN = "firstRun"
+        private const val PRIMARY_COLOR = "primaryColor"
 
         val isDarkTheme = booleanPreferencesKey(IS_DARK_THEME)
         val notificationData = stringPreferencesKey(NOTIFICATION_DATA)
         val firstRun = booleanPreferencesKey(FIRST_RUN)
         var currencyData = stringPreferencesKey(CURRENCY)
+        var primaryColor = stringPreferencesKey(PRIMARY_COLOR)
     }
 
     override suspend fun getIsDarkTheme(): Flow<Boolean> {
@@ -114,6 +117,23 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
             .catch { e ->
                 e.printStackTrace()
                 emit(null)
+            }
+    }
+
+    override suspend fun setPrimaryColor(color: PrimaryColor) {
+        context.dataStore.edit { preferences ->
+            preferences[primaryColor] = color.name
+        }
+    }
+
+    override suspend fun getPrimaryColor(): Flow<String> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[primaryColor] ?: PrimaryColor.GREEN.name
+            }
+            .catch { e ->
+                e.printStackTrace()
+                emit(PrimaryColor.GREEN.name)
             }
     }
 }

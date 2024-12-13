@@ -1,26 +1,18 @@
 package com.example.budgetbuddy.ui.screens.transactions.list
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
@@ -41,7 +33,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,9 +46,6 @@ import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceholderScreenContent
 import com.example.budgetbuddy.ui.elements.transactions.TransactionList
 import com.example.budgetbuddy.ui.theme.BasicMargin
-import com.example.budgetbuddy.ui.theme.Green
-import com.example.budgetbuddy.ui.theme.HalfMargin
-import com.example.budgetbuddy.ui.theme.QuarterMargin
 import com.example.budgetbuddy.ui.theme.White
 
 @Composable
@@ -108,7 +96,7 @@ fun TransactionsListScreen(
                 onClick = {
                     navigationRouter.navigateToAddEditTransactionScreen(null)
                 },
-                containerColor = Green,
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = White
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
@@ -186,7 +174,10 @@ fun TransactionsListScreenContent(
                     selectedFilter = filter.getStringResource()
                     dropdownExpanded = false
                 },  text = {
-                    Text(text = stringResource(id = filter.getStringResource()))
+                    Text(
+                        text = stringResource(id = filter.getStringResource()),
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 })
             }
         }

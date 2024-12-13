@@ -71,6 +71,7 @@ fun TransactionItem(
                 text = stringResource(id = transaction.category.getStringResource()),
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.secondary
             )
 
             Text(

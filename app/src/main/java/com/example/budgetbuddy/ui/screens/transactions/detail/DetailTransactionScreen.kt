@@ -1,6 +1,5 @@
 package com.example.budgetbuddy.ui.screens.transactions.detail
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
@@ -14,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,10 +31,10 @@ import com.example.budgetbuddy.ui.elements.shared.SectionTitle
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
+import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
 import com.example.budgetbuddy.ui.elements.shared.labeledelement.LabeledElement
 import com.example.budgetbuddy.ui.elements.shared.labeledelement.LabeledElementData
 import com.example.budgetbuddy.ui.theme.BasicMargin
-import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.White
 import java.io.File
@@ -87,7 +87,7 @@ fun DetailTransactionScreen(
                 onClick = {
                     navigationRouter.navigateToAddEditTransactionScreen(id)
                 },
-                containerColor = Green,
+                containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = White
             ) {
                 Icon(
@@ -136,7 +136,7 @@ fun DetailScreenContent(
             }
 
             CustomButton(
-                type = CustomButtonType.OutlinedMaxSize,
+                type = getCustomButtonType(buttonType = CustomButtonType.OutlinedMaxSize),
                 text = stringResource(id = R.string.detail_delete),
                 onClickAction = { dialogIsVisible = true }
             )

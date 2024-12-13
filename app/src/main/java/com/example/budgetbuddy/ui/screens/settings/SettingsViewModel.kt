@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.model.NotificationData
+import com.example.budgetbuddy.model.PrimaryColor
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.lang.Thread.State
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +33,9 @@ class SettingsViewModel @Inject constructor(
     private var _isDarkMode = MutableStateFlow<Boolean>(false)
     val isDarkMode: StateFlow<Boolean> = _isDarkMode
 
+    private var _primaryColor = MutableStateFlow<PrimaryColor>(PrimaryColor.GREEN)
+    val primaryColor: StateFlow<PrimaryColor> = _primaryColor
+
     init {
         if (authService.getCurrentUser() == null) {
             _settingsUIState.update {
@@ -47,6 +52,12 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreRepository.getIsDarkTheme().collect {
                 _isDarkMode.value = it
+            }
+        }
+
+        viewModelScope.launch {
+            dataStoreRepository.getPrimaryColor().collect {
+                _primaryColor.value = PrimaryColor.fromString(it)
             }
         }
     }
@@ -68,6 +79,16 @@ class SettingsViewModel @Inject constructor(
             }
 
             dataStoreRepository.setCurrency(activeCurrency.value)
+        }
+    }
+
+    override fun changePrimaryColor(color: PrimaryColor) {
+        viewModelScope.launch {
+            _primaryColor.update {
+                color
+            }
+
+            dataStoreRepository.setPrimaryColor(primaryColor.value)
         }
     }
 

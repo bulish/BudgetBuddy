@@ -16,20 +16,19 @@ import androidx.compose.ui.unit.sp
 import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.theme.DoubleMargin
-import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.TripleMargin
-import com.example.budgetbuddy.ui.theme.White
 
 @Composable
 fun BalanceBox(
     currency: String,
     onCurrencyChange: (String) -> Unit,
-    sum: Double
+    sum: Double,
+    addNewTransaction: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Green)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(horizontal = DoubleMargin(), vertical = TripleMargin()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -59,12 +58,12 @@ fun BalanceBox(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Add Money action */ },
+            onClick = { addNewTransaction() },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary
             )
         ) {
-            Text(text = "Add Money", color = Green)
+            Text(text = "Add Money", color = MaterialTheme.colorScheme.primary)
         }
     }
 }

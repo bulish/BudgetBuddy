@@ -36,7 +36,6 @@ import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.ui.theme.BasicMargin
-import com.example.budgetbuddy.ui.theme.Green
 import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.QuarterMargin
 import com.example.budgetbuddy.ui.theme.White
@@ -108,7 +107,7 @@ fun ImageInput(
                     contentDescription = stringResource(id = R.string.edit_add_icon),
                     tint = White,
                     modifier = Modifier
-                        .background(color = Green, shape = CircleShape)
+                        .background(color = MaterialTheme.colorScheme.primary, shape = CircleShape)
                         .size(48.dp)
                         .padding(HalfMargin())
                 )

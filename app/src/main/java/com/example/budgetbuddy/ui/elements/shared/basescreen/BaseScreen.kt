@@ -59,6 +59,7 @@ fun BaseScreen(
                             Text(
                                 text = topBarText,
                                 style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.secondary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier
