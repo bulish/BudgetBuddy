@@ -3,9 +3,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-
     alias(libs.plugins.com.google.services)
-    alias(libs.plugins.org.jetbrains.kotlin.kapt)
+    kotlin("kapt")
     alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
@@ -42,9 +41,11 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "MAP_API_KEY", properties.getProperty("google_maps_api_key"))
+            buildConfigField("String", "BASE_URL", properties.getProperty("baseurldevel"))
         }
         debug {
             buildConfigField("String", "MAP_API_KEY", properties.getProperty("google_maps_api_key"))
+            buildConfigField("String", "BASE_URL", properties.getProperty("baseurlproduction"))
         }
     }
 
@@ -96,15 +97,16 @@ dependencies {
     implementation(libs.room.viewmodel)
     implementation(libs.room.lifecycle)
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler.kapt)
 
     implementation(libs.hilt)
     implementation(libs.hilt.compose)
     kapt(libs.hilt.compiler.kapt)
 
     implementation(libs.moshi)
+    implementation(libs.moshi.codegen)
     kapt(libs.moshi.kapt)
     implementation(libs.moshi.kotlin)
+    kapt(libs.room.compiler.kapt)
 
     implementation(libs.datastore)
 
@@ -123,4 +125,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.lottie)
 
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.retrofit.okhtt3)
 }
