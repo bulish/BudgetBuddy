@@ -36,9 +36,6 @@ fun PasswordInput(
         },
         value = value,
         isError = error != null,
-        supportingText = {
-            InputError(error = error)
-        },
         onValueChange = {
             onChange(it)
         },
@@ -51,6 +48,11 @@ fun PasswordInput(
             unfocusedBorderColor = Grey,
         ),
         textStyle = TextStyle(color = MaterialTheme.colorScheme.secondary),
+        trailingIcon = {
+            if (error != null) {
+                InputError(error = error)
+            }
+        }
     )
 }
 

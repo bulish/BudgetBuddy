@@ -3,6 +3,7 @@ package com.example.budgetbuddy.ui.screens.settings
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import com.example.budgetbuddy.ui.elements.settings.userIcon.UserIcon
 import com.example.budgetbuddy.ui.elements.settings.userIcon.UserIconType
 import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.elements.shared.SectionTitle
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
 import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
@@ -68,6 +70,10 @@ fun SettingsScreen(
         e.printStackTrace()
     }
 
+    val currencies = remember {
+        mutableStateOf<Map<String, Double>?>(null)
+    }
+
     var loading by remember { mutableStateOf(false) }
 
     state.value.let {
@@ -77,14 +83,26 @@ fun SettingsScreen(
                 viewModel.getUserInformation()
             }
 
-            SettingsUIState.UserNotAuthorized -> {
+            is SettingsUIState.UserNotAuthorized -> {
                 loading = true
                 navigationRouter.navigateToLoginScreen()
+                if (it.message != null) {
+                    ShowToast(message = stringResource(id = it.message))
+                }
             }
 
             is SettingsUIState.Success -> {
                 userData.value = it.user
+                viewModel.getCurrencyData()
+            }
+
+            is SettingsUIState.CurrencyLoaded -> {
+                currencies.value = it.data
                 loading = false
+            }
+
+            is SettingsUIState.Error -> {
+                ShowToast(stringResource(id = it.error.communicationError))
             }
         }
     }
@@ -101,7 +119,8 @@ fun SettingsScreen(
             version = version,
             currency = currency.value,
             isDarkMode = isDarkMode.value,
-            primaryColor = primaryColor.value
+            primaryColor = primaryColor.value,
+            currencies = currencies.value
         )
     }
 }
@@ -114,7 +133,8 @@ fun SettingsScreenContent(
     version: String,
     currency: String,
     isDarkMode: Boolean,
-    primaryColor: PrimaryColor
+    primaryColor: PrimaryColor,
+    currencies: Map<String, Double>?
 ) {
     LazyColumn(
         modifier = Modifier
@@ -167,7 +187,8 @@ fun SettingsScreenContent(
                         onChange = { selectedCurrency ->
                             actions.changeCurrency(selectedCurrency)
                         },
-                        isDark = true
+                        isDark = true,
+                        currencies = currencies
                     )
                 }
 

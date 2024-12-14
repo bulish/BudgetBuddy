@@ -1,13 +1,13 @@
 package com.example.budgetbuddy.communication
 
 data class ExchangeRateResponse(
-    val result: String,
-    val documentation: String,
-    val termsOfUse: String,
-    val timeLastUpdateUnix: Long,
-    val timeLastUpdateUtc: String,
-    val timeNextUpdateUnix: Long,
-    val timeNextUpdateUtc: String,
-    val baseCode: String,
-    val conversionRates: Map<String, Double>
+    val result: String?,
+    val documentation: String?,
+    val terms_of_use: String?,
+    val time_last_update_unix: Long?,
+    val time_last_update_utc: String?,
+    val time_next_update_unix: Long?,
+    val time_next_update_utc: String?,
+    val base_code: String?,
+    val conversion_rates: Map<String, Double>?
 )

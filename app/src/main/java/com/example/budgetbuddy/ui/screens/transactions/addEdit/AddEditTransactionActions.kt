@@ -16,7 +16,6 @@ interface AddEditTransactionActions {
     fun onTransactionTypeChange(type: String)
 
     fun saveTransaction()
-    fun loadTransaction(id: Long?)
-    fun loadPlaces()
+
     fun deleteTransaction()
 }

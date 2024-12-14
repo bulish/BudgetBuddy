@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
@@ -25,8 +26,6 @@ class TransactionsListViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<TransactionsListUIState> = MutableStateFlow(value = TransactionsListUIState.Loading)
     val uiState: StateFlow<TransactionsListUIState> get() = _uiState.asStateFlow()
 
-    private val numberOfMarkers = 2
-
     init {
         if (authService.getCurrentUser() == null) {
             _uiState.update {
@@ -35,11 +34,11 @@ class TransactionsListViewModel @Inject constructor(
         }
     }
 
-    fun getAllTransactions() {
+    fun getAllTransactions(category: TransactionCategory?) {
         val userID = authService.getUserID()
         if (userID != null) {
             viewModelScope.launch {
-                repository.getAllByUser(userID).collect {data ->
+                repository.getAllByUser(userID, category).collect {data ->
                     val totalSum = data.sumOf { transaction ->
                         when (transaction.type) {
                             TransactionType.INCOME.value -> transaction.price
@@ -55,14 +54,4 @@ class TransactionsListViewModel @Inject constructor(
             }
         }
     }
-
-fun deletePlace(id: Long?) {
-        // TODO
-    }
-
 }
-
-
-
-
-

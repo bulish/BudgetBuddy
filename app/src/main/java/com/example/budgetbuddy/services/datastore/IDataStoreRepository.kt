@@ -1,6 +1,5 @@
 package com.example.budgetbuddy.services.datastore
 
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.PrimaryColor
 import kotlinx.coroutines.flow.Flow
 
@@ -21,7 +20,7 @@ interface IDataStoreRepository {
 
     suspend fun getCurrency(): Flow<String>
 
-    suspend fun saveNotificationData(data: NotificationData)
+    suspend fun setCurrencies(currencies: Map<String, Double>)
 
-    suspend fun getNotificationData() : Flow<NotificationData?>
+    suspend fun getCurrencies(): Flow<Map<String, Double>?>
 }

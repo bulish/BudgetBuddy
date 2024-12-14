@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.transactions.list
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,12 +64,13 @@ fun TransactionsListScreen(
         mutableDoubleStateOf(0.0)
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.getAllTransactions()
-    }
-
     val state = viewModel.uiState.collectAsStateWithLifecycle()
+    var selectedFilter by remember { mutableStateOf<TransactionCategory?>(null) }
     var loading = true
+
+    LaunchedEffect(selectedFilter) {
+        viewModel.getAllTransactions(selectedFilter)
+    }
 
     state.value.let {
         when (it) {
@@ -76,10 +78,12 @@ fun TransactionsListScreen(
                 transactions.clear()
                 transactions.addAll(it.data)
                 transactionSum.doubleValue = it.sum
+                loading = false
             }
 
             TransactionsListUIState.Loading -> {
-
+                loading = true
+                viewModel.getAllTransactions(null)
             }
 
             TransactionsListUIState.UserNotAuthorized -> {
@@ -105,19 +109,18 @@ fun TransactionsListScreen(
         },
         topBarText = stringResource(id = R.string.transactions),
         navigation = navigationRouter,
-        placeholderScreenContent = if (transactions.size == 0) {
-        PlaceholderScreenContent(
-            image = R.drawable.list,
-            title = stringResource(id = R.string.list_no_data_title),
-            text = stringResource(id = R.string.list_no_data_subtitle)
-        )
-} else null
+        showLoading = loading,
+        placeholderScreenContent = null
     ) {
         TransactionsListScreenContent(
             transactions = transactions,
             paddingValues = it,
             sum = transactionSum.doubleValue,
-            navigation = navigationRouter
+            navigation = navigationRouter,
+            selectedFilter = selectedFilter,
+            setSelectedFilter = { newValue ->
+                selectedFilter = newValue
+            }
         )
     }
 }
@@ -127,19 +130,12 @@ fun TransactionsListScreenContent(
     transactions: List<Transaction>,
     paddingValues: PaddingValues,
     sum: Double,
-    navigation: INavigationRouter
+    navigation: INavigationRouter,
+    selectedFilter: TransactionCategory?,
+    setSelectedFilter: (TransactionCategory?) -> Unit
 ) {
-    var selectedFilter by remember { mutableIntStateOf(TransactionCategory.SALARY.getStringResource()) }
-    val filters = TransactionCategory.entries
+    val filters = listOf("All") + TransactionCategory.entries.map { it }
     var dropdownExpanded by remember { mutableStateOf(false) }
-
-    val filteredTransactions by remember(selectedFilter, transactions) {
-        derivedStateOf {
-            transactions.filter {
-                it.category.getStringResource() == selectedFilter
-            }
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -159,7 +155,7 @@ fun TransactionsListScreenContent(
                 .padding(BasicMargin())
         ) {
             Text(
-                text = stringResource(id = selectedFilter),
+                text = stringResource(id = if (selectedFilter == null) R.string.all else  TransactionCategory.valueOf(selectedFilter.toString()).getStringResource()),
                 color = Color.White,
                 modifier = Modifier.weight(1f)
             )
@@ -180,11 +176,17 @@ fun TransactionsListScreenContent(
         ) {
             filters.forEach { filter ->
                 DropdownMenuItem(onClick = {
-                    selectedFilter = filter.getStringResource()
+                    setSelectedFilter(
+                        if (filter == "All") {
+                            null
+                        } else {
+                            TransactionCategory.valueOf(filter.toString())
+                        }
+                    )
                     dropdownExpanded = false
                 },  text = {
                     Text(
-                        text = stringResource(id = filter.getStringResource()),
+                        text = stringResource(id = if (filter == "All") R.string.all else TransactionCategory.valueOf(filter.toString()).getStringResource()),
                         color = MaterialTheme.colorScheme.secondary
                     )
                 })
@@ -213,7 +215,7 @@ fun TransactionsListScreenContent(
 
         TransactionList(
             displayTitle = false,
-            transactions = filteredTransactions,
+            transactions = transactions,
             navigation = navigation
         )
     }

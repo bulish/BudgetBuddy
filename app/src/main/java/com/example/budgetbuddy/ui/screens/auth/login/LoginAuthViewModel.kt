@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.utils.ErrorUtils.handleFirebaseError
@@ -34,7 +33,7 @@ class LoginAuthViewModel @Inject constructor(
     init {
         if (authService.getCurrentUser() != null) {
             _loginUIState.update {
-                LoginUIState.UserLoggedIn(authService.getCurrentUser())
+                LoginUIState.UserLoggedIn(authService.getCurrentUser(), null)
             }
         } else {
             _loginUIState.update {
@@ -53,17 +52,7 @@ class LoginAuthViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         _loginUIState.update {
-                            LoginUIState.UserLoggedIn(user)
-                        }
-
-                        viewModelScope.launch {
-                            dataStoreRepository.saveNotificationData(
-                                NotificationData(
-                                    show = true,
-                                    message = R.string.login_success,
-                                    isSuccess = true
-                                )
-                            )
+                            LoginUIState.UserLoggedIn(user, R.string.login_success)
                         }
                     } else {
                         Log.e(
@@ -78,34 +67,16 @@ class LoginAuthViewModel @Inject constructor(
 
                         val exception = task.exception
                         if (exception is FirebaseAuthException) {
-                            viewModelScope.launch {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = handleFirebaseError(exception.errorCode),
-                                        isSuccess = false
-                                    )
-                                )
+                            _loginUIState.update {
+                                LoginUIState.Error(handleFirebaseError(exception.errorCode))
                             }
                         } else if (exception is FirebaseNetworkException) {
-                            viewModelScope.launch {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = R.string.network_error,
-                                        isSuccess = false
-                                    )
-                                )
+                            _loginUIState.update {
+                                LoginUIState.Error(R.string.network_error)
                             }
                         } else {
-                            viewModelScope.launch {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = R.string.network_error,
-                                        isSuccess = false
-                                    )
-                                )
+                            _loginUIState.update {
+                                LoginUIState.Error(R.string.network_error)
                             }
                         }
                     }

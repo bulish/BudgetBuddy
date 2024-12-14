@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.db.PlaceCategory
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
@@ -63,17 +62,10 @@ class AddEditPlaceViewModel @Inject constructor(
                 } else {
                     repository.insert(data.place)
                 }
-
-                dataStoreRepository.saveNotificationData(
-                    NotificationData(
-                    true,
-                    R.string.add_edit_place_success, true
-                )
-                )
             }
 
             _addEditPlaceUIState.update {
-                AddEditPlaceUIState.PlaceSaved
+                AddEditPlaceUIState.PlaceSaved(R.string.add_edit_place_success)
             }
         }
         else {

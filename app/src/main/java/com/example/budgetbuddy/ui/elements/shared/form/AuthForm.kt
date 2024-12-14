@@ -74,6 +74,8 @@ fun AuthForm(
 
                     inputs()
 
+                    Spacer(modifier = Modifier.height(BasicMargin()))
+
                     CustomButton(
                         type = getCustomButtonType(buttonType = CustomButtonType.Basic),
                         text = buttonText,

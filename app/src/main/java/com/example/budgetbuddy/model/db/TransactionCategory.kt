@@ -39,7 +39,7 @@ enum class TransactionCategory(val value: String, val icon: Int) {
 
     companion object {
         fun fromString(type: String?): TransactionCategory {
-            return entries.find { it.name.equals(type, ignoreCase = true) } ?: OTHER
+            return entries.find { it.value.equals(type, ignoreCase = true) } ?: OTHER
         }
     }
 }

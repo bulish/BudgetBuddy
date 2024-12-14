@@ -11,4 +11,10 @@ sealed class HomeScreenUIState {
         val transactions: List<Transaction>,
         val totalSum: Double
     ) : HomeScreenUIState()
+
+    class Error(val error: HomeScreenError) : HomeScreenUIState()
+
+    class CurrencyLoaded(
+        val data: Map<String, Double>?
+    ): HomeScreenUIState()
 }

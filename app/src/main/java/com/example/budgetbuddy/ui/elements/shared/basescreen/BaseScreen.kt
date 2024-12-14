@@ -18,7 +18,6 @@ import com.example.budgetbuddy.ui.elements.shared.LoadingScreen
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceHolderScreen
 import com.example.budgetbuddy.ui.elements.shared.placeholderScreen.PlaceholderScreenContent
 import com.example.budgetbuddy.ui.elements.shared.navigation.BottomNavigationBar
-import com.example.budgetbuddy.ui.elements.shared.notification.Notification
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +36,6 @@ fun BaseScreen(
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
 
     val viewModel = hiltViewModel<BaseScreenViewModel>()
-    val notificationData = viewModel.notificationData.collectAsState()
 
     Scaffold(
         modifier = Modifier
@@ -99,7 +97,5 @@ fun BaseScreen(
         } else {
             content(it)
         }
-
-        Notification(data = notificationData.value)
     }
 }

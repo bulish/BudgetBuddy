@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 data class Transaction(
     var type: String,
     var receipt: String? = null,
-    var category: TransactionCategory,
+    var category: String,
     var price: Double,
     var currency: String,
     var note: String?,

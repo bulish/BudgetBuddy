@@ -10,6 +10,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.budgetbuddy.ui.theme.DoubleMargin
+import com.example.budgetbuddy.ui.theme.Grey
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +24,8 @@ fun FormPageTopAppBar(title: String, subtitle: String) {
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Grey
             )
         }
     },

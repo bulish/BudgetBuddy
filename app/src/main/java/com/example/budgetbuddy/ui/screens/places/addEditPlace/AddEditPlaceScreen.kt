@@ -29,6 +29,7 @@ import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.map.AddressInputField
 import com.example.budgetbuddy.ui.elements.map.PlaceIcon
 import com.example.budgetbuddy.ui.elements.shared.CustomAlertDialog
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.form.Dropdown
 import com.example.budgetbuddy.ui.elements.shared.form.ImageInput
@@ -65,7 +66,8 @@ fun AddEditPlaceScreen(
             is AddEditPlaceUIState.PlaceChanged -> {
                 data = it.data
             }
-            AddEditPlaceUIState.PlaceSaved -> {
+            is AddEditPlaceUIState.PlaceSaved -> {
+                ShowToast(message = stringResource(id = it.message))
                 LaunchedEffect(it){
                     navigationRouter.returnBack()
                 }

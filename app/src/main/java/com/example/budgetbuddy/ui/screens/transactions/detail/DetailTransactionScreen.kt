@@ -1,10 +1,8 @@
 package com.example.budgetbuddy.ui.screens.transactions.detail
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +13,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +27,7 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.shared.CustomAlertDialog
 import com.example.budgetbuddy.ui.elements.shared.SectionTitle
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
@@ -37,7 +37,6 @@ import com.example.budgetbuddy.ui.elements.shared.labeledelement.LabeledElementD
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.White
-import java.io.File
 
 @Composable
 fun DetailTransactionScreen(
@@ -51,18 +50,24 @@ fun DetailTransactionScreen(
 
     var loading by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        if (id != null) {
+            viewModel.loadTransaction(id)
+        }
+    }
+
     state.value.let {
         when (it) {
             DetailTransactionUIState.Loading -> {
                 loading = true
-                Log.d("detail id", "$id")
                 if (id != null) {
                     viewModel.loadTransaction(id)
                 }
             }
 
-            DetailTransactionUIState.TransactionDeleted -> {
+            is DetailTransactionUIState.TransactionDeleted -> {
                 navigationRouter.navigateToTransactionsListScreen()
+                ShowToast(message = stringResource(id = it.message))
             }
 
             DetailTransactionUIState.UserNotAuthorized -> {
@@ -71,7 +76,6 @@ fun DetailTransactionScreen(
             }
 
             is DetailTransactionUIState.Success -> {
-                Log.d("success data", "$it.data")
                 data.addAll(it.data)
                 loading = false
             }

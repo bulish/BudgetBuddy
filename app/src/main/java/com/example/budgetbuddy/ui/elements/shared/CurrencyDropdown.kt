@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.elements.shared
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,16 +25,23 @@ import androidx.compose.ui.Modifier
 fun CurrencyDropdown(
     currency: String,
     onChange: (currency: String) -> Unit,
-    isDark: Boolean? = false
+    isDark: Boolean? = false,
+    currencies: Map<String, Double>?
 ) {
     val isDropDownExpanded = remember {
         mutableStateOf(false)
     }
 
-    val currencies = listOf("CZK (Kč)", "USD ($)", "EUR (€)", "GBP (£)")
+    val currencyKeys = currencies?.keys?.toList() ?: emptyList()
 
     val itemPosition = remember {
-        mutableStateOf(currencies.indexOf(currency).takeIf { it >= 0 } ?: 0)
+        mutableIntStateOf(
+            if (currencyKeys.isNotEmpty()) {
+                currencyKeys.indexOf(currency).takeIf { it >= 0 } ?: 0
+            } else {
+                0
+            }
+        )
     }
 
     Column(
@@ -52,13 +61,15 @@ fun CurrencyDropdown(
                 }
             ) {
                 Text(
-                    text = currencies[itemPosition.value],
-                    color = if (isDark == false) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
+                    text = if (currencyKeys.isNotEmpty()) currencyKeys[itemPosition.intValue] else "",
+                    color = if (isDark == false) MaterialTheme.colorScheme.tertiary
+                        else MaterialTheme.colorScheme.secondary
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "Dropdown",
-                    tint = if (isDark == false) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
+                    tint = if (isDark == false) MaterialTheme.colorScheme.tertiary
+                        else MaterialTheme.colorScheme.secondary
                 )
             }
             DropdownMenu(
@@ -66,7 +77,7 @@ fun CurrencyDropdown(
                 onDismissRequest = {
                     isDropDownExpanded.value = false
                 }) {
-                currencies.forEachIndexed { index, currency ->
+                currencyKeys.forEachIndexed { index, currency ->
                     DropdownMenuItem(text = {
                         Text(
                             text =
@@ -75,12 +86,11 @@ fun CurrencyDropdown(
                     },
                         onClick = {
                             isDropDownExpanded.value = false
-                            itemPosition.value = index
+                            itemPosition.intValue = index
                             onChange(currency)
                         })
                 }
             }
         }
-
     }
 }

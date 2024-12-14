@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.utils.ErrorUtils.handleFirebaseError
 import com.google.firebase.FirebaseNetworkException
@@ -57,22 +56,13 @@ class SignUpAuthViewModel @Inject constructor(
                                     )
                                 }
 
-                                viewModelScope.launch {
-                                    val message =
-                                        if (profileUpdateTask.isSuccessful) R.string.signup_success else handleFirebaseError(
-                                            (profileUpdateTask.exception as FirebaseAuthException).errorCode
-                                        )
-                                    dataStoreRepository.saveNotificationData(
-                                        NotificationData(
-                                            show = true,
-                                            message = message,
-                                            isSuccess = profileUpdateTask.isSuccessful
-                                        )
+                                val message =
+                                    if (profileUpdateTask.isSuccessful) R.string.signup_success else handleFirebaseError(
+                                        (profileUpdateTask.exception as FirebaseAuthException).errorCode
                                     )
-                                }
 
                                 _signUpUIState.update {
-                                    SignUpUIState.UserSaved
+                                    SignUpUIState.UserSaved(message)
                                 }
                             }
                     } else {
@@ -82,24 +72,14 @@ class SignUpAuthViewModel @Inject constructor(
                             task.exception
                         )
 
-                        viewModelScope.launch {
-                            val exception = task.exception
-                            if (exception is FirebaseAuthException) {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = handleFirebaseError(exception.errorCode),
-                                        isSuccess = false
-                                    )
-                                )
-                            } else if (exception is FirebaseNetworkException) {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = R.string.network_error,
-                                        isSuccess = false
-                                    )
-                                )
+                        val exception = task.exception
+                        if (exception is FirebaseAuthException) {
+                            _signUpUIState.update {
+                                SignUpUIState.Error(handleFirebaseError(exception.errorCode))
+                            }
+                        } else if (exception is FirebaseNetworkException) {
+                            _signUpUIState.update {
+                                SignUpUIState.Error(R.string.network_error)
                             }
                         }
 

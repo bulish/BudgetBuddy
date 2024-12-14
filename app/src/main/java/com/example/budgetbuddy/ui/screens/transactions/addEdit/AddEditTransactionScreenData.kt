@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.transactions.addEdit
 
+import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
@@ -9,7 +10,7 @@ class AddEditTransactionScreenData {
     var transaction: Transaction = Transaction(
         TransactionType.INCOME.value,
         "",
-        TransactionCategory.SALARY,
+        TransactionCategory.SALARY.value,
         0.0,
         "",
         "",
@@ -22,3 +23,10 @@ class AddEditTransactionScreenData {
     var transactionPriceError: Int? = null
     var transactionNoteError: Int? = null
 }
+
+data class CombinedTransactionData(
+    val transaction: Transaction?,
+    val places: List<Place>,
+    val currencies: Map<String, String>
+)
+

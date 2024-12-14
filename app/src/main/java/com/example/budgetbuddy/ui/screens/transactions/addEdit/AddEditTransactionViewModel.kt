@@ -6,16 +6,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
-import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
-import com.example.budgetbuddy.ui.screens.places.map.MapScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -28,7 +30,7 @@ class AddEditTransactionViewModel @Inject constructor(
     private val repository: ILocalTransactionsRepository,
     private val placeRepository: ILocalPlacesRepository,
     private val authService: AuthService,
-    private val dataStoreRepository: IDataStoreRepository
+    private val dataStoreRepository: IDataStoreRepository,
 ) : ViewModel(), AddEditTransactionActions {
 
     private val _addEditTransactionUIState: MutableStateFlow<AddEditTransactionUIState> =
@@ -47,11 +49,6 @@ class AddEditTransactionViewModel @Inject constructor(
     }
 
     override fun saveTransaction(){
-        val type = data.transaction.type
-        val category = data.transaction.category
-        val note = data.transaction.note
-        val date = data.transaction.date
-        val place = data.transaction.placeId
         val price = data.transaction.price
 
         authService.getUserID()?.let { userId ->
@@ -65,17 +62,10 @@ class AddEditTransactionViewModel @Inject constructor(
                 } else {
                     repository.insert(data.transaction)
                 }
-
-                dataStoreRepository.saveNotificationData(
-                    NotificationData(
-                        true,
-                        R.string.add_edit_transaction_success, true
-                    )
-                )
             }
 
             _addEditTransactionUIState.update {
-                AddEditTransactionUIState.TransactionSaved
+                AddEditTransactionUIState.TransactionSaved(R.string.add_edit_transaction_success)
             }
         }
         else {
@@ -87,38 +77,64 @@ class AddEditTransactionViewModel @Inject constructor(
         }
     }
 
-    override fun loadTransaction(id: Long?) {
+    fun initializeTransactionData(id: Long?) {
         authService.getUserID()?.let { userId ->
-            if (id != null){
-                viewModelScope.launch {
-                    repository.getTransaction(id, userId).collect { transaction ->
-                        if (transaction != null) {
-                            data.transaction = transaction
+            viewModelScope.launch {
+                try {
+                    coroutineScope {
+                        val transactionFlow = id?.let {
+                            repository.getTransaction(it, userId)
+                        } ?: flowOf(null)
+
+                        val placesFlow = placeRepository.getAllByUser(userId).also { Log.d("PlacesFlow", "Places flow created") }
+                        val currenciesFlow = dataStoreRepository.getCurrencies()
+                            .filterNotNull()
+
+                        combine(
+                            transactionFlow,
+                            placesFlow,
+                            currenciesFlow.map { currencies ->
+                                currencies.mapValues { it.value.toString() }
+                            },
+                        ) { transaction, places, currencies ->
+
+                            if (transaction != null) {
+                                data.transaction = transaction
+                            }
+
+                            CombinedTransactionData(
+                                transaction = transaction,
+                                places = places,
+                                currencies = currencies
+                            )
+                        }.collect { combinedData ->
                             _addEditTransactionUIState.update {
-                                AddEditTransactionUIState.TransactionChanged(data)
+                                AddEditTransactionUIState.TransactionDataLoaded(combinedData)
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-
-    override fun loadPlaces() {
-        val userID = authService.getUserID()
-        if (userID != null) {
-            viewModelScope.launch {
-                placeRepository.getAllByUser(userID).collect {data ->
+                } catch (e: Exception) {
                     _addEditTransactionUIState.update {
-                        AddEditTransactionUIState.PlacesLoaded(data)
+                        AddEditTransactionUIState.Error(
+                            AddEditTransactionScreenError(R.string.something_went_wrong)
+                        )
                     }
                 }
+            }
+        } ?: run {
+            _addEditTransactionUIState.update {
+                AddEditTransactionUIState.UserNotAuthorized
             }
         }
     }
 
     override fun deleteTransaction() {
-        // TODO
+        viewModelScope.launch {
+            repository.delete(data.transaction)
+            _addEditTransactionUIState.update {
+                AddEditTransactionUIState.TransactionDeleted
+            }
+        }
     }
 
     override fun onReceiptChange() {
@@ -133,7 +149,7 @@ class AddEditTransactionViewModel @Inject constructor(
     }
 
     override fun onTransactionCategoryChanged(category: TransactionCategory) {
-        data.transaction.category = category
+        data.transaction.category = category.value
         _addEditTransactionUIState.update {
             AddEditTransactionUIState.TransactionChanged(data)
         }

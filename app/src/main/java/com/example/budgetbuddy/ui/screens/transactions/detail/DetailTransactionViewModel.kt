@@ -1,7 +1,5 @@
 package com.example.budgetbuddy.ui.screens.transactions.detail
 
-import android.util.Log
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
@@ -9,7 +7,6 @@ import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
 import com.example.budgetbuddy.extensions.formatToDisplayString
 import com.example.budgetbuddy.extensions.toFormattedString
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionCategory
@@ -66,7 +63,7 @@ class DetailTransactionViewModel @Inject constructor(
                     }
                     val transactionCategory = MutableStateFlow<TransactionCategory?>(null)
 
-                    val category = TransactionCategory.valueOf(transaction.category.value.uppercase())
+                    val category = TransactionCategory.valueOf(transaction.category.uppercase())
                     transactionCategory.value = category
 
                     val modifierData = listOf(
@@ -88,7 +85,7 @@ class DetailTransactionViewModel @Inject constructor(
                         ),
                         LabeledElementData(
                             label = R.string.note_label,
-                            data = transaction.note ?: "-",
+                            data = if (transaction.note != "") transaction.note ?: "-" else "-",
                         ),
                         LabeledElementData(
                             label = R.string.place_label,
@@ -105,22 +102,13 @@ class DetailTransactionViewModel @Inject constructor(
     }
 
     override fun deleteTransaction(id: Long?) {
-        Log.d("transaction id", "$id")
-        Log.d("transaction value", "${transactionData.value}")
        if (id != null && transactionData.value != null) {
            viewModelScope.launch {
                repository.delete(transactionData.value!!)
-               dataStoreRepository.saveNotificationData(
-                   NotificationData(
-                       show = true,
-                       message = R.string.delete_success,
-                       isSuccess = true
-                   )
-               )
            }
 
            _detailUIState.update {
-               DetailTransactionUIState.TransactionDeleted
+               DetailTransactionUIState.TransactionDeleted(R.string.delete_success)
            }
        }
     }

@@ -27,6 +27,7 @@ import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.shared.CustomAlertDialog
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.form.CustomDatePicker
 import com.example.budgetbuddy.ui.elements.shared.form.CustomRadioButton
@@ -59,32 +60,78 @@ fun AddEditTransactionScreen(
         mutableStateOf<Boolean>(false)
     }
 
+    val currencies = remember {
+        mutableStateOf<Map<String, Double>?>(null)
+    }
+
+    var selectedCategory by remember {
+        mutableStateOf<TransactionCategory?>(TransactionCategory.fromString(data.transaction.category))
+    }
+
+    var selectedCurrency = remember {
+        mutableStateOf<String?>("")
+    }
+
+    var selectedPlace by remember {
+        mutableStateOf<Place?>(null)
+    }
+
+    var loading = true
+
     state.value.let {
         when(it){
             AddEditTransactionUIState.Loading -> {
-                viewModel.loadTransaction(id)
-                viewModel.loadPlaces()
-            }
-            is AddEditTransactionUIState.TransactionChanged -> {
-                data = it.data
-            }
-            AddEditTransactionUIState.TransactionSaved -> {
-                LaunchedEffect(it){
-                    navigationRouter.returnBack()
-                }
-            }
-            AddEditTransactionUIState.TransactionDeleted -> {
-                LaunchedEffect(it){
-                    navigationRouter.returnBack()
-                }
-            }
-            AddEditTransactionUIState.UserNotAuthorized -> {
-                navigationRouter.returnBack()
+                viewModel.initializeTransactionData(id)
             }
 
-            is AddEditTransactionUIState.PlacesLoaded -> {
+            is AddEditTransactionUIState.TransactionChanged -> {
+                data = it.data
+                loading = false
+            }
+
+            is AddEditTransactionUIState.TransactionSaved -> {
+                ShowToast(message = stringResource(id = it.message))
+                
+                LaunchedEffect(it){
+                    navigationRouter.returnBack()
+                }
+            }
+
+            AddEditTransactionUIState.TransactionDeleted -> {
+                LaunchedEffect(it){
+                    navigationRouter.navigateToTransactionsListScreen()
+                }
+            }
+
+            AddEditTransactionUIState.UserNotAuthorized -> {
+                navigationRouter.returnBack()
+                loading = false
+            }
+
+            is AddEditTransactionUIState.Error -> {
+                ShowToast(stringResource(id = it.error.communicationError))
+                loading = false
+            }
+
+            is AddEditTransactionUIState.TransactionDataLoaded -> {
+                currencies.value = it.data.currencies.mapValues { entry ->
+                    entry.value.toDoubleOrNull() ?: 0.0
+                }
+
                 places.clear()
-                places.addAll(it.data)
+                places.addAll(it.data.places)
+
+                it.data.transaction?.let  {
+                    data.transaction = it
+                }
+
+                selectedCategory = TransactionCategory.fromString(it.data.transaction?.category)
+
+                val currencyKeys: List<String> = it.data.currencies.keys.toList() ?: emptyList()
+                selectedCurrency.value = it.data.transaction?.currency ?: currencyKeys[0]
+
+                selectedPlace = places.find { p -> p.id == it.data.transaction?.placeId }
+                loading = false
             }
         }
     }
@@ -106,7 +153,8 @@ fun AddEditTransactionScreen(
                 }
             }
         },
-        navigation = navigationRouter
+        navigation = navigationRouter,
+        showLoading = loading
     ) {
         AddEditTransactionContent(
             paddingValues = it,
@@ -121,7 +169,20 @@ fun AddEditTransactionScreen(
                 dialogIsVisible = false
                 navigationRouter.returnBack()
             },
-            places = places
+            places = places,
+            currencies = currencies.value,
+            selectedCategory = selectedCategory,
+            changeSelectedCategory = { newValue ->
+                selectedCategory = newValue
+            },
+            selectedCurrency = selectedCurrency.value,
+            changeSelectedCurrency = { newValue ->
+                selectedCurrency.value = newValue
+            },
+            selectedPlace = selectedPlace,
+            changeSelectedPlace = { newValue ->
+                selectedPlace = newValue
+            }
         )
     }
 }
@@ -137,21 +198,16 @@ fun AddEditTransactionContent(
     dialogIsVisible: Boolean,
     onDialogDismiss: () -> Unit,
     onDialogConfirmation: () -> Unit,
-    places: List<Place>
+    places: List<Place>,
+    currencies: Map<String, Double>?,
+    selectedCategory: TransactionCategory?,
+    changeSelectedCategory: (TransactionCategory) -> Unit,
+    selectedCurrency: String?,
+    changeSelectedCurrency: (String) -> Unit,
+    selectedPlace: Place?,
+    changeSelectedPlace: (Place) -> Unit,
 ){
-    val currencies = listOf("CZK (Kč)", "USD ($)", "EUR (€)", "GBP (£)")
-
-    var selectedCategory by remember {
-        mutableStateOf<TransactionCategory?>(data.transaction.category)
-    }
-
-    var selectedCurrency by remember {
-        mutableStateOf<String?>(currencies[0])
-    }
-
-    var selectedPlace by remember {
-        mutableStateOf<Place?>(places.find { p -> p.id == data.transaction.placeId })
-    }
+    val currencyKeys: List<String> = currencies?.keys?.toList() ?: emptyList()
 
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -189,12 +245,10 @@ fun AddEditTransactionContent(
                         stringResource(id = category.getStringResource())
                     },
                     onChange = {category ->
-                        selectedCategory = category
+                        changeSelectedCategory(category)
                         actions.onTransactionCategoryChanged(category)
                     }
                 )
-
-                //Spacer(modifier = Modifier.height((-8).dp))
 
                 TextInput(
                     label = stringResource(id = R.string.price_label),
@@ -204,30 +258,23 @@ fun AddEditTransactionContent(
                     isNumber = true
                 )
 
-                TextInput(
-                    label = stringResource(id = R.string.note_label),
-                    value = data.transaction.note.toString(),
-                    error = data.transactionNoteError ,
-                    onChange = { actions.onTransactionNoteChange(it) }
+                Dropdown(
+                    value = selectedCurrency,
+                    noValueMessage = stringResource(id = R.string.no_currency_selected),
+                    data = currencyKeys,
+                    toStringRepresentation = {currency ->
+                        currency
+                    },
+                    onChange = {currency ->
+                        changeSelectedCurrency(currency)
+                        actions.onTransactionCurrencyChange(currency)
+                    }
                 )
 
                 CustomRadioButton(
                     label = stringResource(id = R.string.transaction_type_label),
                     value = data.transaction.type,
                     onChange = { actions.onTransactionTypeChange(it) }
-                )
-
-                Dropdown(
-                    value = selectedCurrency,
-                    noValueMessage = stringResource(id = R.string.no_currency_selected),
-                    data = currencies,
-                    toStringRepresentation = {currency ->
-                        currency.toString()
-                    },
-                    onChange = {currency ->
-                        selectedCurrency = currency.toString()
-                        actions.onTransactionCurrencyChange(currency.toString())
-                    }
                 )
 
                 CustomDatePicker(
@@ -243,9 +290,16 @@ fun AddEditTransactionContent(
                         place.name
                     },
                     onChange = {place ->
-                        selectedPlace = place
+                        changeSelectedPlace(place)
                         actions.onTransactionPlaceChange(place)
                     }
+                )
+
+                TextInput(
+                    label = stringResource(id = R.string.note_label),
+                    value = data.transaction.note.toString(),
+                    error = data.transactionNoteError ,
+                    onChange = { actions.onTransactionNoteChange(it) }
                 )
 
                 SaveCancelButtons(

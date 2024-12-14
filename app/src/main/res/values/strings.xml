@@ -131,4 +131,9 @@
     <string name="blue_color">Blue</string>
     <string name="no_color_selected">No color selected</string>
     <string name="main_color">Main color</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_active_currency">No active currency is selected</string>
+    <string name="no_data_available">No data available</string>
+    <string name="all">All</string>
 </resources>

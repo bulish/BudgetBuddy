@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.INavigationRouter
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.form.AuthForm
 import com.example.budgetbuddy.ui.elements.shared.form.FormPageTopAppBar
@@ -42,10 +43,16 @@ fun ResetPasswordScreen(
                 data = it.data
             }
 
-            ResetPasswordUIState.EmailSent -> {
+            is ResetPasswordUIState.EmailSent -> {
+                ShowToast(message = stringResource(id = it.message))
+
                 LaunchedEffect(it) {
                     navigationRouter.returnBack()
                 }
+            }
+
+            is ResetPasswordUIState.Error -> {
+                ShowToast(message = stringResource(id = it.message))
             }
         }
     }

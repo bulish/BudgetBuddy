@@ -46,6 +46,7 @@ import com.example.budgetbuddy.extensions.toEpochMillis
 import com.example.budgetbuddy.extensions.toIntTimestamp
 import com.example.budgetbuddy.extensions.toLocalDateTime
 import com.example.budgetbuddy.ui.theme.BasicMargin
+import com.example.budgetbuddy.ui.theme.Black
 import com.example.budgetbuddy.ui.theme.BluePrimary
 import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.example.budgetbuddy.ui.theme.Green
@@ -123,9 +124,8 @@ fun CustomDatePicker(
                             colorScheme = MaterialTheme.colorScheme
                         ) {
                             Surface(
-                                color = MaterialTheme.colorScheme.secondary,
-                                contentColor = MaterialTheme.colorScheme.tertiary,
-
+                                color = White,
+                                contentColor = Black
                             ) {
                                 DatePicker(
                                     state = datePickerState,

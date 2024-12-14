@@ -7,16 +7,16 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.model.PrimaryColor
 import com.squareup.moshi.JsonAdapter
 import javax.inject.Inject
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.delay
+import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+
 
 class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
     : IDataStoreRepository {
@@ -25,22 +25,25 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
     private val moshi: Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
-    private val jsonAdapter: JsonAdapter<NotificationData> =
-        moshi.adapter(NotificationData::class.java)
+
+    val currencyType = Types.newParameterizedType(Map::class.java, String::class.java, java.lang.Double::class.java)
+
+    private val jsonAdapterCurrencies: JsonAdapter<Map<String, Double>> =
+        moshi.adapter(currencyType)
 
     companion object {
         const val DATA = "Data"
         private const val IS_DARK_THEME = "IsDarkTheme"
-        private const val CURRENCY = "CZK (Kč)"
-        private const val NOTIFICATION_DATA = "notificationData"
+        private const val CURRENCY = "CZK"
         private const val FIRST_RUN = "firstRun"
         private const val PRIMARY_COLOR = "primaryColor"
+        private const val CURRENCIES = "currencies"
 
         val isDarkTheme = booleanPreferencesKey(IS_DARK_THEME)
-        val notificationData = stringPreferencesKey(NOTIFICATION_DATA)
         val firstRun = booleanPreferencesKey(FIRST_RUN)
         var currencyData = stringPreferencesKey(CURRENCY)
         var primaryColor = stringPreferencesKey(PRIMARY_COLOR)
+        var allCurrencies = stringPreferencesKey(CURRENCIES)
     }
 
     override suspend fun getIsDarkTheme(): Flow<Boolean> {
@@ -63,11 +66,11 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
     override suspend fun getCurrency(): Flow<String> {
         return context.dataStore.data
             .map { preferences ->
-                preferences[currencyData] ?: "CZK (Kč)"
+                preferences[currencyData] ?: "CZK"
             }
             .catch { e ->
                 e.printStackTrace()
-                emit("CZK (Kč)")
+                emit("CZK")
             }
     }
 
@@ -94,24 +97,17 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
         }
     }
 
-    override suspend fun saveNotificationData(data: NotificationData) {
+    override suspend fun setCurrencies(currencies: Map<String, Double>) {
         context.dataStore.edit { preferences ->
-            preferences[notificationData] = jsonAdapter.toJson(data)
-        }
-
-        delay(2000)
-
-        val emptyData = NotificationData(false, 0, false)
-        context.dataStore.edit { preferences ->
-            preferences[notificationData] = jsonAdapter.toJson(emptyData)
+            preferences[allCurrencies] = jsonAdapterCurrencies.toJson(currencies)
         }
     }
 
-    override suspend fun getNotificationData(): Flow<NotificationData?> {
+    override suspend fun getCurrencies(): Flow<Map<String, Double>?> {
         return context.dataStore.data
             .map { preferences ->
-                val serializedData = preferences[notificationData]
-                val data = if (serializedData != null) jsonAdapter.fromJson(serializedData) else null
+                val serializedData = preferences[allCurrencies]
+                val data = if (serializedData != null) jsonAdapterCurrencies.fromJson(serializedData) else null
                 data
             }
             .catch { e ->
@@ -136,4 +132,5 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
                 emit(PrimaryColor.GREEN.name)
             }
     }
+
 }

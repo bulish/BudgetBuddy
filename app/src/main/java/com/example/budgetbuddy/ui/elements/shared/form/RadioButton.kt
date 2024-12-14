@@ -13,7 +13,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +27,8 @@ fun CustomRadioButton(
     value: String,
     onChange: (String) -> Unit,
 ) {
+
     val radioOptions = listOf(TransactionType.EXPENSE.value, TransactionType.INCOME.value)
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(value ?: TransactionType.EXPENSE) }
 
     Column(
         modifier = Modifier
@@ -51,9 +50,8 @@ fun CustomRadioButton(
                 Modifier
                     .fillMaxWidth()
                     .selectable(
-                        selected = (text == selectedOption),
+                        selected = (text == value),
                         onClick = {
-                            onOptionSelected(text)
                             onChange(text)
                         }
                     ),
@@ -61,9 +59,8 @@ fun CustomRadioButton(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = (text == selectedOption),
+                    selected = (text == value),
                     onClick = {
-                        onOptionSelected(text)
                         onChange(text)
                     },
                     enabled = true,

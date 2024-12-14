@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.budgetbuddy.extensions.toFormattedString
+import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.theme.BasicMargin
@@ -36,6 +37,7 @@ fun TransactionItem(
     transaction: Transaction,
     navigation: INavigationRouter
 ) {
+    val transactionCategory = TransactionCategory.fromString(transaction.category)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,13 +53,13 @@ fun TransactionItem(
             modifier = Modifier
                 .size(36.dp)
                 .background(
-                    color = transaction.category.color,
+                    color = transactionCategory.color,
                     shape = CircleShape
                 ),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(id = transaction.category.icon),
+                painter = painterResource(id = transactionCategory.icon),
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(24.dp)
@@ -68,7 +70,7 @@ fun TransactionItem(
             .weight(1f)
             .padding(start = HalfMargin())) {
             Text(
-                text = stringResource(id = transaction.category.getStringResource()),
+                text = stringResource(id = transactionCategory.getStringResource()),
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.secondary

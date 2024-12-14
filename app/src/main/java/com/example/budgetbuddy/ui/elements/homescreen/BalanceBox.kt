@@ -23,7 +23,8 @@ fun BalanceBox(
     currency: String,
     onCurrencyChange: (String) -> Unit,
     sum: Double,
-    addNewTransaction: () -> Unit
+    addNewTransaction: () -> Unit,
+    currencies: Map<String, Double>?
 ) {
     Column(
         modifier = Modifier
@@ -37,7 +38,8 @@ fun BalanceBox(
             currency = currency,
             onChange = { newCurrency ->
                 onCurrencyChange(newCurrency)
-            }
+            },
+            currencies = currencies
         )
 
         Spacer(modifier = Modifier.height(4.dp))

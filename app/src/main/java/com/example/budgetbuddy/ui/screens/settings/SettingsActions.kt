@@ -9,5 +9,6 @@ interface SettingsActions {
     fun changeCurrency(currency: String)
     fun signOut()
     fun getUserInformation()
+    fun getCurrencyData()
 
 }

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.model.NotificationData
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.utils.ErrorUtils
 import com.google.firebase.FirebaseNetworkException
@@ -46,19 +45,8 @@ class ResetPasswordAuthViewModel @Inject constructor(
                     try {
                         if (task.isSuccessful) {
                             _resetEmailUIState.update {
-                                ResetPasswordUIState.EmailSent
+                                ResetPasswordUIState.EmailSent(R.string.reset_success)
                             }
-                            viewModelScope.launch {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = R.string.reset_success,
-                                        isSuccess = true
-                                    )
-                                )
-                            }
-
-                            Log.d("ResetPasswordAuthViewModel", "sendPasswordResetEmail:success")
                         } else {
                             Log.e(
                                 "ResetPasswordAuthViewModel",
@@ -72,24 +60,12 @@ class ResetPasswordAuthViewModel @Inject constructor(
 
                             val exception = task.exception
                             if (exception is FirebaseAuthException) {
-                                viewModelScope.launch {
-                                    dataStoreRepository.saveNotificationData(
-                                        NotificationData(
-                                            show = true,
-                                            message = ErrorUtils.handleFirebaseError(exception.errorCode),
-                                            isSuccess = false
-                                        )
-                                    )
+                                _resetEmailUIState.update {
+                                    ResetPasswordUIState.Error(ErrorUtils.handleFirebaseError(exception.errorCode))
                                 }
                             } else if (exception is FirebaseNetworkException) {
-                                viewModelScope.launch {
-                                    dataStoreRepository.saveNotificationData(
-                                        NotificationData(
-                                            show = true,
-                                            message = R.string.network_error,
-                                            isSuccess = false
-                                        )
-                                    )
+                                _resetEmailUIState.update {
+                                    ResetPasswordUIState.Error(R.string.network_error)
                                 }
                             }
                         }
@@ -101,24 +77,12 @@ class ResetPasswordAuthViewModel @Inject constructor(
                         )
 
                         if (e is FirebaseNetworkException) {
-                            viewModelScope.launch {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = R.string.network_error,
-                                        isSuccess = false
-                                    )
-                                )
+                            _resetEmailUIState.update {
+                                ResetPasswordUIState.Error(R.string.network_error)
                             }
                         } else {
-                            viewModelScope.launch {
-                                dataStoreRepository.saveNotificationData(
-                                    NotificationData(
-                                        show = true,
-                                        message = ErrorUtils.handleFirebaseError((task.exception as? FirebaseAuthException)?.errorCode ?: ""),
-                                        isSuccess = false
-                                    )
-                                )
+                            _resetEmailUIState.update {
+                                ResetPasswordUIState.Error(ErrorUtils.handleFirebaseError((task.exception as? FirebaseAuthException)?.errorCode ?: ""))
                             }
                         }
                     }

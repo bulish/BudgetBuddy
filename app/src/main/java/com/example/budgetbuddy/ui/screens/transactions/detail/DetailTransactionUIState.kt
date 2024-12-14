@@ -7,7 +7,7 @@ sealed class DetailTransactionUIState {
 
     object UserNotAuthorized : DetailTransactionUIState()
 
-    object TransactionDeleted: DetailTransactionUIState()
+    class TransactionDeleted(val message: Int): DetailTransactionUIState()
 
     class Success(
         val data: List<LabeledElementData>,

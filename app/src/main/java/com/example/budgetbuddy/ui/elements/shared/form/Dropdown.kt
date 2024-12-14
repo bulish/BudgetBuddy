@@ -78,7 +78,7 @@ fun <T> Dropdown(
                 DropdownMenuItem(
                     onClick = {},
                     text = {
-                        Text(text = stringResource(id = R.string.no_places_available))
+                        Text(text = stringResource(id = R.string.no_data_available))
                     }
                 )
             } else {

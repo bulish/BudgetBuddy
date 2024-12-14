@@ -18,10 +18,12 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.homescreen.BalanceBox
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.transactions.TransactionList
 import com.example.budgetbuddy.ui.theme.BasicMargin
@@ -40,6 +42,10 @@ fun HomeScreen(
 
     val transactionSum = remember {
         mutableDoubleStateOf(0.0)
+    }
+
+    val currencies = remember {
+        mutableStateOf<Map<String, Double>?>(null)
     }
 
     LaunchedEffect(Unit) {
@@ -62,7 +68,19 @@ fun HomeScreen(
             is HomeScreenUIState.UserNotAuthorized -> {
                 navigationRouter.navigateToLoginScreen()
             }
+
+            is HomeScreenUIState.CurrencyLoaded -> {
+                currencies.value = it.data
+            }
+
+            is HomeScreenUIState.Error -> {
+                ShowToast(stringResource(id = it.error.communicationError))
+            }
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getCurrencyData()
     }
 
     BaseScreen(
@@ -88,7 +106,8 @@ fun HomeScreen(
             navigationRouter = navigationRouter,
             transactions = transactions,
             currency = currency.value,
-            sum = transactionSum.doubleValue
+            sum = transactionSum.doubleValue,
+            currencies = currencies.value
         )
     }
 }
@@ -100,7 +119,8 @@ fun HomeScreenContent(
     navigationRouter: INavigationRouter,
     transactions: List<Transaction>,
     currency: String,
-    sum: Double
+    sum: Double,
+    currencies: Map<String, Double>?
 ) {
     val updatedCurrency = remember { mutableStateOf(currency) }
 
@@ -115,7 +135,8 @@ fun HomeScreenContent(
             sum = sum,
             addNewTransaction = {
                 navigationRouter.navigateToAddEditTransactionScreen(null)
-            }
+            },
+            currencies = currencies
         )
 
         Spacer(modifier = Modifier.height(BasicMargin()))

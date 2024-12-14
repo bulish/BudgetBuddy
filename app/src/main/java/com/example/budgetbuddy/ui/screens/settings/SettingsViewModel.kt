@@ -1,25 +1,29 @@
 package com.example.budgetbuddy.ui.screens.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.model.NotificationData
+import com.example.budgetbuddy.communication.CommunicationResult
+import com.example.budgetbuddy.communication.IExchangeRateRemoteRepository
 import com.example.budgetbuddy.model.PrimaryColor
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Thread.State
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val authService: AuthService,
-    private val dataStoreRepository: IDataStoreRepository
+    private val dataStoreRepository: IDataStoreRepository,
+    private val exchangeRateRemoteRepository: IExchangeRateRemoteRepository
 ) : ViewModel(), SettingsActions {
 
     private val _settingsUIState: MutableStateFlow<SettingsUIState> =
@@ -39,7 +43,7 @@ class SettingsViewModel @Inject constructor(
     init {
         if (authService.getCurrentUser() == null) {
             _settingsUIState.update {
-                SettingsUIState.UserNotAuthorized
+                SettingsUIState.UserNotAuthorized(null)
             }
         }
 
@@ -95,23 +99,60 @@ class SettingsViewModel @Inject constructor(
     override fun signOut() {
         authService.signOut()
         _settingsUIState.update {
-            SettingsUIState.UserNotAuthorized
-        }
-
-        viewModelScope.launch {
-            dataStoreRepository.saveNotificationData(
-                NotificationData(
-                    show = true,
-                    message = R.string.logout_success,
-                    isSuccess = true
-                )
-            )
+            SettingsUIState.UserNotAuthorized(R.string.logout_success)
         }
     }
 
     override fun getUserInformation() {
         _settingsUIState.update {
             SettingsUIState.Success(authService.getCurrentUser())
+        }
+    }
+
+    override fun getCurrencyData() {
+        viewModelScope.launch {
+            dataStoreRepository.getCurrencies().collect { dataStoreData ->
+                if (dataStoreData != null) {
+                    Log.d("dataStoreData", "${dataStoreData}")
+                    _settingsUIState.update {
+                        SettingsUIState.CurrencyLoaded(dataStoreData)
+                    }
+                } else {
+                    val result = withContext(Dispatchers.IO) {
+                        exchangeRateRemoteRepository.getCurrentCurrency(activeCurrency.value)
+                    }
+
+                    when(result) {
+                        is CommunicationResult.ConnectionError -> {
+                            _settingsUIState.update {
+                                SettingsUIState
+                                    .Error(SettingsScreenError(R.string.no_internet_connection))
+                            }
+                        }
+                        is CommunicationResult.Error -> {
+                            _settingsUIState.update {
+                                SettingsUIState
+                                    .Error(SettingsScreenError(R.string.something_went_wrong))
+                            }
+                        }
+                        is CommunicationResult.Exception -> {
+                            _settingsUIState.update {
+                                SettingsUIState
+                                    .Error(SettingsScreenError(R.string.something_went_wrong))
+                            }
+                        }
+                        is CommunicationResult.Success -> {
+                            _settingsUIState.update {
+                                SettingsUIState.CurrencyLoaded(result.data.conversion_rates)
+                            }
+
+                            result.data.conversion_rates?.let {
+                                dataStoreRepository.setCurrencies(it)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

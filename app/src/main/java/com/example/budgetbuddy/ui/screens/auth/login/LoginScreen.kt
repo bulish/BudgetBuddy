@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.navigation.INavigationRouter
+import com.example.budgetbuddy.ui.elements.shared.ShowToast
 import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.form.AuthForm
 import com.example.budgetbuddy.ui.elements.shared.form.FormBottomText
@@ -49,9 +50,17 @@ fun LoginScreen(navigationRouter: INavigationRouter) {
             }
 
             is LoginUIState.UserLoggedIn -> {
+                if (it.message != null) {
+                    ShowToast(message = stringResource(id = it.message))
+                }
+
                 LaunchedEffect(it) {
                     navigationRouter.navigateToHomeScreen()
                 }
+            }
+
+            is LoginUIState.Error -> {
+                ShowToast(message = stringResource(id = it.message))
             }
         }
     }
