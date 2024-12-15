@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -24,7 +25,8 @@ fun TextInput(
     value: String,
     error: Int?,
     onChange: (String) -> Unit,
-    isNumber: Boolean = false
+    isNumber: Boolean = false,
+    testTag: String
 ) {
     OutlinedTextField(
         placeholder = if (value.isEmpty()) {
@@ -38,7 +40,8 @@ fun TextInput(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp),
+            .padding(0.dp)
+            .testTag(testTag),
         maxLines = 1,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Grey,

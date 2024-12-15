@@ -38,7 +38,8 @@ fun AuthForm(
     onSubmit: () -> Unit,
     formBottomText: (@Composable () -> Unit)? = null,
     bottomBottomText: @Composable () -> Unit,
-    testTag: String = ""
+    testTag: String,
+    submitButtonTestTag: String
 ) {
     LazyColumn(
         modifier = Modifier
@@ -84,7 +85,8 @@ fun AuthForm(
                         text = buttonText,
                         onClickAction = {
                             onSubmit()
-                        }
+                        },
+                        testTag = submitButtonTestTag
                     )
 
                     Spacer(modifier = Modifier.height(BasicMargin()))

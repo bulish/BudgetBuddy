@@ -242,7 +242,8 @@ fun SettingsScreenContent(
                 CustomButton(
                     type = getCustomButtonType(buttonType = CustomButtonType.OutlinedMaxSize),
                     text = stringResource(id = R.string.sign_out),
-                    onClickAction = { actions.signOut() }
+                    onClickAction = { actions.signOut() },
+                    testTag = ""
                 )
             }
         }

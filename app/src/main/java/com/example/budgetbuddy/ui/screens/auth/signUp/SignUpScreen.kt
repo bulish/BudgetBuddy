@@ -89,14 +89,16 @@ fun SignUpScreenContent(
                 label = "Email",
                 value = data.user.email,
                 error = data.userEmailError,
-                onChange = { actions.onUserEmailChanged(it) }
+                onChange = { actions.onUserEmailChanged(it) },
+                testTag = TestTagSignUpScreenEmailInput
             )
 
             TextInput(
                 label = stringResource(id = R.string.placeholder_username),
                 value = data.user.username,
                 error = data.userUsernameError,
-                onChange = { actions.onUserUsernameChanged(it) }
+                onChange = { actions.onUserUsernameChanged(it) },
+                testTag = TestTagSignUpScreenUsernameInput
             )
 
             PasswordInput(
@@ -104,7 +106,8 @@ fun SignUpScreenContent(
                 onChange = { newPassword ->
                     actions.onUserPasswordChanged(newPassword)
                 },
-                error = data.userPasswordError
+                error = data.userPasswordError,
+                testTag = TestTagSignUpScreenPasswordInput
             )
 
             PasswordInput(
@@ -112,7 +115,8 @@ fun SignUpScreenContent(
                 onChange = { newPassword ->
                     actions.onUserPasswordAgainChanged(newPassword)
                 },
-                error = data.userPasswordError
+                error = data.userPasswordError,
+                testTag = TestTagSignUpScreenPasswordAgainInput
             )
         },
         buttonText = stringResource(id = R.string.signup_submit),
@@ -125,8 +129,11 @@ fun SignUpScreenContent(
                 text = stringResource(id = R.string.login_submit),
                 onClickHandler = {
                     navigationRouter.navigateToLoginScreen()
-                }
+                },
+                testTag = TestTagSignUpScreenLoginButton
             )
         },
+        testTag = TestTagSignUpScreenForm,
+        submitButtonTestTag = TestTagSignUpScreenSubmitButton
     )
 }

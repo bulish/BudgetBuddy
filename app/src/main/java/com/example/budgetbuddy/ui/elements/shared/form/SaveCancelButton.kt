@@ -25,7 +25,8 @@ fun SaveCancelButtons(
         CustomButton(
             type = getCustomButtonType(buttonType = CustomButtonType.Basic),
             text = stringResource(id = R.string.save),
-            onClickAction = { onSave() }
+            onClickAction = { onSave() },
+            testTag = ""
         )
 
         Spacer(modifier = Modifier.width(HalfMargin()))
@@ -33,7 +34,8 @@ fun SaveCancelButtons(
         CustomButton(
             type = getCustomButtonType(buttonType = CustomButtonType.Outlined),
             text = stringResource(id = R.string.cancel),
-            onClickAction = { onCancel() }
+            onClickAction = { onCancel() },
+            testTag = ""
         )
     }
 }

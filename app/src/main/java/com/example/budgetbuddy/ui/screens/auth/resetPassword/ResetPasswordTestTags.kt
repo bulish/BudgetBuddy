@@ -1,0 +1,6 @@
+package com.example.budgetbuddy.ui.screens.auth.resetPassword
+
+const val TestTagResetPasswordScreenForm = "TestTagResetPasswordScreenForm"
+const val TestTagResetPasswordScreenEmailInput = "TestTagResetPasswordScreenEmailInput"
+const val TestTagResetPasswordScreenSubmitButton = "TestTagResetPasswordScreenSubmitButton"
+const val TestTagResetPasswordScreenGoBackButton = "TestTagResetPasswordScreenGoBackButton"

@@ -141,7 +141,8 @@ fun DetailScreenContent(
             CustomButton(
                 type = getCustomButtonType(buttonType = CustomButtonType.OutlinedMaxSize),
                 text = stringResource(id = R.string.detail_delete),
-                onClickAction = { dialogIsVisible = true }
+                onClickAction = { dialogIsVisible = true },
+                testTag = ""
             )
 
             if (dialogIsVisible) {

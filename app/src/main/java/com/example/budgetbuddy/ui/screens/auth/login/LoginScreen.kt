@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
@@ -26,8 +27,6 @@ import com.example.budgetbuddy.ui.elements.shared.form.FormPageTopAppBar
 import com.example.budgetbuddy.ui.elements.shared.form.PasswordInput
 import com.example.budgetbuddy.ui.elements.shared.form.TextInput
 import com.example.budgetbuddy.ui.theme.BasicMargin
-
-const val TestTagLoginScreenForm = "TestTagLoginScreenForm"
 
 @Composable
 fun LoginScreen(navigationRouter: INavigationRouter) {
@@ -102,7 +101,8 @@ fun LoginScreenContent(
                 label = "Email",
                 value = data.user.email,
                 error = data.userEmailError,
-                onChange = { actions.onUserEmailChanged(it) }
+                onChange = { actions.onUserEmailChanged(it) },
+                testTag = TestTagLoginScreenEmailInput
             )
 
             PasswordInput(
@@ -110,7 +110,8 @@ fun LoginScreenContent(
                 onChange = { newPassword ->
                     actions.onUserPasswordChanged(newPassword)
                 },
-                error = data.userPasswordError
+                error = data.userPasswordError,
+                testTag = TestTagLoginScreenPasswordInput
             )
         },
         buttonText = stringResource(id = R.string.login_submit),
@@ -127,7 +128,7 @@ fun LoginScreenContent(
                 ),
                 modifier = Modifier.clickable() {
                     navigationRouter.navigateToResetPasswordScreen()
-                }
+                }.testTag(TestTagLoginScreenForgottenPassword)
             )
         },
         bottomBottomText = {
@@ -136,9 +137,11 @@ fun LoginScreenContent(
                 text = stringResource(id = R.string.signup_submit),
                 onClickHandler = {
                     navigationRouter.navigateToSignUpScreen()
-                }
+                },
+                testTag = TestTagLoginScreenSignUpButton
             )
         },
-        testTag = TestTagLoginScreenForm
+        testTag = TestTagLoginScreenForm,
+        submitButtonTestTag = TestTagLoginScreenSubmitButton
     )
 }

@@ -35,6 +35,7 @@ class SignUpAuthViewModel @Inject constructor(
         val password = data.user.password
         val password_again = data.user.passwordAgain
 
+        // TODO: po registraci rovnou prihlasit
         if (email.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()
             && password_again.isNotEmpty() && password == password_again) {
             auth.createUserWithEmailAndPassword(email, password)

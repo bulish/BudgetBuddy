@@ -185,7 +185,8 @@ fun AddEditPlaceScreenContent(
                     label = stringResource(id = R.string.name_label),
                     value = data.place.name,
                     error = data.placeNameError,
-                    onChange = { actions.onPlaceNameChanged(it) }
+                    onChange = { actions.onPlaceNameChanged(it) },
+                    testTag = ""
                 )
 
                 Spacer(modifier = Modifier.height(BasicMargin()))

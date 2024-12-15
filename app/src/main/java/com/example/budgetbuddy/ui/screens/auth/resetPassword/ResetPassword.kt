@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
@@ -92,7 +93,8 @@ fun ResetPasswordContent(
                 label = "Email",
                 value = data.email,
                 error = data.emailError,
-                onChange = { actions.onEmailChanged(it) }
+                onChange = { actions.onEmailChanged(it) },
+                testTag = TestTagResetPasswordScreenEmailInput
             )
         },
         buttonText = stringResource(id = R.string.reset_submit),
@@ -107,8 +109,10 @@ fun ResetPasswordContent(
                 ),
                 modifier = Modifier.clickable() {
                     navigationRouter.navigateToLoginScreen()
-                }
+                }.testTag(TestTagResetPasswordScreenGoBackButton)
             )
-        }
+        },
+        testTag = TestTagResetPasswordScreenForm,
+        submitButtonTestTag = TestTagResetPasswordScreenSubmitButton
     )
 }

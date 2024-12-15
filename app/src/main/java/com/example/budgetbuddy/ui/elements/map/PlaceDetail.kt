@@ -93,7 +93,8 @@ fun PlaceDetail(
                             text = stringResource(id = R.string.edit),
                             onClickAction = {
                                 onEdit()
-                            }
+                            },
+                            testTag = ""
                         )
 
                         Spacer(modifier = Modifier.width(HalfMargin()))
@@ -101,7 +102,8 @@ fun PlaceDetail(
                         CustomButton(
                             type = getCustomButtonType(buttonType = CustomButtonType.Basic),
                             text = stringResource(id = R.string.delete),
-                            onClickAction = { onDelete() }
+                            onClickAction = { onDelete() },
+                            testTag = ""
                         )
                     }
                 }

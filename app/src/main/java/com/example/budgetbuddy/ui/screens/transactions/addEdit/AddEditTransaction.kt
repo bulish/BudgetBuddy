@@ -255,7 +255,8 @@ fun AddEditTransactionContent(
                     value = data.transaction.price.toString(),
                     error = data.transactionPriceError,
                     onChange = { actions.onTransactionPriceChange(it.toDouble()) },
-                    isNumber = true
+                    isNumber = true,
+                    testTag = ""
                 )
 
                 Dropdown(
@@ -299,7 +300,8 @@ fun AddEditTransactionContent(
                     label = stringResource(id = R.string.note_label),
                     value = data.transaction.note.toString(),
                     error = data.transactionNoteError ,
-                    onChange = { actions.onTransactionNoteChange(it) }
+                    onChange = { actions.onTransactionNoteChange(it) },
+                    testTag = ""
                 )
 
                 SaveCancelButtons(

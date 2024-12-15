@@ -58,7 +58,8 @@ fun AddressInputField(
                 onChange = { newAddress ->
                     isUserEditing = true
                     onAddressChange(newAddress)
-                }
+                },
+                testTag = "" // TODO
             )
         }
 
