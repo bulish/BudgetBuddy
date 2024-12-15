@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,13 +28,18 @@ import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 import com.example.budgetbuddy.ui.theme.White
 
+const val TestTagListOfTransactionsScreenListContainer = "TestTagListOfTransactionsScreenListContainer"
+
 @Composable
 fun TransactionList(
     displayTitle: Boolean = true,
     transactions: List<Transaction>,
     navigation: INavigationRouter
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .testTag(TestTagListOfTransactionsScreenListContainer)
+    ) {
         if (displayTitle) {
             Text(
                 text = "Transactions",

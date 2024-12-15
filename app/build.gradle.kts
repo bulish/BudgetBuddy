@@ -27,7 +27,8 @@ android {
         versionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.budgetbuddy.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -65,7 +66,14 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/*"
+        }
+    }
+    testOptions {
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging = true
+            }
         }
     }
 }
@@ -128,4 +136,16 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.moshi)
     implementation(libs.retrofit.okhtt3)
+
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+
+    // required if you want to use Mockito for unit tests
+    testImplementation(libs.mockito.core)
+    // required if you want to use Mockito for Android tests
+    androidTestImplementation(libs.mockito.android)
+
+    testImplementation("io.mockk:mockk:1.13.2")
+    androidTestImplementation("io.mockk:mockk-android:1.13.2")
+
 }

@@ -27,6 +27,8 @@ import com.example.budgetbuddy.ui.elements.shared.form.PasswordInput
 import com.example.budgetbuddy.ui.elements.shared.form.TextInput
 import com.example.budgetbuddy.ui.theme.BasicMargin
 
+const val TestTagLoginScreenForm = "TestTagLoginScreenForm"
+
 @Composable
 fun LoginScreen(navigationRouter: INavigationRouter) {
     val viewModel = hiltViewModel<LoginAuthViewModel>()
@@ -136,6 +138,7 @@ fun LoginScreenContent(
                     navigationRouter.navigateToSignUpScreen()
                 }
             )
-        }
+        },
+        testTag = TestTagLoginScreenForm
     )
 }

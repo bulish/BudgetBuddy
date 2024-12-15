@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
@@ -37,6 +38,7 @@ fun AuthForm(
     onSubmit: () -> Unit,
     formBottomText: (@Composable () -> Unit)? = null,
     bottomBottomText: @Composable () -> Unit,
+    testTag: String = ""
 ) {
     LazyColumn(
         modifier = Modifier
@@ -47,7 +49,8 @@ fun AuthForm(
                 end = BasicMargin(),
                 bottom = BasicMargin(),
                 top = 88.dp
-            ),
+            )
+            .testTag(testTag),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

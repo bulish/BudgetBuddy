@@ -10,6 +10,7 @@ activityCompose = "1.9.3"
 composeBom = "2023.08.00"
 firebase = "32.8.1"
 google-services = "4.4.1"
+mockitoCore = "2.24.5"
 navigation-compose = "2.7.7"
 
 room = "2.6.1"
@@ -42,6 +43,11 @@ moshi_v = "1.15.0"
 
 ksp-version = "1.9.0-1.0.13"
 
+hilt-android-testing = "2.44"
+hilt-android-compiler = "2.44"
+mockito = "4.1.0"
+room-testing = "2.5.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -61,6 +67,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 
+mockito-core-v2245 = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose"}
 
 room-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "room" }
@@ -100,6 +107,12 @@ retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", v
 retrofit-okhtt3 = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging_v" }
 
 moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi_v" }
+
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt-android-testing" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-android-compiler" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
+room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room-testing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
