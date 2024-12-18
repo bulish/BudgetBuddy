@@ -110,7 +110,8 @@ fun SettingsScreen(
     BaseScreen(
         topBarText = stringResource(id = R.string.settings),
         showLoading = loading,
-        navigation = navigationRouter
+        navigation = navigationRouter,
+        navigationTitleTestTag = TestTagSettingsScreenTitle
     ) {
         SettingsScreenContent(
             paddingValues = it,

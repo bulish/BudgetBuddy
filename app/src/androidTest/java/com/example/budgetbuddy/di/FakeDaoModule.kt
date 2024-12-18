@@ -20,12 +20,8 @@ object FakeDaoModule {
 
     @Provides
     @Singleton
-    fun provideTransactions(): TransactionsDao {
-        val transactionsDao = mockk<TransactionsDao>()
-
-        every { transactionsDao.getAllByUser(any()) } returns flowOf(listOf())
-
-        return transactionsDao
+    fun provideTransactionsDao(): TransactionsDao {
+        return mockk()
     }
 
     @Provides
