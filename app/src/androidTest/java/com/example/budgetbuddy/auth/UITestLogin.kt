@@ -1,6 +1,5 @@
 package com.example.budgetbuddy.auth
 
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
@@ -19,7 +18,6 @@ import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenForm
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenPasswordInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSignUpButton
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSubmitButton
-import com.example.budgetbuddy.ui.screens.transactions.list.TestTagTransactionsListScreenTitle
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase.assertTrue
@@ -85,6 +83,23 @@ class UITestLogin {
             assertTrue(route == Destination.LoginScreen.route)
         }
     }
+
+    /*
+    @Test
+    fun test3_login_successful() {
+
+        runBlocking {
+            val mockApiService = mockk<FakeExchangeRateRemoteRepositoryImpl>(relaxed = true)
+            val currencyMock = ServerMock.data
+
+            `when`(mockApiService.getCurrentCurrency("USD")).thenReturn(CommunicationResult.Success(currencyMock))
+
+
+            val result = mockApiService.getCurrentCurrency("USD")
+            assert(result is CommunicationResult.Success)
+            assert((result as CommunicationResult.Success).data.base_code == "USD")
+        }
+    }*/
 
     private fun launchLoginScreenWithNavigation() {
         composeRule.activity.setContent {

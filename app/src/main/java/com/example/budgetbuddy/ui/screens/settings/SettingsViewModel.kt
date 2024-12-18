@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val authService: AuthService,
-    private val dataStoreRepository: IDataStoreRepository,
+    val dataStoreRepository: IDataStoreRepository,
     private val exchangeRateRemoteRepository: IExchangeRateRemoteRepository
 ) : ViewModel(), SettingsActions {
 
@@ -69,12 +69,14 @@ class SettingsViewModel @Inject constructor(
     override fun changeMode() {
         viewModelScope.launch {
             _isDarkMode.update {
-                !isDarkMode.value
+                !it
             }
 
-            dataStoreRepository.setDarkTheme(isDarkMode.value)
+            val updatedMode = _isDarkMode.value
+            dataStoreRepository.setDarkTheme(updatedMode)
         }
     }
+
 
     override fun changeCurrency(currency: String) {
         viewModelScope.launch {

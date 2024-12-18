@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ fun BaseScreen(
     hideNavigation: Boolean? = false,
     isAuth: Boolean? = false,
     navigation: INavigationRouter,
+    navigationTitleTestTag: String = "",
 
     content: @Composable (paddingValues: PaddingValues) -> Unit) {
 
@@ -62,6 +64,7 @@ fun BaseScreen(
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier
                                     .padding(start = 0.dp)
+                                    .testTag(navigationTitleTestTag)
                             )
                         } else if (topBar != null) {
                             topBar()

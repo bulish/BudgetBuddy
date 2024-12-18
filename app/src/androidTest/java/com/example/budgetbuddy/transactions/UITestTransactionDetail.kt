@@ -5,14 +5,22 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
+import com.example.budgetbuddy.helpers.LoginHelper.performLogin
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.activity.MainActivity
 import com.example.budgetbuddy.ui.elements.transactions.TestTagListOfTransactionsScreenListContainer
+import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenEmailInput
+import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenForgottenPassword
+import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenForm
+import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenPasswordInput
+import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSignUpButton
+import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSubmitButton
 import com.example.budgetbuddy.ui.screens.transactions.list.TestTagListOfTransactionsScreenFAB
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -51,26 +59,63 @@ class UITestsTransactionDetail {
     }
 
     //  2 - HIGH
+
     @Test
-    fun test_list_of_transactions_exists() {
-        launchListOfTransactionScreenWithNavigation()
+    fun test1_login() {
+        navigate(Destination.LoginScreen.route)
         with(composeRule) {
+            val email = "test@test.com"
+            val password = "Test12345"
+
+            onNodeWithTag(TestTagLoginScreenEmailInput).assertExists()
+            onNodeWithTag(TestTagLoginScreenPasswordInput).assertExists()
+            onNodeWithTag(TestTagLoginScreenSubmitButton).assertExists()
+
+            onNodeWithTag(TestTagLoginScreenEmailInput).performTextInput(email)
+            onNodeWithTag(TestTagLoginScreenPasswordInput).performTextInput(password)
+            onNodeWithTag(TestTagLoginScreenSubmitButton).performClick()
+        }
+    }
+
+    @Test
+    fun test2_list_of_transactions_exists() {
+        navigate(Destination.TransactionsList.route)
+        with(composeRule) {
+
+            waitForIdle()
+
             onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertExists()
-            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertIsDisplayed()
             onNodeWithTag(TestTagListOfTransactionsScreenFAB).assertExists()
+
             Thread.sleep(1000)
         }
     }
 
-    /*
-    //  3 - HIGH
     @Test
-    fun test_navigate_to_correct_transaction_detail_screen() {
+    fun test3_list_of_transactions_exists() {
+        navigate(Destination.TransactionsList.route)
+        with(composeRule) {
+
+            waitForIdle()
+
+            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertExists()
+            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertIsDisplayed()
+            onNodeWithTag(TestTagListOfTransactionsScreenFAB).assertExists()
+
+            onNodeWithTag(TestTagListOfTransactionsScreenFAB).performClick()
+
+            Thread.sleep(1000)
+        }
+    }
+
+    //  3 - HIGH
+   /* @Test
+    fun test4_navigate_to_correct_transaction_detail_screen() {
         runBlocking {
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             assertNotNull(userId)
 
-            launchListOfTransactionScreenWithNavigation()
+
             with(composeRule) {
                 val transactions =
                     placesRepository.getAllByUser(userId!!).first { it.isNotEmpty() }
@@ -89,94 +134,20 @@ class UITestsTransactionDetail {
                 val route = navController.currentBackStackEntry?.destination?.route
                 Assert.assertTrue(route?.contains(Destination.TransactionDetail.route) ?: false)
 
-                onNodeWithTag(TestTagPetDetailName).assertTextEquals(targetTransaction.name)
+                //onNodeWithTag(TestTagPetDetailName).assertTextEquals(targetTransaction.name)
             }
-        }
-    }
-
-    @Test
-    fun test_scroll_and_navigate_to_correct_pet_detail_screen() {
-        launchListOfPetsScreenWithNavigation()
-        with(composeRule) {
-            val targetPetName = "Carlitto"
-            onNodeWithTag(TestTagListOfPetsScreenLazyList).assertIsDisplayed()
-            onNodeWithTag(TestTagListOfPetsScreenLazyList).performScrollToNode(
-                hasText(
-                    targetPetName
-                )
-            )
-
-            waitForIdle()
-            Thread.sleep(1000) // Just to better see
-
-            onNode(hasText(targetPetName)).assertIsDisplayed()
-            onNode(hasText(targetPetName)).performClick()
-
-            waitForIdle()
-            Thread.sleep(1000)   // Just for better visibility
-
-            val route = navController.currentBackStackEntry?.destination?.route
-            Assert.assertTrue(route?.contains(RoutePetDetail) ?: false)
-
-            onNodeWithTag(TestTagPetDetailName).assertTextEquals(targetPetName)
-        }
-    }
-
-    @Test
-    fun test_scroll_and_navigate_to_correct_pet_detail_screen_switch() {
-        launchListOfPetsScreenWithNavigation()
-        with(composeRule) {
-            val targetPetName = "Carlitto"
-            onNodeWithTag(TestTagListOfPetsScreenLazyList).assertIsDisplayed()
-            onNodeWithTag(TestTagListOfPetsScreenLazyList).performScrollToNode(
-                hasText(
-                    targetPetName
-                )
-            )
-
-            waitForIdle()
-            Thread.sleep(1000) // Just to better see
-
-            onNode(hasText(targetPetName)).assertIsDisplayed()
-            onNode(hasText(targetPetName)).performClick()
-
-            waitForIdle()
-            Thread.sleep(1000)   // Just for better visibility
-
-            val route = navController.currentBackStackEntry?.destination?.route
-            Assert.assertTrue(route?.contains(RoutePetDetail) ?: false)
-
-            onNodeWithTag(TestTagPetDetailName).assertTextEquals(targetPetName)
-
-            onNodeWithTag(TestTagPetDetailWeightText).assertIsDisplayed()
-            onNodeWithTag(TestTagPetDetailRadioButtonKilograms).assertIsDisplayed()
-            onNodeWithTag(TestTagPetDetailRadioButtonPounds).assertIsDisplayed()
-
-            onNodeWithTag(TestTagPetDetailWeightText).assertTextContains(
-                value = WeightUnitsEnum.KILOGRAMS.unit,
-                substring = true,
-                ignoreCase = true
-            )
-            onNodeWithTag(TestTagPetDetailRadioButtonPounds).performClick()
-
-            waitForIdle()
-            Thread.sleep(1000)   // Just for better visibility
-
-            onNodeWithTag(TestTagPetDetailWeightText).assertTextContains(
-                value = WeightUnitsEnum.POUNDS.unit,
-                substring = true,
-                ignoreCase = true
-            )
         }
     }*/
 
-    //  1 - HIGH
-    private fun launchListOfTransactionScreenWithNavigation() {
+    // Helper method to launch the transaction screen and navigate
+    private fun navigate(route: String) {
         composeRule.activity.setContent {
             MaterialTheme {
                 navController = rememberNavController()
-                NavGraph(startDestination = Destination.TransactionsList.route)
+                NavGraph(navController = navController, startDestination = route)
             }
         }
     }
+
+
 }

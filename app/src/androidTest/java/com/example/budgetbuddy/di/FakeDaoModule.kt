@@ -6,8 +6,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import io.mockk.every
 import javax.inject.Singleton
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
+
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
@@ -18,7 +21,11 @@ object FakeDaoModule {
     @Provides
     @Singleton
     fun provideTransactions(): TransactionsDao {
-        return mockk()
+        val transactionsDao = mockk<TransactionsDao>()
+
+        every { transactionsDao.getAllByUser(any()) } returns flowOf(listOf())
+
+        return transactionsDao
     }
 
     @Provides

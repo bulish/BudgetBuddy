@@ -110,7 +110,8 @@ fun TransactionsListScreen(
         topBarText = stringResource(id = R.string.transactions),
         navigation = navigationRouter,
         showLoading = loading,
-        placeholderScreenContent = null
+        placeholderScreenContent = null,
+        navigationTitleTestTag = TestTagTransactionsListScreenTitle
     ) {
         TransactionsListScreenContent(
             transactions = transactions,
