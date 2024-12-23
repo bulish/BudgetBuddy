@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import com.example.budgetbuddy.ui.screens.auth.login.LoginScreen
 import com.example.budgetbuddy.ui.screens.auth.resetPassword.ResetPasswordScreen
 import com.example.budgetbuddy.ui.screens.auth.signUp.SignUpScreen
+import com.example.budgetbuddy.ui.screens.greetings.GreetingsScreen
 import com.example.budgetbuddy.ui.screens.home.HomeScreen
 import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditPlaceScreen
 import com.example.budgetbuddy.ui.screens.places.map.MapScreen
@@ -104,6 +105,10 @@ fun NavGraph(
         ) {
             val id = it.arguments?.getLong("id")
             DetailTransactionScreen(navigationRouter = navigationRouter, id = id)
+        }
+
+        composable(Destination.GreetingsScreen.route){
+            GreetingsScreen(navigationRouter = navigationRouter)
         }
     }
 }

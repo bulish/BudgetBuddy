@@ -157,4 +157,17 @@
 
     <string name="income">Income</string>
     <string name="expense">Expense</string>
+
+    <string name="greetings_first_title">Welcome to BudgetBuddy</string>
+    <string name="greetings_first_subtitle">Your personal finance management app</string>
+    <string name="greetings_second_title">Track your transactions</string>
+    <string name="greetings_second_subtitle">Easily manage your income and expenses</string>
+    <string name="greetings_third_title">Add transaction locations</string>
+    <string name="greetings_third_subtitle">Pin your transaction locations on the map</string>
+    <string name="greetings_fourth_title">Manage your currencies</string>
+    <string name="greetings_fourth_subtitle">Track transactions in various currencies with up-to-date exchange rates</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get Started</string>
+    <string name="skip">Skip</string>
+
 </resources>

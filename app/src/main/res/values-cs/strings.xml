@@ -158,4 +158,16 @@
 
     <string name="income">Příjem</string>
     <string name="expense">Výdaj</string>
+
+    <string name="greetings_first_title">Vítejte v aplikaci BudgetBuddy</string>
+    <string name="greetings_first_subtitle">Vaše aplikace pro správu osobních financí</string>
+    <string name="greetings_second_title">Sledujte své transakce</string>
+    <string name="greetings_second_subtitle">Snadno spravujte své příjmy a výdaje</string>
+    <string name="greetings_third_title">Přidávejte místa transakcí</string>
+    <string name="greetings_third_subtitle">Zaznamenávejte místa, kde jste provedli transakce, na mapě</string>
+    <string name="greetings_fourth_title">Spravujte své měny</string>
+    <string name="greetings_fourth_subtitle">Sledujte transakce v různých měnách s aktuálními směnnými kurzy</string>
+    <string name="next">Další</string>
+    <string name="get_started">Začít</string>
+    <string name="skip">Přeskočit</string>
 </resources>

@@ -16,4 +16,5 @@ interface INavigationRouter {
     fun returnBack()
     fun getNavController(): NavController
     fun navigateTabs(route: String)
+    fun navigateToGreetingScreen()
 }

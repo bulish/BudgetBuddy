@@ -16,4 +16,5 @@ sealed class Destination(val route: String, val icon: ImageVector? = null, val t
     object TransactionsList : Destination("transactions_list", Icons.Default.List, R.string.money)
     object AddEditTransaction : Destination("add_edit_transaction", null, R.string.add_transaction_title)
     object TransactionDetail : Destination("transaction_detail", null, R.string.transactions)
+    object GreetingsScreen : Destination("greetings", null, 0)
 }

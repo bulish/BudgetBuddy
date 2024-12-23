@@ -170,4 +170,6 @@ dependencies {
     implementation(libs.camera.video)
     implementation(libs.guava)
 
+    implementation(libs.splashscreen)
+
 }

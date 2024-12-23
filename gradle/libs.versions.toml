@@ -53,6 +53,7 @@ uiTestJunit4Android = "1.7.6"
 text-recognition = "16.0.1"
 camerax-version = "1.4.0"
 guava = "31.0.1-android"
+splashscreen = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -129,6 +130,8 @@ camera-video = { group = "androidx.camera", name = "camera-video", version.ref =
 camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax-version" }
 camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax-version" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+
+splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

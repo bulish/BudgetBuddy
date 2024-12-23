@@ -75,4 +75,8 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
     override fun navigateTabs(route: String) {
         navController.navigate(route)
     }
+
+    override fun navigateToGreetingScreen() {
+        navController.navigate(Destination.GreetingsScreen.route)
+    }
 }
