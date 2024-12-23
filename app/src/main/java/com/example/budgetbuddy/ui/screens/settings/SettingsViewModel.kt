@@ -116,7 +116,6 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreRepository.getCurrencies().collect { dataStoreData ->
                 if (dataStoreData != null) {
-                    Log.d("dataStoreData", "${dataStoreData}")
                     _settingsUIState.update {
                         SettingsUIState.CurrencyLoaded(dataStoreData)
                     }

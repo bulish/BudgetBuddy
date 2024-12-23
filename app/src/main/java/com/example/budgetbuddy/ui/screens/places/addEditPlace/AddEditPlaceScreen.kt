@@ -59,6 +59,8 @@ fun AddEditPlaceScreen(
         mutableStateOf<Boolean>(false)
     }
 
+    var loading = true
+
     state.value.let {
         when(it){
             AddEditPlaceUIState.Loading -> {
@@ -66,20 +68,28 @@ fun AddEditPlaceScreen(
             }
             is AddEditPlaceUIState.PlaceChanged -> {
                 data = it.data
+                loading = false
             }
             is AddEditPlaceUIState.PlaceSaved -> {
                 ShowToast(message = stringResource(id = it.message))
                 LaunchedEffect(it){
                     navigationRouter.returnBack()
                 }
+                loading = true
             }
             AddEditPlaceUIState.PlaceDeleted -> {
                 LaunchedEffect(it){
                     navigationRouter.returnBack()
                 }
+                loading = true
             }
             AddEditPlaceUIState.UserNotAuthorized -> {
                 navigationRouter.returnBack()
+                loading = true
+            }
+
+            is AddEditPlaceUIState.Error -> {
+                ShowToast(message = stringResource(id = it.error))
             }
         }
     }
@@ -92,6 +102,7 @@ fun AddEditPlaceScreen(
         onBackClick = {
             dialogIsVisible = true
         },
+        showLoading = loading,
         actions = {
             if (id != null){
                 IconButton(onClick = {
@@ -243,6 +254,5 @@ fun AddEditPlaceScreenContent(
                 )
             }
         }
-
     }
 }

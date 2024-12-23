@@ -33,7 +33,7 @@ import com.example.budgetbuddy.ui.theme.White
 fun HomeScreen(
     navigationRouter: INavigationRouter
 ) {
-    var loading = false
+    var loading = true
 
     val viewModel = hiltViewModel<HomeScreenViewModel>()
     val state = viewModel.homeScreenUIState.collectAsState()
@@ -63,15 +63,18 @@ fun HomeScreen(
 
             is HomeScreenUIState.UserNotAuthorized -> {
                 navigationRouter.navigateToLoginScreen()
+                loading = true
             }
 
             is HomeScreenUIState.CurrencyLoaded -> {
                 currencies.value = it.data
                 viewModel.loadTransactions()
+                loading = false
             }
 
             is HomeScreenUIState.Error -> {
                 ShowToast(stringResource(id = it.error.communicationError))
+                loading = false
             }
         }
     }

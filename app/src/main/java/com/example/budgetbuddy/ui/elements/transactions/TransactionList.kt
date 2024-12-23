@@ -43,7 +43,7 @@ fun TransactionList(
     ) {
         if (displayTitle) {
             Text(
-                text = "Transactions",
+                text = stringResource(id = R.string.transactions),
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(vertical = HalfMargin())
@@ -80,7 +80,7 @@ fun TransactionList(
 
                 Button(onClick = { navigation.navigateToAddEditTransactionScreen(null) }, modifier = Modifier.align(
                     Alignment.CenterHorizontally)) {
-                    Text(text = "Add Transaction", color = White)
+                    Text(text = stringResource(id = R.string.add_transaction), color = White)
                 }
             }
         } else {

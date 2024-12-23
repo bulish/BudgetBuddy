@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">BudgetBuddy</string>
+
     <string name="back">Back</string>
     <string name="network_error">Connection error</string>
     <string name="cannot_be_empty">This field is required</string>
@@ -90,6 +91,7 @@
     <string name="category_groceries">Groceries</string>
     <string name="category_other">Other</string>
     <string name="no_category_selected">No category selected</string>
+
     <string name="address">Address</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -97,6 +99,7 @@
     <string name="add_edit_transaction_success">Transaction was saved successfully</string>
     <string name="edit_transaction_title">Edit transaction</string>
     <string name="add_transaction_title">New transaction</string>
+
     <string name="category_salary">Salary</string>
     <string name="category_business">Business</string>
     <string name="category_investment">Investment</string>
@@ -112,6 +115,7 @@
     <string name="category_insurance">Insurance</string>
     <string name="category_bank_fees">Bank fees</string>
     <string name="category_loan_payment">Loan payment</string>
+
     <string name="price_label">Price</string>
     <string name="note_label">Note</string>
     <string name="transaction_type_label">Transaction type</string>
@@ -138,5 +142,19 @@
     <string name="all">All</string>
     <string name="invalid_parameters">Invalid parameters</string>
     <string name="scan_receipt">Scan your receipt</string>
-    <string name="text_detected">Recognizing text...</string>
+    <string name="text_detected">Recognizing text…</string>
+    <string name="unknown_address">This address is unknown</string>
+    <string name="add_new_money">Add money</string>
+    <string name="available_balance">Available balance</string>
+    <string name="add_transaction">Add transaction</string>
+
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="home">Home</string>
+    <string name="map">Map</string>
+    <string name="money">Money</string>
+
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
 </resources>

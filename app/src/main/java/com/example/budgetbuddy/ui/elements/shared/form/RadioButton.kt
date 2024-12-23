@@ -16,10 +16,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.budgetbuddy.R
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.ui.theme.BasicMargin
+
+data class RadioOption(
+    val value: String,
+    val label: String
+)
 
 @Composable
 fun CustomRadioButton(
@@ -28,7 +35,10 @@ fun CustomRadioButton(
     onChange: (String) -> Unit,
 ) {
 
-    val radioOptions = listOf(TransactionType.EXPENSE.value, TransactionType.INCOME.value)
+    val radioOptions = listOf(
+        RadioOption(TransactionType.EXPENSE.value, stringResource(id = R.string.expense)),
+        RadioOption(TransactionType.INCOME.value, stringResource(id = R.string.income))
+    )
 
     Column(
         modifier = Modifier
@@ -50,18 +60,18 @@ fun CustomRadioButton(
                 Modifier
                     .fillMaxWidth()
                     .selectable(
-                        selected = (text == value),
+                        selected = (text.value == value),
                         onClick = {
-                            onChange(text)
+                            onChange(text.value)
                         }
                     ),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = (text == value),
+                    selected = (text.value == value),
                     onClick = {
-                        onChange(text)
+                        onChange(text.value)
                     },
                     enabled = true,
                     colors = RadioButtonDefaults.colors(
@@ -71,7 +81,7 @@ fun CustomRadioButton(
                     interactionSource = remember { MutableInteractionSource() }
                 )
                 Text(
-                    text = text.toString(),
+                    text = text.label,
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.secondary

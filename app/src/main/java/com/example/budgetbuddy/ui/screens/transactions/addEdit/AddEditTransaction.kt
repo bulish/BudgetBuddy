@@ -96,13 +96,14 @@ fun AddEditTransactionScreen(
 
             is AddEditTransactionUIState.TransactionSaved -> {
                 ShowToast(message = stringResource(id = it.message))
-                
+                loading = true
                 LaunchedEffect(it){
                     navigationRouter.returnBack()
                 }
             }
 
             AddEditTransactionUIState.TransactionDeleted -> {
+                loading = true
                 LaunchedEffect(it){
                     navigationRouter.navigateToTransactionsListScreen()
                 }
@@ -110,7 +111,7 @@ fun AddEditTransactionScreen(
 
             AddEditTransactionUIState.UserNotAuthorized -> {
                 navigationRouter.returnBack()
-                loading = false
+                loading = true
             }
 
             is AddEditTransactionUIState.Error -> {
@@ -135,7 +136,6 @@ fun AddEditTransactionScreen(
                }
 
                 val currencyKeys: List<String> = it.data.currencies.keys.toList() ?: emptyList()
-                Log.d("currency", "${it.data.transaction?.currency}")
                 selectedCurrency.value = it.data.transaction?.currency ?: currencyKeys[0]
 
                 selectedPlace = places.find { p -> p.id == it.data.transaction?.placeId }

@@ -48,7 +48,7 @@ fun DetailTransactionScreen(
 
     val data: MutableList<LabeledElementData> = mutableListOf()
 
-    var loading by remember { mutableStateOf(false) }
+    var loading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         if (id != null) {
@@ -59,7 +59,6 @@ fun DetailTransactionScreen(
     state.value.let {
         when (it) {
             DetailTransactionUIState.Loading -> {
-                loading = true
                 if (id != null) {
                     viewModel.loadTransaction(id)
                 }
@@ -68,6 +67,7 @@ fun DetailTransactionScreen(
             is DetailTransactionUIState.TransactionDeleted -> {
                 navigationRouter.navigateToTransactionsListScreen()
                 ShowToast(message = stringResource(id = it.message))
+                loading = true
             }
 
             DetailTransactionUIState.UserNotAuthorized -> {
@@ -85,6 +85,7 @@ fun DetailTransactionScreen(
     BaseScreen(
         topBarText = "Detail",
         onBackClick = { navigationRouter.returnBack() },
+        showLoading = loading,
         hideNavigation = true,
         floatingActionButton = {
             FloatingActionButton(

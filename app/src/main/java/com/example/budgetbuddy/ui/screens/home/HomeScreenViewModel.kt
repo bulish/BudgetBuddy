@@ -8,6 +8,7 @@ import com.example.budgetbuddy.communication.CommunicationResult
 import com.example.budgetbuddy.communication.ExchangeRateResponse
 import com.example.budgetbuddy.communication.IExchangeRateRemoteRepository
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
@@ -152,7 +153,7 @@ class HomeScreenViewModel @Inject constructor(
         }
 
         val activeRate = _conversionRates.value?.get(currency) ?: 1.0
-        val value =  transaction.price * activeRate
+        val value =  (transaction.price * activeRate).toFormattedString()
         return "$value $currency"
     }
 }

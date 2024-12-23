@@ -175,7 +175,6 @@ class AddEditTransactionViewModel @Inject constructor(
             ZoneId.systemDefault()
         )
 
-        Log.d("new date", "${data.transaction.date}")
         _addEditTransactionUIState.update {
             AddEditTransactionUIState.TransactionChanged(data)
         }

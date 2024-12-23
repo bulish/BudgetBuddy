@@ -53,8 +53,6 @@ fun SettingsScreen(
     navigationRouter: INavigationRouter,
     context: Context
 ) {
-    Log.d("SettingsScreen", "Settings screen is being rendered")
-
     val viewModel = hiltViewModel<SettingsViewModel>()
     val state = viewModel.settingsUIState.collectAsState()
     val currency = viewModel.activeCurrency.collectAsState()
@@ -83,7 +81,6 @@ fun SettingsScreen(
         when (it) {
             SettingsUIState.Loading -> {
                 loading = true
-
                 try {
                     viewModel.getUserInformation()
                 } catch (e: Exception) {
@@ -103,6 +100,7 @@ fun SettingsScreen(
             }
 
             is SettingsUIState.Success -> {
+                loading = false
                 userData.value = it.user
                 viewModel.getCurrencyData()
             }

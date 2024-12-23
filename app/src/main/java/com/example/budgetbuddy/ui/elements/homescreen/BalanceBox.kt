@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,6 +21,7 @@ import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.TripleMargin
+import com.example.budgetbuddy.R
 
 @Composable
 fun BalanceBox(
@@ -62,7 +64,7 @@ fun BalanceBox(
         )
 
         Text(
-            text = "Available balance",
+            text = stringResource(id = R.string.available_balance),
             color = MaterialTheme.colorScheme.tertiary,
             fontSize = 16.sp
         )
@@ -75,7 +77,7 @@ fun BalanceBox(
                 containerColor = MaterialTheme.colorScheme.tertiary
             )
         ) {
-            Text(text = "Add Money", color = MaterialTheme.colorScheme.primary)
+            Text(text = stringResource(id = R.string.add_new_money), color = MaterialTheme.colorScheme.primary)
         }
     }
 }

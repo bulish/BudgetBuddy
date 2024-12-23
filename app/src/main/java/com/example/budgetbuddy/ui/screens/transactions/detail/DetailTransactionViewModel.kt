@@ -70,7 +70,7 @@ class DetailTransactionViewModel @Inject constructor(
                     val modifierData = listOf(
                         LabeledElementData(
                             label = R.string.category_placeholder,
-                            data = category.name.lowercase(),
+                            dataInt = TransactionCategory.fromString(transaction.category).getStringResource(),
                         ),
                         LabeledElementData(
                             label = R.string.price_label,
@@ -78,7 +78,7 @@ class DetailTransactionViewModel @Inject constructor(
                         ),
                         LabeledElementData(
                             label = R.string.transaction_type_label,
-                            data = TransactionType.valueOf(transaction.type.uppercase()).name.lowercase() ?: "-",
+                            dataInt = TransactionType.fromString(transaction.type).getStringResource(),
                         ),
                         LabeledElementData(
                             label = R.string.date_label,

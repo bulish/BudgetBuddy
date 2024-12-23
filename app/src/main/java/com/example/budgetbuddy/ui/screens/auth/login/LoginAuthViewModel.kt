@@ -33,7 +33,8 @@ class LoginAuthViewModel @Inject constructor(
     private var data = LoginData()
 
     init {
-        if (authService.getCurrentUser() != null) {
+        val user = authService.getCurrentUser()
+        if (user.email != null) {
             _loginUIState.update {
                 LoginUIState.UserLoggedIn(
                     authService.getCurrentUser(), null)

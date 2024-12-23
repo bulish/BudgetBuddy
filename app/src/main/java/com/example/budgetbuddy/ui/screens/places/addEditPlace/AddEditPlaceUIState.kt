@@ -8,4 +8,6 @@ sealed class AddEditPlaceUIState {
     object UserNotAuthorized : AddEditPlaceUIState()
     class PlaceChanged(val data: AddEditPlaceScreenData) : AddEditPlaceUIState()
     object PlaceDeleted : AddEditPlaceUIState()
+
+    class Error(val error: Int): AddEditPlaceUIState()
 }

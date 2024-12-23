@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.elements.shared.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
@@ -7,6 +8,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.INavigationRouter
@@ -27,6 +29,7 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     val selectedItem = remember(currentRoute) {
+        Log.d("current route", "$currentRoute")
         items.indexOfFirst { it.route == currentRoute }
     }
 
@@ -38,7 +41,7 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
                     Column {
                         Icon(
                             item.icon ?: Icons.Default.Home,
-                            contentDescription = item.title,
+                            contentDescription = stringResource(id = item.title),
                             tint = if (selectedItem == index) White else MaterialTheme.colorScheme.secondary
                         )
 
@@ -46,7 +49,7 @@ fun BottomNavigationBar(navigation: INavigationRouter) {
                 },
                 label = {
                     Text(
-                        item.title,
+                        stringResource(id = item.title),
                         color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier.offset(y = HalfMargin())
                     )

@@ -55,12 +55,14 @@ fun LoginScreen(navigationRouter: INavigationRouter) {
                     ShowToast(message = stringResource(id = it.message))
                 }
 
+                loading = true
                 LaunchedEffect(it) {
                     navigationRouter.navigateToHomeScreen()
                 }
             }
 
             is LoginUIState.Error -> {
+                loading = false
                 ShowToast(message = stringResource(id = it.message))
             }
         }

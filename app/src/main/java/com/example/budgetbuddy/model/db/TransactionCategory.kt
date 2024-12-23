@@ -40,7 +40,6 @@ enum class TransactionCategory(val value: String, val icon: Int) {
 
     companion object {
         fun fromString(type: String?): TransactionCategory {
-            Log.d("transaction category", "${type}")
             return entries.find { it.value.equals(type, ignoreCase = true) } ?: OTHER
         }
     }
@@ -58,6 +57,19 @@ fun randomColor(): Color {
 
 enum class TransactionType(val value: String) {
     INCOME("income"),
-    EXPENSE("expense")
+    EXPENSE("expense");
+
+    companion object {
+        fun fromString(type: String?): TransactionType {
+            return TransactionType.entries.find { it.value.equals(type, ignoreCase = true) } ?: TransactionType.INCOME
+        }
+    }
+
+    fun getStringResource(): Int {
+        return when (this) {
+            TransactionType.INCOME -> R.string.income
+            TransactionType.EXPENSE -> R.string.expense
+        }
+    }
 }
 

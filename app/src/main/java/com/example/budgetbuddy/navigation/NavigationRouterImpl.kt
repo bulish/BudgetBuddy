@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.navigation
 
+import android.util.Log
 import androidx.navigation.NavController
 import com.example.budgetbuddy.model.Location
 import com.squareup.moshi.JsonAdapter

@@ -86,7 +86,6 @@ fun TransactionsListScreen(
             }
 
             TransactionsListUIState.Loading -> {
-                loading = true
                 viewModel.getAllTransactions(null)
             }
 

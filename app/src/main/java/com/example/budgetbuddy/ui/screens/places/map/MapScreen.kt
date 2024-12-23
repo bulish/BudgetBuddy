@@ -1,6 +1,5 @@
 package com.example.budgetbuddy.ui.screens.places.map
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -60,13 +59,12 @@ fun MapScreen(
     state.value.let {
         when(it){
             is MapScreenUIState.DataLoaded -> {
-                Log.d("delete place", "loaded")
                 mapData.clear()
                 mapData.addAll(it.data)
+                loading = false
             }
 
             MapScreenUIState.Loading -> {
-                Log.d("delete place", "hello")
                 viewModel.loadPlaces()
             }
 
@@ -74,12 +72,12 @@ fun MapScreen(
                 loading = true
                 navigationRouter.navigateToLoginScreen()
             }
-
         }
     }
 
     BaseScreen(
         topBar = null,
+        showLoading = loading,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -149,7 +147,7 @@ fun MapScreenContent(
             uiSettings = mapUiSettings,
             cameraPositionState = cameraPositionState
         ) {
-            //if (data.isNotEmpty()) {
+            if (data.isNotEmpty()) {
                 MapEffect { map ->
                     if (googleMap == null) {
                         googleMap = map
@@ -175,9 +173,9 @@ fun MapScreenContent(
 
                     if (data.isNotEmpty() && clusterManager != null) {
                         clusterManager?.addItems(data)
-                        clusterManager?.cluster()  // Re-cluster the items
+                        clusterManager?.cluster()
                     }
-               // }
+                }
             }
         }
 

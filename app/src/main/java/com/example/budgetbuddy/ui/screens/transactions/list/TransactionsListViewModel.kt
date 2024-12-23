@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
@@ -90,7 +91,7 @@ class TransactionsListViewModel @Inject constructor(
         }
 
         val activeRate = conversionRates?.get(currency) ?: 1.0
-        val value =  transaction.price * activeRate
+        val value =  (transaction.price * activeRate).toFormattedString()
         return "$value $currency"
     }
 }

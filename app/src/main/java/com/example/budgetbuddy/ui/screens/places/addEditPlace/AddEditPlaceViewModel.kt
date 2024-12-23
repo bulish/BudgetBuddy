@@ -57,12 +57,16 @@ class AddEditPlaceViewModel @Inject constructor(
 
         if (name.isNotEmpty() && address.isNotEmpty() && category != null
             && latitude != null && longitude != null) {
-            viewModelScope.launch {
-                if (data.place.id != null){
-                    repository.update(data.place)
-                } else {
-                    repository.insert(data.place)
+            try {
+                viewModelScope.launch {
+                    if (data.place.id != null){
+                        repository.update(data.place)
+                    } else {
+                        repository.insert(data.place)
+                    }
                 }
+            } catch (error: Exception) {
+                AddEditPlaceUIState.Error(R.string.something_went_wrong)
             }
 
             _addEditPlaceUIState.update {
@@ -87,20 +91,24 @@ class AddEditPlaceViewModel @Inject constructor(
             }
 
             if (latitude == null) {
-                data.placeLatitudeError = R.string.cannot_be_empty
+                data.placeAddressError = R.string.unknown_address
             }
 
             if (longitude == null) {
-                data.placeLongitudeError = R.string.cannot_be_empty
+                data.placeAddressError = R.string.unknown_address
             }
         }
     }
 
     override fun onPlaceAddressChanged(address: String) {
-        data.place.address = address
-        _addEditPlaceUIState.update {
-            AddEditPlaceUIState.PlaceChanged(data)
-        }
+       try {
+           data.place.address = address
+           _addEditPlaceUIState.update {
+               AddEditPlaceUIState.PlaceChanged(data)
+           }
+       } catch (error: Exception) {
+           Log.e("Error place address", "$error")
+       }
     }
 
     override fun onPlaceCategoryChanged(category: PlaceCategory) {
@@ -153,6 +161,10 @@ class AddEditPlaceViewModel @Inject constructor(
                             }
                         }
                     }
+                }
+            } else {
+                _addEditPlaceUIState.update {
+                    AddEditPlaceUIState.PlaceChanged(data)
                 }
             }
         }

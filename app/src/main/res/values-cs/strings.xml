@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BudgetBuddy</string>
+
+    <string name="back">Zpět</string>
+    <string name="network_error">Chyba připojení</string>
+    <string name="cannot_be_empty">Toto pole je povinné</string>
+
+    <string name="error_argument_error">Chyba argumentu</string>
+    <string name="error_app_not_authorized01">Aplikace není autorizována</string>
+    <string name="error_email_already_in_use">Tato emailová adresa je již používána</string>
+    <string name="error_email_not_found">Emailová adresa je neplatná</string>
+    <string name="error_invalid_email">Emailová adresa je neplatná</string>
+    <string name="error_missing_email">Emailová adresa je povinná</string>
+    <string name="error_operation_not_allowed">Operace není povolena</string>
+    <string name="error_password_login_disabled">Přihlášení pomocí hesla je zakázáno</string>
+    <string name="error_too_many_attempts_try_later">Příliš mnoho pokusů, zkuste to znovu později</string>
+    <string name="error_user_disabled">Uživatelský účet byl deaktivován</string>
+    <string name="error_user_not_found">Uživatel s touto emailovou adresou neexistuje</string>
+    <string name="error_weak_password">Heslo je příliš slabé</string>
+    <string name="error_invalid_credentials">Přihlašovací údaje jsou neplatné</string>
+
+    <string name="signup_title">Vytvořit účet</string>
+    <string name="signup_subtitle">Zaregistrujte se pro nový účet</string>
+    <string name="signup_submit">Zaregistrovat se</string>
+    <string name="signup_form_title">Registrace</string>
+    <string name="signup_success">Registrace byla úspěšná</string>
+    <string name="signup_already_have_aacount">Již máte účet?</string>
+
+    <string name="login_submit">Přihlásit se</string>
+    <string name="login_success">Přihlášení bylo úspěšné</string>
+    <string name="login_title">Vítejte zpět</string>
+    <string name="login_subtitle">Přihlaste se zpět do svého účtu</string>
+    <string name="login_form_title">Přihlášení</string>
+    <string name="login_new_user">Jste nový uživatel?</string>
+    <string name="login_forgotten_password">Zapomenuté heslo?</string>
+
+    <string name="reset_password_title">Zapomenuté heslo</string>
+    <string name="reset_password_subtitle">Zadejte svůj email</string>
+    <string name="reset_back">Zpět k přihlášení</string>
+    <string name="reset_form_title">Nové heslo</string>
+    <string name="reset_submit">Odeslat</string>
+    <string name="reset_success">Odeslání emailu bylo úspěšné</string>
+
+    <string name="settings">Nastavení</string>
+    <string name="settings_appearance">Vzhled</string>
+    <string name="settings_dark_mode">Tmavý režim</string>
+    <string name="settings_show_icons">Zobrazit ikony webových stránek</string>
+    <string name="settings_language">Jazyk</string>
+    <string name="settings_activeLanguage">čeština</string>
+    <string name="settings_application_info">Informace o aplikaci</string>
+    <string name="settings_version">Verze</string>
+
+    <string name="sign_out">Odhlásit se</string>
+
+    <string name="edit_add_icon">Přidat fotku</string>
+    <string name="edit_change_icon">Změnit fotku</string>
+    <string name="edit_delete_icon">Smazat fotku</string>
+    <string name="placeholder_password">Heslo</string>
+    <string name="save">Uložit</string>
+    <string name="cancel">Zrušit</string>
+    <string name="passwords_dont_match">Hesla se neshodují</string>
+    <string name="placeholder_username">Uživatelské jméno</string>
+    <string name="list_no_data_title">Žádné transakce</string>
+    <string name="list_no_data_subtitle">Začněte přidáním první transakce, aby se zde zobrazily!</string>
+    <string name="logout_success">Odhlášení bylo úspěšné</string>
+    <string name="currency">Měna</string>
+    <string name="add_edit_place_success">Místo bylo úspěšně uloženo</string>
+    <string name="add_place_title">Přidat místo</string>
+    <string name="edit_place_title">Upravit místo</string>
+    <string name="not_set">Nastaveno není</string>
+    <string name="location">Lokalita</string>
+    <string name="name_label">Název</string>
+
+    <string name="alert_dialog_confirm">Potvrdit</string>
+    <string name="alert_dialog_dismiss">Zavřít</string>
+    <string name="alert_dialog_icon">Dialog - ikona</string>
+    <string name="alert_dialog_delete_title">Opravdu chcete smazat toto heslo?</string>
+    <string name="alert_dialog_delete_subtitle">Po smazání bude heslo přesunuto do koše.</string>
+    <string name="alert_dialog_trash_title">Jste si jistí, že chcete trvale smazat toto heslo?</string>
+    <string name="alert_dialog_trash_subtitle">Po smazání nebude možné heslo obnovit.</string>
+    <string name="alert_dialog_add_edit_title">Opravdu chcete opustit tuto obrazovku?</string>
+    <string name="alert_dialog_add_edit_subtitle">Po opuštění nebude možné obnovit změny</string>
+
+    <string name="category_food">Jídlo</string>
+    <string name="category_entertainment">Zábava</string>
+    <string name="category_books">Knihy</string>
+    <string name="category_electronics">Elektronika</string>
+    <string name="category_clothing">Oblečení</string>
+    <string name="category_health">Zdraví</string>
+    <string name="category_education">Vzdělání</string>
+    <string name="category_groceries">Potraviny</string>
+    <string name="category_other">Ostatní</string>
+    <string name="no_category_selected">Žádná kategorie není vybraná</string>
+
+    <string name="address">Adresa</string>
+    <string name="edit">Upravit</string>
+    <string name="delete">Smazat</string>
+    <string name="transactions">Transakce</string>
+    <string name="add_edit_transaction_success">Transakce byla úspěšně uložena</string>
+    <string name="edit_transaction_title">Upravit transakci</string>
+    <string name="add_transaction_title">Nová transakce</string>
+
+    <string name="category_salary">Výplata</string>
+    <string name="category_business">Byznys</string>
+    <string name="category_investment">Investice</string>
+    <string name="category_gift">Dárek</string>
+    <string name="category_bonus">Bonus</string>
+    <string name="category_load_received">Přijatý úvěr</string>
+    <string name="category_restaurants">Restaurace</string>
+    <string name="category_coffee">Káva</string>
+    <string name="category_rent">Nájem</string>
+    <string name="category_utilities">Účet za služby</string>
+    <string name="category_fuel">Palivo</string>
+    <string name="category_medical">Zdravotní</string>
+    <string name="category_insurance">Pojištění</string>
+    <string name="category_bank_fees">Bankovní poplatky</string>
+    <string name="category_loan_payment">Splátka půjčky</string>
+
+    <string name="price_label">Cena</string>
+    <string name="note_label">Poznámka</string>
+    <string name="transaction_type_label">Typ transakce</string>
+    <string name="select_date">Vybrat datum</string>
+    <string name="date_label">Datum</string>
+    <string name="confirm">Potvrdit</string>
+    <string name="no_currency_selected">Vyberte měnu</string>
+    <string name="no_place_selected">Vyberte místo</string>
+    <string name="delete_success">Smazání bylo úspěšné</string>
+    <string name="detail_subtitle">Podrobnosti</string>
+    <string name="detail_delete">Smazat</string>
+    <string name="place_label">Místo</string>
+    <string name="category_placeholder">Kategorie</string>
+    <string name="no_places_available">Žádná místa nejsou dostupná</string>
+    <string name="green_color">Zelená</string>
+    <string name="red_color">Červená</string>
+    <string name="blue_color">Modrá</string>
+    <string name="no_color_selected">Žádná barva není vybraná</string>
+    <string name="main_color">Hlavní barva</string>
+    <string name="no_internet_connection">Žádné připojení k internetu</string>
+    <string name="something_went_wrong">Něco se pokazilo</string>
+    <string name="no_active_currency">Žádná aktivní měna není vybrána</string>
+    <string name="no_data_available">Žádná data nejsou k dispozici</string>
+    <string name="all">Vše</string>
+    <string name="invalid_parameters">Neplatné parametry</string>
+    <string name="scan_receipt">Naskenujte svoji účtenku</string>
+    <string name="text_detected">Rozpoznávání textu…</string>
+    <string name="unknown_address">Tato adresa je neznámá</string>
+    <string name="add_new_money">Přidat peníze</string>
+    <string name="available_balance">Zůstatek</string>
+    <string name="add_transaction">Přidat transakci</string>
+
+    <string name="login">Přihlášení</string>
+    <string name="sign_up">Registrace</string>
+    <string name="reset_password">Nové heslo</string>
+    <string name="home">Domů</string>
+    <string name="map">Mapa</string>
+    <string name="money">Peníze</string>
+
+    <string name="income">Příjem</string>
+    <string name="expense">Výdaj</string>
+</resources>

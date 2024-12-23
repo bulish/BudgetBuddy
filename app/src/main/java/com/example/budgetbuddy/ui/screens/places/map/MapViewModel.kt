@@ -27,7 +27,6 @@ class MapViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<MapScreenUIState> = MutableStateFlow(value = MapScreenUIState.Loading)
     val uiState: StateFlow<MapScreenUIState> get() = _uiState.asStateFlow()
 
-    private val numberOfMarkers = 2
 
     init {
         if (authService.getCurrentUser() == null) {
