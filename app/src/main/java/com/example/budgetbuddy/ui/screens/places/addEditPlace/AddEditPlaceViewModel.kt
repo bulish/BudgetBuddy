@@ -7,6 +7,7 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.model.db.PlaceCategory
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditPlaceViewModel @Inject constructor(
     private val repository: ILocalPlacesRepository,
-    private val authService: AuthService,
+    private val authService: IAuthService,
     private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel(), AddEditPlaceScreenActions {
 
@@ -146,7 +147,6 @@ class AddEditPlaceViewModel @Inject constructor(
                 viewModelScope.launch {
                     repository.getPlace(id, userId).collect { place ->
                         if (place != null) {
-                            Log.d("edited place", "$place")
                             data.place = place
                             _addEditPlaceUIState.update {
                                 AddEditPlaceUIState.PlaceChanged(data)

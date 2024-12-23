@@ -1,6 +1,7 @@
 package com.example.budgetbuddy.di
 
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,7 @@ object FireBaseAuth {
 
     @Singleton
     @Provides
-    fun provideAuthService(auth: FirebaseAuth): AuthService {
+    fun provideAuthService(auth: FirebaseAuth): IAuthService {
         return AuthService(auth)
     }
 

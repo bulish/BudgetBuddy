@@ -34,7 +34,8 @@ const val TestTagListOfTransactionsScreenListContainer = "TestTagListOfTransacti
 fun TransactionList(
     displayTitle: Boolean = true,
     transactions: List<Transaction>,
-    navigation: INavigationRouter
+    navigation: INavigationRouter,
+    transformPrice: (Transaction) -> String
 ) {
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -87,7 +88,10 @@ fun TransactionList(
                 items(transactions) { transaction ->
                     TransactionItem(
                         transaction,
-                        navigation
+                        navigation,
+                        transformPrice = {
+                            transformPrice(transaction)
+                        }
                     )
                 }
             }

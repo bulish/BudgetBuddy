@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.model.PrimaryColor
+import com.example.budgetbuddy.services.UserData
 import com.example.budgetbuddy.ui.elements.settings.ColorDropdown
 import com.example.budgetbuddy.ui.elements.settings.settingsItem.SettingsItem
 import com.example.budgetbuddy.ui.elements.settings.userIcon.UserIcon
@@ -52,6 +53,8 @@ fun SettingsScreen(
     navigationRouter: INavigationRouter,
     context: Context
 ) {
+    Log.d("SettingsScreen", "Settings screen is being rendered")
+
     val viewModel = hiltViewModel<SettingsViewModel>()
     val state = viewModel.settingsUIState.collectAsState()
     val currency = viewModel.activeCurrency.collectAsState()
@@ -59,7 +62,7 @@ fun SettingsScreen(
     val primaryColor = viewModel.primaryColor.collectAsState()
 
     var version = ""
-    var userData: MutableState<FirebaseUser?> = remember {
+    var userData: MutableState<UserData?> = remember {
         mutableStateOf(null)
     }
 
@@ -80,7 +83,13 @@ fun SettingsScreen(
         when (it) {
             SettingsUIState.Loading -> {
                 loading = true
-                viewModel.getUserInformation()
+
+                try {
+                    viewModel.getUserInformation()
+                } catch (e: Exception) {
+                    Log.e("SettingsScreen", "Error fetching user data", e)
+                }
+
             }
 
             is SettingsUIState.UserNotAuthorized -> {
@@ -88,6 +97,8 @@ fun SettingsScreen(
                 navigationRouter.navigateToLoginScreen()
                 if (it.message != null) {
                     ShowToast(message = stringResource(id = it.message))
+                } else {
+                    Log.e("SettingsScreen", "Not authorized")
                 }
             }
 
@@ -129,7 +140,7 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     paddingValues: PaddingValues,
-    userData: FirebaseUser?,
+    userData: UserData?,
     actions: SettingsActions,
     version: String,
     currency: String,

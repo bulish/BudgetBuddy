@@ -2,6 +2,7 @@ package com.example.budgetbuddy.ui.screens.places.addEditPlace
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -134,18 +135,23 @@ fun AddEditPlaceScreenContent(
     onDialogConfirmation: () -> Unit
 
 ){
+    Log.d("selected category", "${data.place.category}")
     var selectedCategory by remember { mutableStateOf<PlaceCategory?>(data.place.category) }
 
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
     }
 
-    LaunchedEffect(data.place.imageName) {
+    LaunchedEffect(data.place) {
         if (data.place.imageName != null) {
             val file = File(context.filesDir, data.place.imageName)
             selectedImageUri = Uri.fromFile(file)
         } else {
             selectedImageUri = null
+        }
+
+        if (data.place.category != null) {
+            selectedCategory = data.place.category
         }
     }
 

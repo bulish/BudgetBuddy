@@ -1,8 +1,6 @@
 package com.example.budgetbuddy.ui.elements.shared.form
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -11,21 +9,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,26 +28,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.extensions.formatToDisplayString
 import com.example.budgetbuddy.extensions.toEpochMillis
-import com.example.budgetbuddy.extensions.toIntTimestamp
 import com.example.budgetbuddy.extensions.toLocalDateTime
-import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.Black
-import com.example.budgetbuddy.ui.theme.BluePrimary
-import com.example.budgetbuddy.ui.theme.BudgetBuddyTheme
-import com.example.budgetbuddy.ui.theme.Green
-import com.example.budgetbuddy.ui.theme.Grey
-import com.example.budgetbuddy.ui.theme.LightGreen
-import com.example.budgetbuddy.ui.theme.Pink40
-import com.example.budgetbuddy.ui.theme.Purple40
 import com.example.budgetbuddy.ui.theme.White
 import java.time.LocalDateTime
 
@@ -69,9 +52,17 @@ fun CustomDatePicker(
         initialSelectedDateMillis = value.toEpochMillis()
     )
 
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        it.toLocalDateTime().formatToDisplayString()
-    } ?: value.formatToDisplayString()
+    var selectedDate by remember { mutableStateOf(
+        datePickerState.selectedDateMillis?.let {
+            it.toLocalDateTime().formatToDisplayString()
+        } ?: value.formatToDisplayString()
+    )}
+
+    LaunchedEffect(value) {
+        selectedDate = datePickerState.selectedDateMillis?.let {
+            value.formatToDisplayString()
+        }.toString()
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -161,4 +152,3 @@ fun CustomDatePicker(
         }
     }
 }
-

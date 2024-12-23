@@ -2,6 +2,8 @@ package com.example.budgetbuddy.di
 
 import android.content.Context
 import com.example.budgetbuddy.database.BudgetBuddyDatabase
+import com.example.budgetbuddy.database.places.PlacesDao
+import com.example.budgetbuddy.database.transactions.TransactionsDao
 import com.example.budgetbuddy.fake.FakeBudgetBuddyDatabase
 import dagger.Module
 import dagger.Provides
@@ -19,7 +21,7 @@ object FakeDatabaseModule {
 
     @Provides
     @Singleton
-    fun provideBudgetBuddyDatabase(@ApplicationContext context: Context): BudgetBuddyDatabase {
+    fun provideFakeBudgetBuddyDatabase(context: Context): BudgetBuddyDatabase {
         return FakeBudgetBuddyDatabase.getInMemoryDatabase(context)
     }
 

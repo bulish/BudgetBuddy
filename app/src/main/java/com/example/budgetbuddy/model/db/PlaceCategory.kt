@@ -13,7 +13,7 @@ import com.example.budgetbuddy.ui.theme.Red40
 import com.example.budgetbuddy.ui.theme.Teal40
 import com.example.budgetbuddy.ui.theme.Gray40
 
-enum class PlaceCategory(val value: String, val icon: Int, val itemColor: Color) {
+enum class PlaceCategory(var value: String, val icon: Int, val itemColor: Color) {
     FOOD("food", R.drawable.fork_spoon_24px, Yellow40),
     ENTERTAINMENT("entertainment", R.drawable.sports_esports_24px, Orange40),
     BOOKS("books", R.drawable.auto_stories_24px, Purple40),

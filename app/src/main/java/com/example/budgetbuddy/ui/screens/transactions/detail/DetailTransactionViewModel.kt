@@ -12,6 +12,7 @@ import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.ui.elements.shared.labeledelement.LabeledElementData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailTransactionViewModel @Inject constructor(
     private val repository: ILocalTransactionsRepository,
-    private val authService: AuthService,
+    private val authService: IAuthService,
     private val dataStoreRepository: IDataStoreRepository,
     private val placesRepository: ILocalPlacesRepository
 ) : ViewModel(), DetailTransactionAction {

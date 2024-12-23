@@ -1,19 +1,25 @@
 package com.example.budgetbuddy.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.communication.CommunicationResult
+import com.example.budgetbuddy.communication.ExchangeRateResponse
 import com.example.budgetbuddy.communication.IExchangeRateRemoteRepository
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val repository: ILocalTransactionsRepository,
-    private val authService: AuthService,
+    private val authService: IAuthService,
     private val dataStoreRepository: IDataStoreRepository,
     private val exchangeRateRemoteRepository: IExchangeRateRemoteRepository
 ) : ViewModel(), HomeScreenActions {
@@ -34,6 +40,8 @@ class HomeScreenViewModel @Inject constructor(
 
     private var _activeCurrency = MutableStateFlow<String>("")
     val activeCurrency: StateFlow<String> = _activeCurrency
+
+    private var _conversionRates = MutableStateFlow<Map<String, Double>?>(null)
 
     init {
         if (authService.getCurrentUser() == null) {
@@ -48,6 +56,12 @@ class HomeScreenViewModel @Inject constructor(
                 getCurrencyData()
             }
         }
+
+        viewModelScope.launch {
+            dataStoreRepository.getCurrencies().collect {
+                _conversionRates.value = it
+            }
+        }
     }
 
     override fun loadTransactions() {
@@ -55,31 +69,31 @@ class HomeScreenViewModel @Inject constructor(
 
         if (userID != null) {
             viewModelScope.launch {
-                repository.getAllByUser(userId = userID, null).collect {transactions ->
-                    val totalSum = transactions.sumOf { transaction ->
+                repository.getAllByUser(userId = userID, null).collect { transactions ->
+                    val conversionRates = dataStoreRepository.getCurrencies().first()
+                    val totalSumInCurrentCurrency = transactions.sumOf { transaction ->
+                        val activeRate = conversionRates?.get(activeCurrency.value) ?: 1.0
+
                         when (transaction.type) {
-                            TransactionType.INCOME.value -> transaction.price
-                            TransactionType.EXPENSE.value -> -transaction.price
+                            TransactionType.INCOME.value -> transaction.price * activeRate
+                            TransactionType.EXPENSE.value -> -transaction.price * activeRate
                             else -> 0.0
                         }
                     }
 
                     _homeScreenUIState.update {
-                        HomeScreenUIState.Success(transactions, totalSum)
+                        HomeScreenUIState.Success(transactions, totalSumInCurrentCurrency)
                     }
                 }
-
             }
         }
     }
 
     override fun changeCurrency(currency: String) {
         viewModelScope.launch {
-            _activeCurrency.update {
-                currency
-            }
-
+            _activeCurrency.update { currency }
             dataStoreRepository.setCurrency(activeCurrency.value)
+            getCurrencyData()
         }
     }
 
@@ -92,8 +106,9 @@ class HomeScreenViewModel @Inject constructor(
                    }
                } else {
                    val result = withContext(Dispatchers.IO) {
-                       exchangeRateRemoteRepository.getCurrentCurrency(activeCurrency.value)
+                       exchangeRateRemoteRepository.getCurrentCurrency("CZK")
                    }
+
                    when(result) {
                        is CommunicationResult.ConnectionError -> {
                            _homeScreenUIState.update {
@@ -120,11 +135,24 @@ class HomeScreenViewModel @Inject constructor(
 
                            result.data.conversion_rates?.let {
                                dataStoreRepository.setCurrencies(it)
+                               _conversionRates.value = it
                            }
                        }
                    }
                }
             }
         }
+    }
+
+    override fun transformTransactionPrice(transaction: Transaction): String {
+        val currency = activeCurrency.value
+
+        _activeCurrency.update {
+            currency
+        }
+
+        val activeRate = _conversionRates.value?.get(currency) ?: 1.0
+        val value =  transaction.price * activeRate
+        return "$value $currency"
     }
 }

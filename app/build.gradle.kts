@@ -13,7 +13,7 @@ properties.load(project.rootProject.file("local.properties").reader())
 
 var versionMajor = 1
 var versionMinor = 0
-var versionPatch = 0
+var versionPatch = 1
 
 android {
     namespace = "com.example.budgetbuddy"
@@ -72,6 +72,11 @@ android {
         }
     }
     testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+            it.jvmArgs?.add("-javaagent:${rootDir}/libs/mockk-agent.jar")
+        }
+
         packagingOptions {
             jniLibs {
                 useLegacyPackaging = true
@@ -149,7 +154,20 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.13.5")
     androidTestImplementation("io.mockk:mockk-android:1.13.5")
+    testImplementation("io.mockk:mockk-agent:1.13.5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     implementation(libs.tracing)
+    implementation("com.google.firebase:firebase-auth:21.0.7")
+    testImplementation("org.mockito:mockito-core:4.0.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+
+    implementation(libs.text.recognition)
+    implementation(libs.camera.core)
+    implementation(libs.camera.view)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecyvle)
+    implementation(libs.camera.extensions)
+    implementation(libs.camera.video)
+    implementation(libs.guava)
 
 }

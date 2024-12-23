@@ -9,28 +9,38 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
+import com.example.budgetbuddy.database.transactions.LocalTransactionsRepositoryImpl
 import com.example.budgetbuddy.database.transactions.TransactionsDao
+import com.example.budgetbuddy.model.db.Transaction
+import com.example.budgetbuddy.model.db.TransactionCategory
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.activity.MainActivity
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenEmailInput
-import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenForgottenPassword
-import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenForm
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenPasswordInput
-import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSignUpButton
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSubmitButton
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
+import org.mockito.ArgumentMatchers.any
+import io.mockk.mockk
+import io.mockk.every
+import io.mockk.mockkObject
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -48,8 +58,7 @@ class UITestSettingsView {
     @Before
     fun setUp() {
         hiltRule.inject()
-
-        MockKAnnotations.init(this, relaxUnitFun = true)
+        MockKAnnotations.init(this, relaxed = true)
 
         val email = "test@test.com"
         val password = "Test12345"
@@ -59,6 +68,7 @@ class UITestSettingsView {
 
         composeRule.waitForIdle() // Wait for idle state before interaction
 
+        // Perform login actions
         with(composeRule) {
             onNodeWithTag(TestTagLoginScreenEmailInput).performTextInput(email)
             onNodeWithTag(TestTagLoginScreenPasswordInput).performTextInput(password)
@@ -66,21 +76,33 @@ class UITestSettingsView {
             waitForIdle() // Wait after the login action before the navigation
         }
 
+        // Log before attempting navigation
+        println("Attempting to navigate to Settings screen...")
+
         // Now navigate to the settings screen after ensuring login is completed
         composeRule.activity.runOnUiThread {
-            navController.navigate(Destination.SettingsScreen.route)
+            try {
+                navController.navigate(Destination.SettingsScreen.route)
+
+                composeRule.waitForIdle()
+            } catch (e: Exception) {
+                println("Navigation failed: ${e.message}")
+            }
         }
 
-        composeRule.waitForIdle()
+        composeRule.waitForIdle() // Wait for navigation to complete
     }
 
     @Test
     fun test1_settingsViewScreenIsLoaded() {
         with(composeRule) {
-            //onNodeWithTag("settingsScreenTag").assertIsDisplayed()
+            // Ensure the settings screen is visible after navigation
+            waitForIdle()
+            onNodeWithTag("TestTagSettingsScreenTitle").assertIsDisplayed()
             waitForIdle()
         }
     }
+
 
     private fun launchLoginScreenWithNavigation() {
         composeRule.activity.setContent {

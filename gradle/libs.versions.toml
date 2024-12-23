@@ -47,8 +47,12 @@ hilt-android-testing = "2.44"
 hilt-android-compiler = "2.44"
 mockito = "4.1.0"
 room-testing = "2.5.0"
-tracing = "1.0.0"
+tracing = "1.2.0"
 uiTestJunit4Android = "1.7.6"
+
+text-recognition = "16.0.1"
+camerax-version = "1.4.0"
+guava = "31.0.1-android"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -116,6 +120,15 @@ mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mo
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room-testing" }
 tracing = { group = "androidx.tracing", name = "tracing", version.ref = "tracing" }
+
+text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "text-recognition" }
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax-version" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax-version" }
+camera-lifecyvle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax-version" }
+camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax-version" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax-version" }
+camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax-version" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

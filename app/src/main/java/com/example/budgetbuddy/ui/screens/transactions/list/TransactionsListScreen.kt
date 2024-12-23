@@ -63,6 +63,10 @@ fun TransactionsListScreen(
         mutableDoubleStateOf(0.0)
     }
 
+    val currency = remember {
+        mutableStateOf("")
+    }
+
     val state = viewModel.uiState.collectAsStateWithLifecycle()
     var selectedFilter by remember { mutableStateOf<TransactionCategory?>(null) }
     var loading = true
@@ -77,6 +81,7 @@ fun TransactionsListScreen(
                 transactions.clear()
                 transactions.addAll(it.data)
                 transactionSum.doubleValue = it.sum
+                currency.value = it.currency
                 loading = false
             }
 
@@ -121,7 +126,9 @@ fun TransactionsListScreen(
             selectedFilter = selectedFilter,
             setSelectedFilter = { newValue ->
                 selectedFilter = newValue
-            }
+            },
+            currency = currency.value,
+            actions = viewModel
         )
     }
 }
@@ -133,7 +140,9 @@ fun TransactionsListScreenContent(
     sum: Double,
     navigation: INavigationRouter,
     selectedFilter: TransactionCategory?,
-    setSelectedFilter: (TransactionCategory?) -> Unit
+    setSelectedFilter: (TransactionCategory?) -> Unit,
+    currency: String,
+    actions: TransactionListScreenActions
 ) {
     val filters = listOf("All") + TransactionCategory.entries.map { it }
     var dropdownExpanded by remember { mutableStateOf(false) }
@@ -207,7 +216,7 @@ fun TransactionsListScreenContent(
             )
 
             Text(
-                text = "${sum.toFormattedString()} Kč",
+                text = "${sum.toFormattedString()} $currency",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.secondary
@@ -217,7 +226,10 @@ fun TransactionsListScreenContent(
         TransactionList(
             displayTitle = false,
             transactions = transactions,
-            navigation = navigation
+            navigation = navigation,
+            transformPrice = {
+                actions.transformTransactionPrice(it)
+            }
         )
     }
 }

@@ -5,7 +5,6 @@ import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
 
 interface AddEditTransactionActions {
-    fun onReceiptChange()
 
     fun onTransactionPriceChange(price: Double)
     fun onTransactionCategoryChanged(category: TransactionCategory)

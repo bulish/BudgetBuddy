@@ -8,6 +8,7 @@ import com.example.budgetbuddy.communication.CommunicationResult
 import com.example.budgetbuddy.communication.IExchangeRateRemoteRepository
 import com.example.budgetbuddy.model.PrimaryColor
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val authService: AuthService,
+    private val authService: IAuthService,
     val dataStoreRepository: IDataStoreRepository,
     private val exchangeRateRemoteRepository: IExchangeRateRemoteRepository
 ) : ViewModel(), SettingsActions {
@@ -121,7 +122,7 @@ class SettingsViewModel @Inject constructor(
                     }
                 } else {
                     val result = withContext(Dispatchers.IO) {
-                        exchangeRateRemoteRepository.getCurrentCurrency(activeCurrency.value)
+                        exchangeRateRemoteRepository.getCurrentCurrency("CZK")
                     }
 
                     when(result) {

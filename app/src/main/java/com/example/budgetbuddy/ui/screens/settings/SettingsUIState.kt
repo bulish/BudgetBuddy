@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.settings
 
+import com.example.budgetbuddy.services.UserData
 import com.example.budgetbuddy.ui.screens.home.HomeScreenError
 import com.example.budgetbuddy.ui.screens.home.HomeScreenUIState
 import com.google.firebase.auth.FirebaseUser
@@ -10,7 +11,7 @@ sealed class SettingsUIState {
     class UserNotAuthorized(val message: Int?) : SettingsUIState()
 
     class Success(
-        val user: FirebaseUser?
+        val user: UserData?
     ) : SettingsUIState()
 
     class Error(val error: SettingsScreenError) : SettingsUIState()

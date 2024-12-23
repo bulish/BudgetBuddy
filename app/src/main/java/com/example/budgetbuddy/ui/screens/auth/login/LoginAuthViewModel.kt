@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
+import com.example.budgetbuddy.services.UserData
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.utils.ErrorUtils.handleFirebaseError
 import com.google.firebase.FirebaseNetworkException
@@ -20,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginAuthViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val authService: AuthService,
+    private val authService: IAuthService,
     private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel(), LoginActions {
     private val _loginUIState: MutableStateFlow<LoginUIState> =
@@ -33,7 +35,8 @@ class LoginAuthViewModel @Inject constructor(
     init {
         if (authService.getCurrentUser() != null) {
             _loginUIState.update {
-                LoginUIState.UserLoggedIn(authService.getCurrentUser(), null)
+                LoginUIState.UserLoggedIn(
+                    authService.getCurrentUser(), null)
             }
         } else {
             _loginUIState.update {
@@ -52,7 +55,7 @@ class LoginAuthViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         _loginUIState.update {
-                            LoginUIState.UserLoggedIn(user, R.string.login_success)
+                            LoginUIState.UserLoggedIn(UserData.Firebase(user), R.string.login_success)
                         }
                     } else {
                         Log.e(

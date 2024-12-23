@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.ui.screens.places.addEditPlace.AddEditPlaceUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val repository: ILocalPlacesRepository,
-    private val authService: AuthService,
+    private val authService: IAuthService,
     private val dataStoreRepository: IDataStoreRepository
 ) : ViewModel(), MapActions {
 

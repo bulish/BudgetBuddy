@@ -5,7 +5,7 @@ import com.example.budgetbuddy.model.db.TransactionCategory
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class LocalTransactionsRepositoryImpl @Inject constructor(
+open class LocalTransactionsRepositoryImpl @Inject constructor(
     private val dao: TransactionsDao
 ) : ILocalTransactionsRepository {
 

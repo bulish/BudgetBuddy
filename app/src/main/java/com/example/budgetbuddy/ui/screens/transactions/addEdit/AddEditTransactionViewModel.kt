@@ -9,6 +9,7 @@ import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepositor
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -29,7 +30,7 @@ import javax.inject.Inject
 class AddEditTransactionViewModel @Inject constructor(
     private val repository: ILocalTransactionsRepository,
     private val placeRepository: ILocalPlacesRepository,
-    private val authService: AuthService,
+    private val authService: IAuthService,
     private val dataStoreRepository: IDataStoreRepository,
 ) : ViewModel(), AddEditTransactionActions {
 
@@ -57,6 +58,8 @@ class AddEditTransactionViewModel @Inject constructor(
 
         if (price != 0.0) {
             viewModelScope.launch {
+                Log.d("new item", "${data.transaction}")
+
                 if (data.transaction.id != null){
                     repository.update(data.transaction)
                 } else {
@@ -137,10 +140,6 @@ class AddEditTransactionViewModel @Inject constructor(
         }
     }
 
-    override fun onReceiptChange() {
-        // TODO
-    }
-
     override fun onTransactionPriceChange(price: Double) {
         data.transaction.price = price
         _addEditTransactionUIState.update {
@@ -170,10 +169,13 @@ class AddEditTransactionViewModel @Inject constructor(
     }
 
     override fun onTransactionDateChange(date: Long?) {
+        val dateToUse = date ?: System.currentTimeMillis()
         data.transaction.date = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(date ?: System.currentTimeMillis()),
+            Instant.ofEpochMilli(dateToUse),
             ZoneId.systemDefault()
         )
+
+        Log.d("new date", "${data.transaction.date}")
         _addEditTransactionUIState.update {
             AddEditTransactionUIState.TransactionChanged(data)
         }

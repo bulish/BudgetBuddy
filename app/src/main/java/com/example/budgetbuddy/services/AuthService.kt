@@ -2,22 +2,29 @@ package com.example.budgetbuddy.services
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import javax.inject.Inject
 
-class AuthService(private val auth: FirebaseAuth) {
+class AuthService @Inject constructor(
+    private val auth: FirebaseAuth
+): IAuthService {
 
-    fun getCurrentUser(): FirebaseUser? {
-        return auth.currentUser
+    init {
+        println("Hello user from auth service")
     }
 
-    fun getUsername(): String? {
-        return getCurrentUser()?.displayName
+    override fun getCurrentUser(): UserData {
+        return UserData.Firebase(auth.currentUser)
     }
 
-    fun getUserID() : String? {
-        return getCurrentUser()?.uid
+    override fun getUsername(): String? {
+        return auth.currentUser?.displayName
     }
 
-    fun signOut() {
+    override fun getUserID() : String? {
+        return auth.currentUser?.uid
+    }
+
+    override fun signOut() {
         auth.signOut()
     }
 }

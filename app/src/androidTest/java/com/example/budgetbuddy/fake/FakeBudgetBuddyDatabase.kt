@@ -18,6 +18,9 @@ import com.example.budgetbuddy.model.db.Transaction
 @TypeConverters(Converters::class)
 abstract class FakeBudgetBuddyDatabase : RoomDatabase() {
 
+    abstract fun placesDao(): PlacesDao
+    abstract fun transactionsDao(): TransactionsDao
+
     companion object {
         private var INSTANCE: BudgetBuddyDatabase? = null
 

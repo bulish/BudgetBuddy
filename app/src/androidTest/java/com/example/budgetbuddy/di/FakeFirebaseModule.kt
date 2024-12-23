@@ -1,19 +1,24 @@
 package com.example.budgetbuddy.di
 
-import dagger.hilt.testing.TestInstallIn
+import com.example.budgetbuddy.communication.CurrencyAPI
+import com.example.budgetbuddy.fake.FakeAuthService
 import com.example.budgetbuddy.services.AuthService
+import com.example.budgetbuddy.services.IAuthService
+import dagger.hilt.testing.TestInstallIn
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
+import io.mockk.mockk
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [FireBaseAuth::class],
+    replaces = [FireBaseAuth::class]
 )
-class FakeFirebaseModule {
+object TestAuthServiceModule {
 
     @Provides
     @Singleton
@@ -23,8 +28,7 @@ class FakeFirebaseModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(auth: FirebaseAuth): AuthService {
-        return AuthService(auth)
+    fun provideAuthService(firebaseAuth: FirebaseAuth): IAuthService {
+        return FakeAuthService(firebaseAuth)
     }
-
 }

@@ -1,4 +1,5 @@
 package com.example.budgetbuddy.model.db
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.budgetbuddy.R
@@ -39,6 +40,7 @@ enum class TransactionCategory(val value: String, val icon: Int) {
 
     companion object {
         fun fromString(type: String?): TransactionCategory {
+            Log.d("transaction category", "${type}")
             return entries.find { it.value.equals(type, ignoreCase = true) } ?: OTHER
         }
     }

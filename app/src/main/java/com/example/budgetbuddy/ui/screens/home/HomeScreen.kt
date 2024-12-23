@@ -48,10 +48,6 @@ fun HomeScreen(
         mutableStateOf<Map<String, Double>?>(null)
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadTransactions()
-    }
-
     state.value.let {
         when (it) {
             is HomeScreenUIState.Loading -> {
@@ -71,16 +67,13 @@ fun HomeScreen(
 
             is HomeScreenUIState.CurrencyLoaded -> {
                 currencies.value = it.data
+                viewModel.loadTransactions()
             }
 
             is HomeScreenUIState.Error -> {
                 ShowToast(stringResource(id = it.error.communicationError))
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.getCurrencyData()
     }
 
     BaseScreen(
@@ -124,6 +117,11 @@ fun HomeScreenContent(
 ) {
     val updatedCurrency = remember { mutableStateOf(currency) }
 
+    LaunchedEffect(updatedCurrency) {
+        actions.getCurrencyData()
+        actions.loadTransactions()
+    }
+
     Column {
 
         BalanceBox(
@@ -131,6 +129,7 @@ fun HomeScreenContent(
             onCurrencyChange = { newCurrency ->
                 updatedCurrency.value = newCurrency
                 actions.changeCurrency(newCurrency)
+                actions.loadTransactions()
             },
             sum = sum,
             addNewTransaction = {
@@ -143,11 +142,15 @@ fun HomeScreenContent(
 
         Box(modifier = Modifier
             .padding(paddingValues)
-            .padding(horizontal = BasicMargin())) {
+            .padding(horizontal = BasicMargin())
+            .padding(bottom = BasicMargin())) {
             TransactionList(
                 displayTitle = true,
                 transactions = transactions,
-                navigation = navigationRouter
+                navigation = navigationRouter,
+                transformPrice = {
+                    actions.transformTransactionPrice(it)
+                }
             )
         }
     }

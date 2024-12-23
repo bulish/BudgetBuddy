@@ -8,18 +8,17 @@ import java.time.LocalDateTime
 
 class AddEditTransactionScreenData {
     var transaction: Transaction = Transaction(
-        TransactionType.INCOME.value,
+        type = TransactionType.INCOME.value,
         "",
-        TransactionCategory.SALARY.value,
+        category = TransactionCategory.SALARY.value,
         0.0,
-        "",
+        "Kč",
         "",
         "",
         LocalDateTime.now(),
         null
     )
 
-    var transactionReceiptError: Int? = null
     var transactionPriceError: Int? = null
     var transactionNoteError: Int? = null
 }

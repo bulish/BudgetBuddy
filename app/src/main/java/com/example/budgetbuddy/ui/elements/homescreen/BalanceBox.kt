@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +29,13 @@ fun BalanceBox(
     addNewTransaction: () -> Unit,
     currencies: Map<String, Double>?
 ) {
+
+    val updatedCurrency = remember { mutableStateOf(currency) }
+
+    LaunchedEffect(currency) {
+        updatedCurrency.value = currency
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +45,7 @@ fun BalanceBox(
     ) {
 
         CurrencyDropdown(
-            currency = currency,
+            currency = updatedCurrency.value,
             onChange = { newCurrency ->
                 onCurrencyChange(newCurrency)
             },
@@ -45,7 +55,7 @@ fun BalanceBox(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = "${sum.toFormattedString()} Kč",
+            text = "${sum.toFormattedString()} ${updatedCurrency.value}",
             color = MaterialTheme.colorScheme.tertiary,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold

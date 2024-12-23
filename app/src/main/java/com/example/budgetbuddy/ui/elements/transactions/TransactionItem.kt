@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.elements.transactions
 
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,9 +36,11 @@ import com.example.budgetbuddy.ui.theme.BasicMargin
 @Composable
 fun TransactionItem(
     transaction: Transaction,
-    navigation: INavigationRouter
+    navigation: INavigationRouter,
+    transformPrice: () -> String
 ) {
     val transactionCategory = TransactionCategory.fromString(transaction.category)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,7 +80,7 @@ fun TransactionItem(
             )
 
             Text(
-                text = "${if (transaction.type == TransactionType.EXPENSE.value) "- " else ""}${transaction.price.toFormattedString()} Kč",
+                text = "${if (transaction.type == TransactionType.EXPENSE.value) "- " else ""}${transformPrice()}",
                 color = if (transaction.type == TransactionType.EXPENSE.value) Color.Red else MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold

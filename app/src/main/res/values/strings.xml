@@ -137,4 +137,6 @@
     <string name="no_data_available">No data available</string>
     <string name="all">All</string>
     <string name="invalid_parameters">Invalid parameters</string>
+    <string name="scan_receipt">Scan your receipt</string>
+    <string name="text_detected">Recognizing text...</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.example.budgetbuddy.ui.screens.transactions.addEdit
 
 import android.content.Context
-import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,8 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.analyzers.ReceiptAnalyzer
 import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.model.db.TransactionCategory
+import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.navigation.INavigationRouter
 import com.example.budgetbuddy.ui.elements.shared.CustomAlertDialog
 import com.example.budgetbuddy.ui.elements.shared.ShowToast
@@ -32,10 +34,13 @@ import com.example.budgetbuddy.ui.elements.shared.basescreen.BaseScreen
 import com.example.budgetbuddy.ui.elements.shared.form.CustomDatePicker
 import com.example.budgetbuddy.ui.elements.shared.form.CustomRadioButton
 import com.example.budgetbuddy.ui.elements.shared.form.Dropdown
-import com.example.budgetbuddy.ui.elements.shared.form.ImageInput
 import com.example.budgetbuddy.ui.elements.shared.form.SaveCancelButtons
 import com.example.budgetbuddy.ui.elements.shared.form.TextInput
+import com.example.budgetbuddy.ui.elements.transactions.CameraLauncherView
 import com.example.budgetbuddy.ui.theme.BasicMargin
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun AddEditTransactionScreen(
@@ -125,9 +130,12 @@ fun AddEditTransactionScreen(
                     data.transaction = it
                 }
 
-                selectedCategory = TransactionCategory.fromString(it.data.transaction?.category)
+               if (it.data.transaction != null) {
+                   selectedCategory = TransactionCategory.fromString(it.data.transaction.category)
+               }
 
                 val currencyKeys: List<String> = it.data.currencies.keys.toList() ?: emptyList()
+                Log.d("currency", "${it.data.transaction?.currency}")
                 selectedCurrency.value = it.data.transaction?.currency ?: currencyKeys[0]
 
                 selectedPlace = places.find { p -> p.id == it.data.transaction?.placeId }
@@ -209,12 +217,42 @@ fun AddEditTransactionContent(
 ){
     val currencyKeys: List<String> = currencies?.keys?.toList() ?: emptyList()
 
-    var selectedImageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
+    val receiptAnalyzer = remember {
+        ReceiptAnalyzer { totalAmount, date, place ->
+            if (totalAmount != null) {
 
-    LaunchedEffect(data.transactionPriceError) {
-        selectedImageUri = null
+                if (data.transaction.price == 0.0) {
+                    actions.onTransactionPriceChange(totalAmount.first)
+                }
+
+                val matchingCurrency = currencies?.get(totalAmount.second)
+                if (matchingCurrency != null) {
+                    actions.onTransactionCurrencyChange(totalAmount.second)
+                    changeSelectedCurrency(totalAmount.second)
+                }
+            }
+
+            if (date != null) {
+                try {
+                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    val parsedDate = LocalDate.parse(date, formatter)
+                    val timestamp = parsedDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * 1000
+                    actions.onTransactionDateChange(timestamp)
+                } catch (e: Exception) {
+                    Log.e("Transaction", "Chyba při převodu data: $date", e)
+                }
+            }
+
+            if (place != null) {
+                val matchingPlace = places.find { p -> p.name.uppercase().contains(place) }
+                if (matchingPlace != null) {
+                    actions.onTransactionPlaceChange(matchingPlace)
+                    changeSelectedPlace(matchingPlace)
+                }
+            }
+
+            actions.onTransactionTypeChange(TransactionType.EXPENSE.value)
+        }
     }
 
     LazyColumn(modifier = Modifier
@@ -226,16 +264,9 @@ fun AddEditTransactionContent(
         item {
             Column(verticalArrangement = Arrangement.spacedBy(BasicMargin()),
                 modifier = Modifier.fillMaxSize()) {
-                ImageInput(
-                    onChangeHandler = {
-                        actions.onReceiptChange()
-                    },
-                    context = context,
-                    selectedImageUri = selectedImageUri,
-                    changeSelectedImageUri = {
-                        selectedImageUri = it
-                    }
-                )
+                CameraLauncherView(paddingValues = paddingValues, receiptAnalyzer) {
+
+                }
 
                 Dropdown(
                     value = selectedCategory,
