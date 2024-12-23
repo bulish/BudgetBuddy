@@ -33,6 +33,6 @@ class SplashScreenViewModel @Inject constructor(
     }
 
     fun continueToApp(): String {
-        return if (auth.getCurrentUser() != null) Destination.HomeScreen.route else Destination.LoginScreen.route
+        return if (auth.getCurrentUser().email != null) Destination.HomeScreen.route else Destination.LoginScreen.route
     }
 }

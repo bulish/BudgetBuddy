@@ -118,6 +118,7 @@ fun GreetingsScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.tertiary)
+            .padding(bottom = DoubleMargin())
     ) {
 
         HorizontalPager(
