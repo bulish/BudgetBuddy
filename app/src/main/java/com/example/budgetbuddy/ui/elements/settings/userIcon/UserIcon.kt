@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 
@@ -20,7 +21,9 @@ import com.example.budgetbuddy.ui.theme.HalfMargin
 fun UserIcon(
     type: UserIconType,
     userName: String?,
-    email: String? = null
+    email: String? = null,
+    iconTestNode: String,
+    nameTestNode: String
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -28,7 +31,8 @@ fun UserIcon(
     ) {
         Box(
             modifier = Modifier
-                .size(type.size),
+                .size(type.size)
+                .testTag(iconTestNode),
             contentAlignment = Alignment.Center
         ) {
             Box(
@@ -51,7 +55,8 @@ fun UserIcon(
                 text = email,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.secondary
-                )
+                ),
+                modifier = Modifier.testTag(nameTestNode)
             )
         }
     }

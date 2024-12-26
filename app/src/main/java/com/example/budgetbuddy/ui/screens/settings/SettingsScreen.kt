@@ -159,7 +159,9 @@ fun SettingsScreenContent(
             UserIcon(
                 type = UserIconType.Large,
                 userName = userData?.displayName,
-                email = userData?.email
+                email = userData?.email,
+                iconTestNode = TestTagSettingsScreenUserIcon,
+                nameTestNode = TestTagSettingsScreenUserName
             )
 
             Spacer(modifier = Modifier.height(DoubleMargin()))
@@ -176,7 +178,8 @@ fun SettingsScreenContent(
                     switchValue = isDarkMode,
                     onSwitchChange = {
                         actions.changeMode()
-                    }
+                    },
+                    testTag = TestTagSettingsScreenModeToggle
                 )
 
                 Row(
@@ -198,7 +201,8 @@ fun SettingsScreenContent(
                             actions.changeCurrency(selectedCurrency)
                         },
                         isDark = true,
-                        currencies = currencies
+                        currencies = currencies,
+                        testTag = TestTagSettingsScreenCurrencyDropdown
                     )
                 }
 
@@ -221,12 +225,14 @@ fun SettingsScreenContent(
                         onChange = { selectedColor ->
                             actions.changePrimaryColor(selectedColor)
                         },
+                        testTag = TestTagSettingsScreenColorDropdown
                     )
                 }
 
                 SettingsItem(
                     title = stringResource(id = R.string.settings_language),
-                    content = stringResource(id = R.string.settings_activeLanguage)
+                    content = stringResource(id = R.string.settings_activeLanguage),
+                    testTag = TestTagSettingsScreenLanguage
                 )
 
                 SectionTitle(
@@ -237,7 +243,8 @@ fun SettingsScreenContent(
 
                 SettingsItem(
                     title = stringResource(id = R.string.settings_version),
-                    content = version
+                    content = version,
+                    testTag = TestTagSettingsScreenVersion
                 )
             }
         }
@@ -253,7 +260,7 @@ fun SettingsScreenContent(
                     type = getCustomButtonType(buttonType = CustomButtonType.OutlinedMaxSize),
                     text = stringResource(id = R.string.sign_out),
                     onClickAction = { actions.signOut() },
-                    testTag = ""
+                    testTag = TestTagSettingsScreenLogOutButton
                 )
             }
         }

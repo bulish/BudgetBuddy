@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import com.example.budgetbuddy.ui.elements.shared.CurrencyDropdown
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.TripleMargin
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.ui.screens.home.TestTagHomeScreenAddMoneyButton
 
 @Composable
 fun BalanceBox(
@@ -51,7 +53,8 @@ fun BalanceBox(
             onChange = { newCurrency ->
                 onCurrencyChange(newCurrency)
             },
-            currencies = currencies
+            currencies = currencies,
+            testTag = ""
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -75,7 +78,8 @@ fun BalanceBox(
             onClick = { addNewTransaction() },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary
-            )
+            ),
+            modifier = Modifier.testTag(TestTagHomeScreenAddMoneyButton)
         ) {
             Text(text = stringResource(id = R.string.add_new_money), color = MaterialTheme.colorScheme.primary)
         }

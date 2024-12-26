@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.budgetbuddy.ui.elements.shared.form.CustomSwitch
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
@@ -18,11 +19,13 @@ fun SettingsItem(
     content: String? = null,
     switchValue: Boolean? = null,
     onSwitchChange: ((Boolean) -> Unit)? = null,
+    testTag: String
 ) {
     Row(
         modifier = Modifier
             .padding(vertical = HalfMargin())
-            .height(DoubleMargin()),
+            .height(DoubleMargin())
+            .testTag(testTag),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(

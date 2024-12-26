@@ -19,13 +19,13 @@
       <SelectionState runConfigName="test1_settingsViewScreenIsLoaded()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test1_apiReturnsCorrectCurrency()">
+      <SelectionState runConfigName="test2_userInfoIsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MockAPITest">
+      <SelectionState runConfigName="test3_changeColorMode()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test2_apiHandlesErrorResponse()">
+      <SelectionState runConfigName="test4_changeColorMode()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

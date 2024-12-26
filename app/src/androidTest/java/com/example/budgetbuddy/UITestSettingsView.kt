@@ -3,27 +3,43 @@ package com.example.budgetbuddy
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.datastore.dataStore
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.budgetbuddy.database.transactions.ILocalTransactionsRepository
 import com.example.budgetbuddy.database.transactions.LocalTransactionsRepositoryImpl
 import com.example.budgetbuddy.database.transactions.TransactionsDao
+import com.example.budgetbuddy.fake.FakeDataStoreRepositoryImpl
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
+import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 import com.example.budgetbuddy.ui.activity.MainActivity
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenEmailInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenPasswordInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSubmitButton
+import com.example.budgetbuddy.ui.screens.greetings.TestTagGreetingsScreenSkip
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenColorDropdown
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenColorDropdownItem
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenCurrencyDropdown
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenLanguage
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenModeToggle
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenTitle
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenUserIcon
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenUserName
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenVersion
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -39,6 +55,10 @@ import org.mockito.ArgumentMatchers.any
 import io.mockk.mockk
 import io.mockk.every
 import io.mockk.mockkObject
+import junit.framework.TestCase
+import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
@@ -63,23 +83,37 @@ class UITestSettingsView {
         val email = "test@test.com"
         val password = "Test12345"
 
-        // Initialize navController here by launching the screen with navigation
         launchLoginScreenWithNavigation()
 
-        composeRule.waitForIdle() // Wait for idle state before interaction
+        composeRule.waitForIdle()
 
-        // Perform login actions
         with(composeRule) {
-            onNodeWithTag(TestTagLoginScreenEmailInput).performTextInput(email)
-            onNodeWithTag(TestTagLoginScreenPasswordInput).performTextInput(password)
-            onNodeWithTag(TestTagLoginScreenSubmitButton).performClick()
-            waitForIdle() // Wait after the login action before the navigation
+            Thread.sleep(3000)
+            waitForIdle()
+
+            val route = navController.currentDestination?.route
+            val skipNodes = onAllNodesWithTag(TestTagGreetingsScreenSkip)
+            if (skipNodes.fetchSemanticsNodes().isNotEmpty()) {
+                skipNodes[0].performClick()
+            }
+
+            if (route == Destination.LoginScreen.route) {
+                onNodeWithTag(TestTagLoginScreenEmailInput).assertExists()
+                onNodeWithTag(TestTagLoginScreenPasswordInput).assertExists()
+                onNodeWithTag(TestTagLoginScreenSubmitButton).assertExists()
+
+                onNodeWithTag(TestTagLoginScreenEmailInput).performTextInput(email)
+                onNodeWithTag(TestTagLoginScreenPasswordInput).performTextInput(password)
+                onNodeWithTag(TestTagLoginScreenSubmitButton).performClick()
+
+                waitForIdle()
+
+                TestCase.assertTrue(route == Destination.LoginScreen.route)
+            }
+
+            Thread.sleep(3000)
         }
 
-        // Log before attempting navigation
-        println("Attempting to navigate to Settings screen...")
-
-        // Now navigate to the settings screen after ensuring login is completed
         composeRule.activity.runOnUiThread {
             try {
                 navController.navigate(Destination.SettingsScreen.route)
@@ -90,19 +124,89 @@ class UITestSettingsView {
             }
         }
 
-        composeRule.waitForIdle() // Wait for navigation to complete
+        composeRule.waitForIdle()
     }
 
     @Test
     fun test1_settingsViewScreenIsLoaded() {
         with(composeRule) {
-            // Ensure the settings screen is visible after navigation
-            waitForIdle()
-            onNodeWithTag("TestTagSettingsScreenTitle").assertIsDisplayed()
-            waitForIdle()
+            onNodeWithTag(TestTagSettingsScreenTitle).assertIsDisplayed()
+            onNodeWithTag(TestTagSettingsScreenLanguage).assertIsDisplayed()
+            onNodeWithTag(TestTagSettingsScreenVersion).assertIsDisplayed()
         }
     }
 
+    @Test
+    fun test2_userInfoIsDisplayed() {
+        with(composeRule) {
+            val userData = "test@test.com"
+
+            onNodeWithTag(TestTagSettingsScreenUserIcon)
+                .assertExists()
+                .assertIsDisplayed()
+
+            onNodeWithTag(TestTagSettingsScreenUserName)
+                .assertTextContains(userData)
+                .assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun test3_changeColorMode() {
+       runBlocking {
+
+           with(composeRule) {
+
+               onNodeWithTag(TestTagSettingsScreenModeToggle)
+                   .assertExists()
+                   .assertIsDisplayed()
+                   .performClick()
+
+           }
+       }
+    }
+
+    @Test
+    fun test4_changeColorMode() {
+        runBlocking {
+
+            with(composeRule) {
+
+                onNodeWithTag(TestTagSettingsScreenColorDropdown)
+                    .assertExists()
+                    .assertIsDisplayed()
+                    .performClick()
+
+                Thread.sleep(1000)
+
+                onNodeWithTag("${TestTagSettingsScreenColorDropdownItem}${1}")
+                    .assertExists()
+                    .assertIsDisplayed()
+                    .performClick()
+            }
+        }
+    }
+
+    @Test
+    fun test5_changeCurrency() {
+        runBlocking {
+
+            with(composeRule) {
+
+                onNodeWithTag(TestTagSettingsScreenCurrencyDropdown)
+                    .assertExists()
+                    .assertIsDisplayed()
+                    .performClick()
+
+                Thread.sleep(1000)
+
+                onNodeWithTag("${TestTagSettingsScreenCurrencyDropdown}${1}")
+                    .assertExists()
+                    .assertIsDisplayed()
+                    .performClick()
+            }
+        }
+    }
 
     private fun launchLoginScreenWithNavigation() {
         composeRule.activity.setContent {

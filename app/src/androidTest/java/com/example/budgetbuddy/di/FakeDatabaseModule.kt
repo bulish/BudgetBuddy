@@ -1,10 +1,8 @@
 package com.example.budgetbuddy.di
 
 import android.content.Context
+import androidx.room.Room
 import com.example.budgetbuddy.database.BudgetBuddyDatabase
-import com.example.budgetbuddy.database.places.PlacesDao
-import com.example.budgetbuddy.database.transactions.TransactionsDao
-import com.example.budgetbuddy.fake.FakeBudgetBuddyDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -21,8 +19,12 @@ object FakeDatabaseModule {
 
     @Provides
     @Singleton
-    fun provideFakeBudgetBuddyDatabase(context: Context): BudgetBuddyDatabase {
-        return FakeBudgetBuddyDatabase.getInMemoryDatabase(context)
+    fun provideInMemoryDatabase(@ApplicationContext context: Context): BudgetBuddyDatabase {
+        return Room.inMemoryDatabaseBuilder(
+            context,
+            BudgetBuddyDatabase::class.java
+        ).allowMainThreadQueries()
+            .build()
     }
 
 }

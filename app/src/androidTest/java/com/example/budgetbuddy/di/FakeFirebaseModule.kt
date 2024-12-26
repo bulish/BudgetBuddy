@@ -1,16 +1,12 @@
 package com.example.budgetbuddy.di
 
-import com.example.budgetbuddy.communication.CurrencyAPI
 import com.example.budgetbuddy.fake.FakeAuthService
-import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.IAuthService
 import dagger.hilt.testing.TestInstallIn
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
-import io.mockk.mockk
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module

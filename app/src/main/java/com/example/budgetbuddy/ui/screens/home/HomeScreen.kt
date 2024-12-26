@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.model.db.Transaction
@@ -88,7 +89,8 @@ fun HomeScreen(
                     navigationRouter.navigateToAddEditTransactionScreen(null)
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = White
+                contentColor = White,
+                modifier = Modifier.testTag(TestTagHomeScreenTransactionsFAB)
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }

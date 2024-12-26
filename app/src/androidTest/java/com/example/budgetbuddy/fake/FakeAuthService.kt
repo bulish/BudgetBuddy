@@ -5,30 +5,31 @@ import com.example.budgetbuddy.services.IAuthService
 import com.example.budgetbuddy.services.UserData
 import com.google.firebase.auth.FirebaseAuth
 import io.mockk.every
+import io.mockk.mockk
 import javax.inject.Inject
 
 class FakeAuthService @Inject constructor(
     private val auth: FirebaseAuth
 ) : IAuthService {
 
-    var user = FakeUserData(
-        uid = "123",
-        displayName = "Test user",
-        email = "test@test.cz"
-    )
+    private val mockUser: FakeUserData = mockk()
+
+    init {
+        every { mockUser.uid } returns "123"
+        every { mockUser.displayName } returns "Test user"
+        every { mockUser.email } returns "test@test.cz"
+    }
 
     override fun getCurrentUser(): UserData {
-        return UserData.Fake(user)
+        return UserData.Fake(mockUser)
     }
 
     override fun getUsername(): String? {
-        every { user.displayName } returns "Fake User"
-        return user.displayName
+        return mockUser.displayName
     }
 
     override fun getUserID(): String? {
-        every { user.uid } returns "123"
-        return user.uid
+        return mockUser.uid
     }
 
     override fun signOut() {

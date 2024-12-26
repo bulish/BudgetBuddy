@@ -20,13 +20,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun CurrencyDropdown(
     currency: String,
     onChange: (currency: String) -> Unit,
     isDark: Boolean? = false,
-    currencies: Map<String, Double>?
+    currencies: Map<String, Double>?,
+    testTag: String
 ) {
     val isDropDownExpanded = remember {
         mutableStateOf(false)
@@ -47,7 +49,7 @@ fun CurrencyDropdown(
     Column(
         modifier = Modifier.then(
             if (isDark == false) Modifier.fillMaxWidth() else Modifier
-        ),
+        ).testTag(testTag),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -88,7 +90,9 @@ fun CurrencyDropdown(
                             isDropDownExpanded.value = false
                             itemPosition.intValue = index
                             onChange(currency)
-                        })
+                        },
+                        modifier = Modifier.testTag(testTag + index)
+                    )
                 }
             }
         }

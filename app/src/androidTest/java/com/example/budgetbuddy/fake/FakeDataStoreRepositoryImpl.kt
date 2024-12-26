@@ -1,4 +1,6 @@
-package com.example.budgetbuddy.services.datastore
+package com.example.budgetbuddy.fake
+
+import com.example.budgetbuddy.services.datastore.IDataStoreRepository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -17,10 +19,9 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "fake_preferences")
 
-class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
-    : IDataStoreRepository {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences")
+class FakeDataStoreRepositoryImpl @Inject constructor(private val context: Context) : IDataStoreRepository {
 
     private val moshi: Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
@@ -132,3 +133,4 @@ class DataStoreRepositoryImpl @Inject constructor(private val context: Context)
             }
     }
 }
+

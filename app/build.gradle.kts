@@ -152,7 +152,7 @@ dependencies {
     // required if you want to use Mockito for Android tests
     androidTestImplementation(libs.mockito.android)
 
-    testImplementation("io.mockk:mockk:1.13.5")
+    androidTestImplementation("io.mockk:mockk:1.13.5")
     androidTestImplementation("io.mockk:mockk-android:1.13.5")
     testImplementation("io.mockk:mockk-agent:1.13.5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")

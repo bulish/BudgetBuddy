@@ -17,13 +17,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.example.budgetbuddy.model.PrimaryColor
+import com.example.budgetbuddy.ui.screens.settings.TestTagSettingsScreenColorDropdownItem
 
 @Composable
 fun ColorDropdown(
     color: PrimaryColor,
-    onChange: (color: PrimaryColor) -> Unit
+    onChange: (color: PrimaryColor) -> Unit,
+    testTag: String
 ) {
     val isDropDownExpanded = remember {
         mutableStateOf(false)
@@ -36,7 +39,7 @@ fun ColorDropdown(
     }
 
     Column(
-        modifier = Modifier,
+        modifier = Modifier.testTag(testTag),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -75,7 +78,8 @@ fun ColorDropdown(
                             isDropDownExpanded.value = false
                             itemPosition.value = index
                             onChange(color)
-                        }
+                        },
+                        modifier = Modifier.testTag("${TestTagSettingsScreenColorDropdownItem}${index}")
                     )
                 }
             }

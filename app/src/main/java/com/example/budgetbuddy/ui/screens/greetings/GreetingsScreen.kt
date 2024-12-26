@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -164,6 +165,7 @@ fun GreetingsScreenContent(
                 modifier = Modifier
                     .height(54.dp)
                     .padding(horizontal = HalfMargin(), vertical = HalfMargin())
+                    .testTag(TestTagGreetingsScreenSkip)
                     .clickable {
                         navigateToSignUp()
                     },
