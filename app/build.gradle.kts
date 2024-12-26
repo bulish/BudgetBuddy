@@ -160,6 +160,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:21.0.7")
     testImplementation("org.mockito:mockito-core:4.0.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
 
     implementation(libs.text.recognition)
     implementation(libs.camera.core)

@@ -187,7 +187,8 @@ class FakeExchangeRateRemoteRepositoryImpl @Inject constructor() : IExchangeRate
                     "ZAR" to 17.8560,
                     "ZMW" to 27.6648,
                     "ZWL" to 25.6954
-                )
+                ),
+                error_type = "unsupported-code"
             )
         )
 
