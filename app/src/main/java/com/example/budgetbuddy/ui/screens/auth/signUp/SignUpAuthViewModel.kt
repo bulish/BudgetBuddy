@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.services.UserData
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
+import com.example.budgetbuddy.ui.screens.auth.login.LoginUIState
 import com.example.budgetbuddy.utils.ErrorUtils.handleFirebaseError
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
@@ -62,9 +64,7 @@ class SignUpAuthViewModel @Inject constructor(
                                         (profileUpdateTask.exception as FirebaseAuthException).errorCode
                                     )
 
-                                _signUpUIState.update {
-                                    SignUpUIState.UserSaved(message)
-                                }
+                                loginUser()
                             }
                     } else {
                         Log.e(
@@ -141,6 +141,60 @@ class SignUpAuthViewModel @Inject constructor(
         data.user.username = username
         _signUpUIState.update {
             SignUpUIState.UserChanged(data)
+        }
+    }
+
+    override fun loginUser() {
+        val email = data.user.email
+        val password = data.user.password
+
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        _signUpUIState.update {
+                            SignUpUIState.UserLoggedIn(UserData.Firebase(user), R.string.signup_success)
+                        }
+                    } else {
+                        Log.e(
+                            "LoginAuthViewModel",
+                            "signInWithEmailAndPassword:failure",
+                            task.exception
+                        )
+
+                        _signUpUIState.update {
+                            SignUpUIState.UserChanged(data)
+                        }
+
+                        val exception = task.exception
+                        if (exception is FirebaseAuthException) {
+                            _signUpUIState.update {
+                                SignUpUIState.Error(handleFirebaseError(exception.errorCode))
+                            }
+                        } else if (exception is FirebaseNetworkException) {
+                            _signUpUIState.update {
+                                SignUpUIState.Error(R.string.network_error)
+                            }
+                        } else {
+                            _signUpUIState.update {
+                                SignUpUIState.Error(R.string.network_error)
+                            }
+                        }
+                    }
+                }
+        } else {
+            _signUpUIState.update {
+                SignUpUIState.UserChanged(data)
+            }
+
+            if (email.isEmpty()) {
+                data.userEmailError = R.string.cannot_be_empty
+            }
+
+            if (password.isEmpty()) {
+                data.userPasswordError = R.string.cannot_be_empty
+            }
         }
     }
 }

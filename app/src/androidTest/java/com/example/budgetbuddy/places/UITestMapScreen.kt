@@ -1,38 +1,38 @@
-package com.example.budgetbuddy
+package com.example.budgetbuddy.places
 
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.activity.MainActivity
 import com.example.budgetbuddy.ui.screens.auth.login.*
 import com.example.budgetbuddy.ui.screens.greetings.TestTagGreetingsScreenSkip
-import com.example.budgetbuddy.ui.screens.settings.*
+import com.example.budgetbuddy.ui.screens.places.addEditPlace.*
+import com.example.budgetbuddy.ui.screens.places.map.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.MockKAnnotations
+import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
-import junit.framework.TestCase
-import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class UITestSettingsView {
+class UITestMapScreen {
+
+    @Inject
+    lateinit var placesRepository: ILocalPlacesRepository
 
     private lateinit var navController: NavHostController
 
@@ -50,7 +50,7 @@ class UITestSettingsView {
         val email = "test@test.com"
         val password = "Test12345"
 
-        launchLoginScreenWithNavigation()
+        navigate(Destination.LoginScreen.route)
 
         composeRule.waitForIdle()
 
@@ -83,7 +83,7 @@ class UITestSettingsView {
 
         composeRule.activity.runOnUiThread {
             try {
-                navController.navigate(Destination.SettingsScreen.route)
+                navController.navigate(Destination.MapScreen.route)
 
                 composeRule.waitForIdle()
             } catch (e: Exception) {
@@ -95,100 +95,65 @@ class UITestSettingsView {
     }
 
     @Test
-    fun test1_settingsViewScreenIsLoaded() {
+    fun test1_map_exists() {
+        navigate(Destination.MapScreen.route)
         with(composeRule) {
-            onNodeWithTag(TestTagSettingsScreenTitle).assertIsDisplayed()
-            onNodeWithTag(TestTagSettingsScreenLanguage).assertIsDisplayed()
-            onNodeWithTag(TestTagSettingsScreenVersion).assertIsDisplayed()
+
+            waitForIdle()
+
+            onNodeWithTag(TestTagMapScreenGoogleMap).assertExists()
+            onNodeWithTag(TestTagMapScreenFAB).assertExists()
+
+            Thread.sleep(1000)
         }
     }
 
     @Test
-    fun test2_userInfoIsDisplayed() {
+    fun test2_addPlaceViaFAB() {
         with(composeRule) {
-            val userData = "test@test.com"
+            navigate(Destination.MapScreen.route)
 
-            onNodeWithTag(TestTagSettingsScreenUserIcon)
+            waitForIdle()
+
+            onNodeWithTag(TestTagMapScreenFAB)
                 .assertExists()
                 .assertIsDisplayed()
+                .performClick()
 
-            onNodeWithTag(TestTagSettingsScreenUserName)
-                .assertTextContains(userData)
+            waitForIdle()
+
+            onNodeWithTag(TestTagAddEditPlaceScreenTitle).assertIsDisplayed()
+
+            onNodeWithTag(TestTagAddEditPlaceScreenNameInput)
                 .assertIsDisplayed()
-        }
-    }
+                .performTextInput("Optika")
 
-    @Test
-    fun test3_changeColorMode() {
-       runBlocking {
-
-           with(composeRule) {
-
-               onNodeWithTag(TestTagSettingsScreenModeToggle)
-                   .assertExists()
-                   .assertIsDisplayed()
-                   .performClick()
-
-           }
-       }
-    }
-
-    @Test
-    fun test4_changeColorMode() {
-        runBlocking {
-
-            with(composeRule) {
-
-                onNodeWithTag(TestTagSettingsScreenColorDropdown)
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
-
-                Thread.sleep(1000)
-
-                onNodeWithTag("${TestTagSettingsScreenColorDropdownItem}${1}")
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
-            }
-        }
-    }
-
-    @Test
-    fun test5_changeCurrency() {
-        runBlocking {
-
-            with(composeRule) {
-
-                onNodeWithTag(TestTagSettingsScreenCurrencyDropdown)
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
-
-                Thread.sleep(1000)
-
-                onNodeWithTag("${TestTagSettingsScreenCurrencyDropdown}${1}")
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
-            }
-        }
-    }
-
-    @Test
-    fun test6_userCanBeLoggedOut() {
-        with(composeRule) {
-            onNodeWithTag(TestTagSettingsScreenLogOutButton)
+            onNodeWithTag(TestTagAddEditPlaceScreenCategoryInput)
                 .assertIsDisplayed()
                 .performClick()
+
+            onNodeWithTag(TestTagAddEditPlaceScreenCategoryInput + 2)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagAddEditPlaceScreenSaveInput)
+                .performScrollTo()
+                .assertIsDisplayed()
+                .apply {
+                    onNodeWithTag(TestTagAddEditPlaceScreenSaveInput + "_submit")
+                        .assertIsDisplayed()
+                        .performClick()
+                }
+
+            waitForIdle()
         }
     }
 
-    private fun launchLoginScreenWithNavigation() {
+    private fun navigate(route: String) {
         composeRule.activity.setContent {
             MaterialTheme {
                 navController = rememberNavController()
-                NavGraph(navController = navController, startDestination = Destination.LoginScreen.route)
+                NavGraph(navController = navController, startDestination = route)
             }
         }
     }

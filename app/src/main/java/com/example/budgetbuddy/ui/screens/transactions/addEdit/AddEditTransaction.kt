@@ -162,7 +162,8 @@ fun AddEditTransactionScreen(
             }
         },
         navigation = navigationRouter,
-        showLoading = loading
+        showLoading = loading,
+        navigationTitleTestTag = TestTagAddEditTransactionScreenTitle
     ) {
         AddEditTransactionContent(
             paddingValues = it,
@@ -278,7 +279,8 @@ fun AddEditTransactionContent(
                     onChange = {category ->
                         changeSelectedCategory(category)
                         actions.onTransactionCategoryChanged(category)
-                    }
+                    },
+                    testTag = TestTagAddEditTransactionCategoryInput
                 )
 
                 TextInput(
@@ -287,7 +289,7 @@ fun AddEditTransactionContent(
                     error = data.transactionPriceError,
                     onChange = { actions.onTransactionPriceChange(it.toDouble()) },
                     isNumber = true,
-                    testTag = ""
+                    testTag = TestTagAddEditTransactionPriceInput
                 )
 
                 Dropdown(
@@ -300,18 +302,21 @@ fun AddEditTransactionContent(
                     onChange = {currency ->
                         changeSelectedCurrency(currency)
                         actions.onTransactionCurrencyChange(currency)
-                    }
+                    },
+                    testTag = TestTagAddEditTransactionCurrencyInput
                 )
 
                 CustomRadioButton(
                     label = stringResource(id = R.string.transaction_type_label),
                     value = data.transaction.type,
-                    onChange = { actions.onTransactionTypeChange(it) }
+                    onChange = { actions.onTransactionTypeChange(it) },
+                    testTag = TestTagAddEditTransactionTransactionTypeInput
                 )
 
                 CustomDatePicker(
                     value = data.transaction.date,
-                    onChange = { actions.onTransactionDateChange(it) }
+                    onChange = { actions.onTransactionDateChange(it) },
+                    testTag = TestTagAddEditTransactionDateInput
                 )
 
                 Dropdown(
@@ -324,7 +329,8 @@ fun AddEditTransactionContent(
                     onChange = {place ->
                         changeSelectedPlace(place)
                         actions.onTransactionPlaceChange(place)
-                    }
+                    },
+                    testTag = TestTagAddEditTransactionPlaceInput
                 )
 
                 TextInput(
@@ -332,12 +338,13 @@ fun AddEditTransactionContent(
                     value = data.transaction.note.toString(),
                     error = data.transactionNoteError ,
                     onChange = { actions.onTransactionNoteChange(it) },
-                    testTag = ""
+                    testTag = TestTagAddEditTransactionNoteInput
                 )
 
                 SaveCancelButtons(
                     onCancel = { onCancel() },
-                    onSave = { actions.saveTransaction() }
+                    onSave = { actions.saveTransaction() },
+                    saveButtonTestTag = TestTagAddEditTransactionSaveButton
                 )
 
                 if (dialogIsVisible) {

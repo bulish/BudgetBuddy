@@ -1,61 +1,49 @@
-package com.example.budgetbuddy.transactions
+package com.example.budgetbuddy
 
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.activity.MainActivity
 import com.example.budgetbuddy.ui.elements.shared.TestTagConfirmButton
-import com.example.budgetbuddy.ui.elements.transactions.TestTagListOfTransactionsScreenListContainer
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenEmailInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenPasswordInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSubmitButton
 import com.example.budgetbuddy.ui.screens.greetings.TestTagGreetingsScreenSkip
-import com.example.budgetbuddy.ui.screens.home.TestTagHomeScreenTransactionsFAB
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionCategoryInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionCurrencyInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionDateInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionNoteInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionPriceInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionSaveButton
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionScreenTitle
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionTransactionTypeInput
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionCategory
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionDate
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionDeleteButton
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionEditButton
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionNote
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionPlace
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionPrice
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionScreenTitle
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionType
-import com.example.budgetbuddy.ui.screens.transactions.list.TestTagListOfTransactionsScreenFAB
+import com.example.budgetbuddy.ui.screens.home.*
+import com.example.budgetbuddy.ui.screens.transactions.addEdit.*
+import com.example.budgetbuddy.ui.screens.transactions.detail.*
 import com.example.budgetbuddy.ui.screens.transactions.list.TransactionEmptyList
 import com.example.budgetbuddy.ui.screens.transactions.list.TransactionLazyList
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.MockKAnnotations
-import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
-import javax.inject.Inject
+import junit.framework.TestCase
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class UITestsTransactionDetail {
-
-    @Inject
-    lateinit var placesRepository: ILocalPlacesRepository
+class UITestHomeView {
 
     private lateinit var navController: NavHostController
 
@@ -73,7 +61,7 @@ class UITestsTransactionDetail {
         val email = "test@test.com"
         val password = "Test12345"
 
-        navigate(Destination.LoginScreen.route)
+        launchLoginScreenWithNavigation()
 
         composeRule.waitForIdle()
 
@@ -106,7 +94,7 @@ class UITestsTransactionDetail {
 
         composeRule.activity.runOnUiThread {
             try {
-                navController.navigate(Destination.TransactionsList.route)
+                navController.navigate(Destination.HomeScreen.route)
 
                 composeRule.waitForIdle()
             } catch (e: Exception) {
@@ -118,26 +106,119 @@ class UITestsTransactionDetail {
     }
 
     @Test
-    fun test1_list_of_transactions_exists() {
-        navigate(Destination.TransactionsList.route)
+    fun test1_homeViewScreenIsLoaded() {
         with(composeRule) {
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertExists()
-            onNodeWithTag(TestTagListOfTransactionsScreenFAB).assertExists()
-
-            Thread.sleep(1000)
+            onNodeWithTag(TestTagHomeScreenTransactionsFAB).assertIsDisplayed()
+            onNodeWithTag(TestTagHomeScreenAddMoneyButton).assertIsDisplayed()
+            onNodeWithTag(TestTagHomeScreenTransactionsTitle).assertIsDisplayed()
         }
     }
 
     @Test
-    fun test2_addMoneyViaFAB() {
+    fun test2_addMoneyViaBalanceBox() {
         with(composeRule) {
-            navigate(Destination.HomeScreen.route)
+            onNodeWithTag(TestTagHomeScreenAddMoneyButton)
+                .assertExists()
+                .assertIsDisplayed()
+                .performClick()
 
             waitForIdle()
 
+            onNodeWithTag(TestTagAddEditTransactionScreenTitle).assertIsDisplayed()
+
+            onNodeWithTag(TestTagAddEditTransactionCategoryInput)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagAddEditTransactionCategoryInput + 1)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagAddEditTransactionPriceInput)
+                .assertIsDisplayed()
+                .performTextInput("500")
+
+            onNodeWithTag(TestTagAddEditTransactionCurrencyInput)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagAddEditTransactionCurrencyInput + 1)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagAddEditTransactionTransactionTypeInput + 0)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagAddEditTransactionDateInput).assertIsDisplayed()
+
+            onNodeWithTag(TestTagAddEditTransactionNoteInput)
+                .assertIsDisplayed()
+                .performTextInput("Note text")
+
+            onNodeWithTag(TestTagAddEditTransactionSaveButton)
+                .performScrollTo()
+                .assertIsDisplayed()
+                .apply {
+                    onNodeWithTag(TestTagAddEditTransactionSaveButton + "_submit")
+                        .assertIsDisplayed()
+                        .performClick()
+                }
+
+            waitForIdle()
+
+            Thread.sleep(1000)
+
+            onNodeWithTag(TransactionLazyList)
+                .assertIsDisplayed()
+
+            onNodeWithTag(TransactionLazyList + 0)
+                .assertIsDisplayed()
+                .performClick()
+
+            waitForIdle()
+
+            onNodeWithTag(TestTagDetailTransactionScreenTitle).isDisplayed()
+
+            onNodeWithTag(TestTagDetailTransactionCategory)
+                .assertTextContains("Business")
+
+            onNodeWithTag(TestTagDetailTransactionPrice)
+                .assertTextContains("- 5.000 AED")
+
+            onNodeWithTag(TestTagDetailTransactionType)
+                .assertTextContains("Expense")
+
+            val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            val currentDate = dateFormat.format(Date())
+
+            onNodeWithTag(TestTagDetailTransactionDate)
+                .assertTextContains(currentDate)
+
+            onNodeWithTag(TestTagDetailTransactionNote)
+                .assertTextContains("Note text")
+
+            onNodeWithTag(TestTagDetailTransactionPlace)
+                .assertTextContains("-")
+
+            onNodeWithTag(TestTagDetailTransactionDeleteButton)
+                .assertIsDisplayed()
+                .performClick()
+
+            onNodeWithTag(TestTagConfirmButton)
+                .assertIsDisplayed()
+                .performClick()
+
+            waitForIdle()
+
+            onNodeWithTag(TransactionEmptyList)
+                .assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun test3_addMoneyViaFAB() {
+        with(composeRule) {
             onNodeWithTag(TestTagHomeScreenTransactionsFAB)
                 .assertExists()
                 .assertIsDisplayed()
@@ -187,112 +268,40 @@ class UITestsTransactionDetail {
                 }
 
             waitForIdle()
-        }
-    }
-
-    @Test
-    fun test3_list_of_transactions_exists() {
-        navigate(Destination.TransactionsList.route)
-        with(composeRule) {
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertExists()
-            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertIsDisplayed()
-            onNodeWithTag(TestTagListOfTransactionsScreenFAB).assertExists()
-
-            onNodeWithTag(TestTagListOfTransactionsScreenFAB).performClick()
 
             Thread.sleep(1000)
-        }
-    }
 
-    @Test
-    fun test4_detail_is_displayed() {
-        with(composeRule) {
-            val firstItemTag = TransactionLazyList + 0
+            onNodeWithTag(TransactionLazyList)
+                .assertIsDisplayed()
 
-            try {
-                onNodeWithTag(firstItemTag, useUnmergedTree = true).assertExists()
-            } catch (e: AssertionError) {
-                return
-            }
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagDetailTransactionScreenTitle).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionCategory).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionPrice).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionType).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionDate).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionNote).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionPlace).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionDeleteButton).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionEditButton).assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun test5_transaction_can_be_edited() {
-        with(composeRule) {
-            val firstItemTag = TransactionLazyList + 0
-
-            try {
-                onNodeWithTag(firstItemTag, useUnmergedTree = true).assertExists()
-            } catch (e: AssertionError) {
-                return
-            }
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagDetailTransactionEditButton)
+            onNodeWithTag(TransactionLazyList + 0)
                 .assertIsDisplayed()
                 .performClick()
 
             waitForIdle()
-
-            onNodeWithTag(TestTagAddEditTransactionScreenTitle).assertIsDisplayed()
-
-            onNodeWithTag(TestTagAddEditTransactionCategoryInput)
-                .assertIsDisplayed()
-                .performClick()
-
-            onNodeWithTag(TestTagAddEditTransactionCategoryInput + 2)
-                .assertIsDisplayed()
-                .performClick()
-
-            onNodeWithTag(TestTagAddEditTransactionSaveButton)
-                .performScrollTo()
-                .assertIsDisplayed()
-                .apply {
-                    onNodeWithTag(TestTagAddEditTransactionSaveButton + "_submit")
-                        .assertIsDisplayed()
-                        .performClick()
-                }
-
-            waitForIdle()
-
-            Thread.sleep(1000)
 
             onNodeWithTag(TestTagDetailTransactionScreenTitle).isDisplayed()
 
             onNodeWithTag(TestTagDetailTransactionCategory)
-                .assertTextContains("Others")
-        }
-    }
+                .assertTextContains("Business")
 
-    @Test
-    fun test6_transaction_can_be_deleted() {
-        with(composeRule) {
-            val firstItemTag = TransactionLazyList + 0
+            onNodeWithTag(TestTagDetailTransactionPrice)
+                .assertTextContains("- 5.000 AED")
 
-            try {
-                onNodeWithTag(firstItemTag, useUnmergedTree = true).assertExists()
-            } catch (e: AssertionError) {
-                return
-            }
+            onNodeWithTag(TestTagDetailTransactionType)
+                .assertTextContains("Expense")
 
-            waitForIdle()
+            val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            val currentDate = dateFormat.format(Date())
+
+            onNodeWithTag(TestTagDetailTransactionDate)
+                .assertTextContains(currentDate)
+
+            onNodeWithTag(TestTagDetailTransactionNote)
+                .assertTextContains("Note text")
+
+            onNodeWithTag(TestTagDetailTransactionPlace)
+                .assertTextContains("-")
 
             onNodeWithTag(TestTagDetailTransactionDeleteButton)
                 .assertIsDisplayed()
@@ -301,14 +310,19 @@ class UITestsTransactionDetail {
             onNodeWithTag(TestTagConfirmButton)
                 .assertIsDisplayed()
                 .performClick()
+
+            waitForIdle()
+
+            onNodeWithTag(TransactionEmptyList)
+                .assertIsDisplayed()
         }
     }
 
-    private fun navigate(route: String) {
+    private fun launchLoginScreenWithNavigation() {
         composeRule.activity.setContent {
             MaterialTheme {
                 navController = rememberNavController()
-                NavGraph(navController = navController, startDestination = route)
+                NavGraph(navController = navController, startDestination = Destination.LoginScreen.route)
             }
         }
     }

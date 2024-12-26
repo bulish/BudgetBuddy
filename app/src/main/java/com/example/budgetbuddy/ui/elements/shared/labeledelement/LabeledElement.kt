@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.budgetbuddy.R
@@ -37,7 +38,9 @@ fun LabeledElement(item: LabeledElementData) {
                         color = Grey,
                         fontWeight = FontWeight.Normal
                     ),
-                    modifier = Modifier.padding(vertical = TextMargin())
+                    modifier = Modifier
+                        .padding(vertical = TextMargin())
+                        .testTag(item.testTag)
                 )
             }
         }

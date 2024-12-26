@@ -113,7 +113,8 @@ fun AddEditPlaceScreen(
                 }
             }
         },
-        navigation = navigationRouter
+        navigation = navigationRouter,
+        navigationTitleTestTag = TestTagAddEditPlaceScreenTitle
     ) {
         AddEditPlaceScreenContent(
             paddingValues = it,
@@ -203,7 +204,7 @@ fun AddEditPlaceScreenContent(
                     value = data.place.name,
                     error = data.placeNameError,
                     onChange = { actions.onPlaceNameChanged(it) },
-                    testTag = ""
+                    testTag = TestTagAddEditPlaceScreenNameInput
                 )
 
                 Spacer(modifier = Modifier.height(BasicMargin()))
@@ -218,7 +219,8 @@ fun AddEditPlaceScreenContent(
                     onChange = {category ->
                         selectedCategory = category
                         actions.onPlaceCategoryChanged(category)
-                    }
+                    },
+                    testTag = TestTagAddEditPlaceScreenCategoryInput
                 )
 
                 Spacer(modifier = Modifier.height(BasicMargin()))
@@ -233,14 +235,16 @@ fun AddEditPlaceScreenContent(
                     address = data.place.address,
                     onAddressChange = { address ->
                         actions.onPlaceAddressChanged(address)
-                    }
+                    },
+                    testTag = TestTagAddEditPlaceScreenAddressInput
                 )
 
                 Spacer(modifier = Modifier.height(BasicMargin()))
 
                 SaveCancelButtons(
                     onCancel = { onCancel() },
-                    onSave = { actions.savePlace() }
+                    onSave = { actions.savePlace() },
+                    saveButtonTestTag = TestTagAddEditPlaceScreenSaveInput
                 )
             }
 

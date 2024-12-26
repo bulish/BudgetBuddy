@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.budgetbuddy.R
@@ -93,7 +94,8 @@ fun DetailTransactionScreen(
                     navigationRouter.navigateToAddEditTransactionScreen(id)
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = White
+                contentColor = White,
+                modifier = Modifier.testTag(TestTagDetailTransactionEditButton)
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -101,6 +103,7 @@ fun DetailTransactionScreen(
                 )
             }
         },
+        navigationTitleTestTag = TestTagDetailTransactionScreenTitle,
         navigation = navigationRouter
     ) {
         DetailScreenContent(
@@ -143,7 +146,7 @@ fun DetailScreenContent(
                 type = getCustomButtonType(buttonType = CustomButtonType.OutlinedMaxSize),
                 text = stringResource(id = R.string.detail_delete),
                 onClickAction = { dialogIsVisible = true },
-                testTag = ""
+                testTag = TestTagDetailTransactionDeleteButton
             )
 
             if (dialogIsVisible) {

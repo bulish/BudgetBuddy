@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,8 @@ import java.time.LocalDateTime
 @Composable
 fun CustomDatePicker(
     value: LocalDateTime,
-    onChange: (Long) -> Unit
+    onChange: (Long) -> Unit,
+    testTag: String
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -66,6 +68,7 @@ fun CustomDatePicker(
 
     Box(
         modifier = Modifier.fillMaxWidth()
+            .testTag(testTag)
     ) {
         OutlinedTextField(
             value = selectedDate,

@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.model.db.Transaction
 import com.example.budgetbuddy.navigation.INavigationRouter
+import com.example.budgetbuddy.ui.screens.transactions.list.TransactionEmptyList
+import com.example.budgetbuddy.ui.screens.transactions.list.TransactionLazyList
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.DoubleMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
@@ -57,7 +59,8 @@ fun TransactionList(
                     .align(Alignment.CenterHorizontally)
                     .clip(RoundedCornerShape(HalfMargin()))
                     .background(MaterialTheme.colorScheme.tertiary)
-                    .padding(DoubleMargin()),
+                    .padding(DoubleMargin())
+                    .testTag(TransactionEmptyList),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -84,14 +87,17 @@ fun TransactionList(
                 }
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(BasicMargin())) {
-                items(transactions) { transaction ->
+            LazyColumn(
+                modifier = Modifier.testTag(TransactionLazyList),
+                verticalArrangement = Arrangement.spacedBy(BasicMargin())) {
+                itemsIndexed(transactions) { index, transaction ->
                     TransactionItem(
                         transaction,
                         navigation,
                         transformPrice = {
                             transformPrice(transaction)
-                        }
+                        },
+                        index
                     )
                 }
             }

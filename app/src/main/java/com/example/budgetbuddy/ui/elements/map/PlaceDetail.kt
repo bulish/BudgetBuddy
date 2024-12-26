@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -26,6 +27,12 @@ import com.example.budgetbuddy.model.db.Place
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
 import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
+import com.example.budgetbuddy.ui.screens.places.map.TestTagMapScreenDetailAddress
+import com.example.budgetbuddy.ui.screens.places.map.TestTagMapScreenDetailCategory
+import com.example.budgetbuddy.ui.screens.places.map.TestTagMapScreenDetailCloseButton
+import com.example.budgetbuddy.ui.screens.places.map.TestTagMapScreenDetailDeleteButton
+import com.example.budgetbuddy.ui.screens.places.map.TestTagMapScreenDetailEditButton
+import com.example.budgetbuddy.ui.screens.places.map.TestTagMapScreenDetailTitle
 import com.example.budgetbuddy.ui.theme.BasicMargin
 import com.example.budgetbuddy.ui.theme.HalfMargin
 
@@ -41,7 +48,7 @@ fun PlaceDetail(
     Card(
         modifier = modifier.zIndex(0f),
         colors = androidx.compose.material3.CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface // Barva pozadí
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Box {
@@ -52,12 +59,16 @@ fun PlaceDetail(
                         .padding(horizontal = BasicMargin(), vertical = 0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(modifier = Modifier.weight(1.0f),
+                    Row(modifier = Modifier.weight(1.0f)
+                        .testTag(TestTagMapScreenDetailCategory),
                         verticalAlignment = Alignment.CenterVertically) {
                         PlaceDetailIcon(place = place.category)
                         Text(text = place.category.name, color = MaterialTheme.colorScheme.secondary)
                     }
-                    IconButton(onClick = { onClose() }) {
+                    IconButton(
+                        onClick = { onClose() },
+                        modifier = Modifier.testTag(TestTagMapScreenDetailCloseButton)
+                    ) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
                     }
                 }
@@ -73,13 +84,15 @@ fun PlaceDetail(
                     Text(
                         text = place.name,
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.testTag(TestTagMapScreenDetailTitle)
                     )
 
                     Text(
                         text = place.address,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.testTag(TestTagMapScreenDetailAddress)
                     )
 
                     Row(
@@ -94,7 +107,7 @@ fun PlaceDetail(
                             onClickAction = {
                                 onEdit()
                             },
-                            testTag = ""
+                            testTag = TestTagMapScreenDetailEditButton
                         )
 
                         Spacer(modifier = Modifier.width(HalfMargin()))
@@ -103,7 +116,7 @@ fun PlaceDetail(
                             type = getCustomButtonType(buttonType = CustomButtonType.Basic),
                             text = stringResource(id = R.string.delete),
                             onClickAction = { onDelete() },
-                            testTag = ""
+                            testTag = TestTagMapScreenDetailDeleteButton
                         )
                     }
                 }

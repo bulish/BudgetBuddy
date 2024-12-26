@@ -162,6 +162,7 @@ fun TransactionsListScreenContent(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(BasicMargin())
+                .testTag(TransactionFilterItem)
         ) {
             Text(
                 text = stringResource(id = if (selectedFilter == null) R.string.all else  TransactionCategory.valueOf(selectedFilter.toString()).getStringResource()),
@@ -183,7 +184,7 @@ fun TransactionsListScreenContent(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.tertiary)
         ) {
-            filters.forEach { filter ->
+            filters.forEachIndexed { index, filter ->
                 DropdownMenuItem(onClick = {
                     setSelectedFilter(
                         if (filter == "All") {
@@ -198,7 +199,9 @@ fun TransactionsListScreenContent(
                         text = stringResource(id = if (filter == "All") R.string.all else TransactionCategory.valueOf(filter.toString()).getStringResource()),
                         color = MaterialTheme.colorScheme.secondary
                     )
-                })
+                },
+                    modifier = Modifier.testTag(TransactionFilterItem + index)
+                )
             }
         }
 

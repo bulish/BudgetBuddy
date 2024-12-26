@@ -31,7 +31,8 @@ fun AddressInputField(
     context: Context,
     addressError: Int?,
     address: String,
-    onAddressChange: (String) -> Unit
+    onAddressChange: (String) -> Unit,
+    testTag: String
 ) {
     var suggestions by remember { mutableStateOf<List<String>>(emptyList()) }
     var selectedPlaceId by remember { mutableStateOf<String?>(null) }
@@ -59,7 +60,7 @@ fun AddressInputField(
                     isUserEditing = true
                     onAddressChange(newAddress)
                 },
-                testTag = "" // TODO
+                testTag = testTag
             )
         }
 

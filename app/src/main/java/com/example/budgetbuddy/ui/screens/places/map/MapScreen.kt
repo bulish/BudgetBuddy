@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -84,7 +85,8 @@ fun MapScreen(
                     navigationRouter.navigateToAddEditPlaceScreen(null)
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = White
+                contentColor = White,
+                modifier = Modifier.testTag(TestTagMapScreenFAB)
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
@@ -141,6 +143,7 @@ fun MapScreenContent(
         Modifier
             .fillMaxSize()
             .padding(paddingValues)
+            .testTag(TestTagMapScreenGoogleMap)
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxHeight(),

@@ -1,0 +1,11 @@
+package com.example.budgetbuddy.ui.screens.transactions.addEdit
+
+const val TestTagAddEditTransactionScreenTitle = "TestTagAddEditTransactionScreenTitle"
+const val TestTagAddEditTransactionCategoryInput = "TestTagAddEditTransactionCategoryInput"
+const val TestTagAddEditTransactionPriceInput = "TestTagAddEditTransactionPriceInput"
+const val TestTagAddEditTransactionCurrencyInput = "TestTagAddEditTransactionCurrencyInput"
+const val TestTagAddEditTransactionTransactionTypeInput = "TestTagAddEditTransactionTransactionTypeInput"
+const val TestTagAddEditTransactionDateInput = "TestTagAddEditTransactionDateInput"
+const val TestTagAddEditTransactionPlaceInput = "TestTagAddEditTransactionPlaceInput"
+const val TestTagAddEditTransactionNoteInput = "TestTagAddEditTransactionNoteInput"
+const val TestTagAddEditTransactionSaveButton = "TestTagAddEditTransactionSaveButton"

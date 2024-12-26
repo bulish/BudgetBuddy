@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.auth.signUp
 
+const val TestTagSignUpScreenTitle = "TestTagSignUpScreenTitle"
 const val TestTagSignUpScreenForm = "TestTagSignUpScreenForm"
 const val TestTagSignUpScreenEmailInput = "TestTagSignUpScreenEmailInput"
 const val TestTagSignUpScreenPasswordInput = "TestTagSignUpScreenPasswordInput"

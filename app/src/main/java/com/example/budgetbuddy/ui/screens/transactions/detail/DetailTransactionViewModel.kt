@@ -71,26 +71,32 @@ class DetailTransactionViewModel @Inject constructor(
                         LabeledElementData(
                             label = R.string.category_placeholder,
                             dataInt = TransactionCategory.fromString(transaction.category).getStringResource(),
+                            testTag = TestTagDetailTransactionCategory
                         ),
                         LabeledElementData(
                             label = R.string.price_label,
                             data = "${if (transaction.type == TransactionType.EXPENSE.value) "- " else ""}${transaction.price.toFormattedString()} ${transaction.currency}",
+                            testTag = TestTagDetailTransactionPrice
                         ),
                         LabeledElementData(
                             label = R.string.transaction_type_label,
                             dataInt = TransactionType.fromString(transaction.type).getStringResource(),
+                            testTag = TestTagDetailTransactionType
                         ),
                         LabeledElementData(
                             label = R.string.date_label,
                             data = transaction.date.formatToDisplayString(),
+                            testTag = TestTagDetailTransactionDate
                         ),
                         LabeledElementData(
                             label = R.string.note_label,
                             data = if (transaction.note != "") transaction.note ?: "-" else "-",
+                            testTag = TestTagDetailTransactionNote
                         ),
                         LabeledElementData(
                             label = R.string.place_label,
                             data = placeName,
+                            testTag = TestTagDetailTransactionPlace
                         )
                     )
 

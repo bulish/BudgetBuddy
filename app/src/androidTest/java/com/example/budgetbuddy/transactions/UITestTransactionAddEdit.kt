@@ -1,5 +1,9 @@
 package com.example.budgetbuddy.transactions
 
+import junit.framework.TestCase.assertEquals
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.*
@@ -10,33 +14,14 @@ import com.example.budgetbuddy.database.places.ILocalPlacesRepository
 import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.activity.MainActivity
-import com.example.budgetbuddy.ui.elements.shared.TestTagConfirmButton
 import com.example.budgetbuddy.ui.elements.transactions.TestTagListOfTransactionsScreenListContainer
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenEmailInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenPasswordInput
 import com.example.budgetbuddy.ui.screens.auth.login.TestTagLoginScreenSubmitButton
 import com.example.budgetbuddy.ui.screens.greetings.TestTagGreetingsScreenSkip
-import com.example.budgetbuddy.ui.screens.home.TestTagHomeScreenTransactionsFAB
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionCategoryInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionCurrencyInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionDateInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionNoteInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionPriceInput
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionSaveButton
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionScreenTitle
-import com.example.budgetbuddy.ui.screens.transactions.addEdit.TestTagAddEditTransactionTransactionTypeInput
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionCategory
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionDate
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionDeleteButton
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionEditButton
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionNote
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionPlace
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionPrice
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionScreenTitle
-import com.example.budgetbuddy.ui.screens.transactions.detail.TestTagDetailTransactionType
-import com.example.budgetbuddy.ui.screens.transactions.list.TestTagListOfTransactionsScreenFAB
-import com.example.budgetbuddy.ui.screens.transactions.list.TransactionEmptyList
-import com.example.budgetbuddy.ui.screens.transactions.list.TransactionLazyList
+import com.example.budgetbuddy.ui.screens.transactions.addEdit.*
+import com.example.budgetbuddy.ui.screens.transactions.detail.*
+import com.example.budgetbuddy.ui.screens.transactions.list.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.MockKAnnotations
@@ -52,7 +37,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class UITestsTransactionDetail {
+class UITestsTransactionAddEdit {
 
     @Inject
     lateinit var placesRepository: ILocalPlacesRepository
@@ -134,11 +119,7 @@ class UITestsTransactionDetail {
     @Test
     fun test2_addMoneyViaFAB() {
         with(composeRule) {
-            navigate(Destination.HomeScreen.route)
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagHomeScreenTransactionsFAB)
+            onNodeWithTag(TestTagListOfTransactionsScreenFAB)
                 .assertExists()
                 .assertIsDisplayed()
                 .performClick()
@@ -187,79 +168,52 @@ class UITestsTransactionDetail {
                 }
 
             waitForIdle()
+
+            onNodeWithTag(TransactionLazyList)
+                .assertIsDisplayed()
+
+            onNodeWithTag(TransactionLazyList + 0)
+                .assertIsDisplayed()
+                .performClick()
+
+            waitForIdle()
+
+            onNodeWithTag(TestTagDetailTransactionScreenTitle).isDisplayed()
+
+            onNodeWithTag(TestTagDetailTransactionCategory)
+                .assertTextContains("Business")
+
+            onNodeWithTag(TestTagDetailTransactionPrice)
+                .assertTextContains("- 5.000 AED")
+
+            onNodeWithTag(TestTagDetailTransactionType)
+                .assertTextContains("Expense")
+
+            val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+            val currentDate = dateFormat.format(Date())
+
+            onNodeWithTag(TestTagDetailTransactionDate)
+                .assertTextContains(currentDate)
+
+            onNodeWithTag(TestTagDetailTransactionNote)
+                .assertTextContains("Note text")
+
+            onNodeWithTag(TestTagDetailTransactionPlace)
+                .assertTextContains("-")
         }
     }
 
     @Test
-    fun test3_list_of_transactions_exists() {
-        navigate(Destination.TransactionsList.route)
+    fun test3_addInvalidData() {
         with(composeRule) {
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertExists()
-            onNodeWithTag(TestTagListOfTransactionsScreenListContainer).assertIsDisplayed()
-            onNodeWithTag(TestTagListOfTransactionsScreenFAB).assertExists()
-
-            onNodeWithTag(TestTagListOfTransactionsScreenFAB).performClick()
-
-            Thread.sleep(1000)
-        }
-    }
-
-    @Test
-    fun test4_detail_is_displayed() {
-        with(composeRule) {
-            val firstItemTag = TransactionLazyList + 0
-
-            try {
-                onNodeWithTag(firstItemTag, useUnmergedTree = true).assertExists()
-            } catch (e: AssertionError) {
-                return
-            }
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagDetailTransactionScreenTitle).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionCategory).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionPrice).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionType).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionDate).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionNote).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionPlace).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionDeleteButton).assertIsDisplayed()
-            onNodeWithTag(TestTagDetailTransactionEditButton).assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun test5_transaction_can_be_edited() {
-        with(composeRule) {
-            val firstItemTag = TransactionLazyList + 0
-
-            try {
-                onNodeWithTag(firstItemTag, useUnmergedTree = true).assertExists()
-            } catch (e: AssertionError) {
-                return
-            }
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagDetailTransactionEditButton)
+            onNodeWithTag(TestTagListOfTransactionsScreenFAB)
+                .assertExists()
                 .assertIsDisplayed()
                 .performClick()
 
             waitForIdle()
 
             onNodeWithTag(TestTagAddEditTransactionScreenTitle).assertIsDisplayed()
-
-            onNodeWithTag(TestTagAddEditTransactionCategoryInput)
-                .assertIsDisplayed()
-                .performClick()
-
-            onNodeWithTag(TestTagAddEditTransactionCategoryInput + 2)
-                .assertIsDisplayed()
-                .performClick()
 
             onNodeWithTag(TestTagAddEditTransactionSaveButton)
                 .performScrollTo()
@@ -272,35 +226,8 @@ class UITestsTransactionDetail {
 
             waitForIdle()
 
-            Thread.sleep(1000)
-
-            onNodeWithTag(TestTagDetailTransactionScreenTitle).isDisplayed()
-
-            onNodeWithTag(TestTagDetailTransactionCategory)
-                .assertTextContains("Others")
-        }
-    }
-
-    @Test
-    fun test6_transaction_can_be_deleted() {
-        with(composeRule) {
-            val firstItemTag = TransactionLazyList + 0
-
-            try {
-                onNodeWithTag(firstItemTag, useUnmergedTree = true).assertExists()
-            } catch (e: AssertionError) {
-                return
-            }
-
-            waitForIdle()
-
-            onNodeWithTag(TestTagDetailTransactionDeleteButton)
-                .assertIsDisplayed()
-                .performClick()
-
-            onNodeWithTag(TestTagConfirmButton)
-                .assertIsDisplayed()
-                .performClick()
+            val route = navController.currentDestination?.route
+            assertEquals(route, Destination.AddEditTransaction.route)
         }
     }
 

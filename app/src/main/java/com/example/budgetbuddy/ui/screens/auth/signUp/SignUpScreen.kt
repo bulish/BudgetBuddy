@@ -19,6 +19,7 @@ import com.example.budgetbuddy.ui.elements.shared.form.FormBottomText
 import com.example.budgetbuddy.ui.elements.shared.form.FormPageTopAppBar
 import com.example.budgetbuddy.ui.elements.shared.form.PasswordInput
 import com.example.budgetbuddy.ui.elements.shared.form.TextInput
+import com.example.budgetbuddy.ui.screens.auth.login.LoginUIState
 
 @Composable
 fun SignUpScreen(
@@ -51,6 +52,16 @@ fun SignUpScreen(
             is SignUpUIState.Error -> {
                 ShowToast(message = stringResource(id = it.message))
             }
+
+            is SignUpUIState.UserLoggedIn -> {
+                if (it.message != null) {
+                    ShowToast(message = stringResource(id = it.message))
+                }
+
+                LaunchedEffect(it) {
+                    navigationRouter.navigateToHomeScreen()
+                }
+            }
         }
     }
 
@@ -62,7 +73,8 @@ fun SignUpScreen(
             )
         },
         isAuth = true,
-        navigation = navigationRouter
+        navigation = navigationRouter,
+        navigationTitleTestTag = TestTagSignUpScreenTitle
     ) {
         SignUpScreenContent(
             paddingValues = it,

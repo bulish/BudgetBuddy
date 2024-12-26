@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ fun CustomRadioButton(
     label: String,
     value: String,
     onChange: (String) -> Unit,
+    testTag: String
 ) {
 
     val radioOptions = listOf(
@@ -43,7 +45,8 @@ fun CustomRadioButton(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .testTag(testTag),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start,
     ) {
@@ -55,7 +58,7 @@ fun CustomRadioButton(
             color = MaterialTheme.colorScheme.secondary
         )
 
-        radioOptions.forEach { text ->
+        radioOptions.forEachIndexed { index, text ->
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -64,7 +67,8 @@ fun CustomRadioButton(
                         onClick = {
                             onChange(text.value)
                         }
-                    ),
+                    )
+                    .testTag(testTag + index),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {

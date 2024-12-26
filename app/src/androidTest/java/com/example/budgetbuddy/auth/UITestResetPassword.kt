@@ -1,9 +1,8 @@
-package com.example.budgetbuddy
+package com.example.budgetbuddy.auth
 
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
@@ -15,24 +14,24 @@ import com.example.budgetbuddy.navigation.Destination
 import com.example.budgetbuddy.navigation.NavGraph
 import com.example.budgetbuddy.ui.activity.MainActivity
 import com.example.budgetbuddy.ui.screens.auth.login.*
+import com.example.budgetbuddy.ui.screens.auth.resetPassword.*
 import com.example.budgetbuddy.ui.screens.greetings.TestTagGreetingsScreenSkip
-import com.example.budgetbuddy.ui.screens.settings.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.MockKAnnotations
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
-import junit.framework.TestCase
-import kotlinx.coroutines.runBlocking
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class UITestSettingsView {
+class UITestResetPassword {
 
     private lateinit var navController: NavHostController
 
@@ -50,7 +49,7 @@ class UITestSettingsView {
         val email = "test@test.com"
         val password = "Test12345"
 
-        launchLoginScreenWithNavigation()
+        navigate(Destination.LoginScreen.route)
 
         composeRule.waitForIdle()
 
@@ -75,7 +74,7 @@ class UITestSettingsView {
 
                 waitForIdle()
 
-                TestCase.assertTrue(route == Destination.LoginScreen.route)
+                assertTrue(route == Destination.LoginScreen.route)
             }
 
             Thread.sleep(3000)
@@ -83,7 +82,7 @@ class UITestSettingsView {
 
         composeRule.activity.runOnUiThread {
             try {
-                navController.navigate(Destination.SettingsScreen.route)
+                navController.navigate(Destination.LoginScreen.route)
 
                 composeRule.waitForIdle()
             } catch (e: Exception) {
@@ -95,100 +94,107 @@ class UITestSettingsView {
     }
 
     @Test
-    fun test1_settingsViewScreenIsLoaded() {
+    fun test1_loginFormExists() {
         with(composeRule) {
-            onNodeWithTag(TestTagSettingsScreenTitle).assertIsDisplayed()
-            onNodeWithTag(TestTagSettingsScreenLanguage).assertIsDisplayed()
-            onNodeWithTag(TestTagSettingsScreenVersion).assertIsDisplayed()
-        }
-    }
+            Thread.sleep(3000)
+            waitForIdle()
 
-    @Test
-    fun test2_userInfoIsDisplayed() {
-        with(composeRule) {
-            val userData = "test@test.com"
+            val route = navController.currentDestination?.route
 
-            onNodeWithTag(TestTagSettingsScreenUserIcon)
-                .assertExists()
-                .assertIsDisplayed()
-
-            onNodeWithTag(TestTagSettingsScreenUserName)
-                .assertTextContains(userData)
-                .assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun test3_changeColorMode() {
-       runBlocking {
-
-           with(composeRule) {
-
-               onNodeWithTag(TestTagSettingsScreenModeToggle)
-                   .assertExists()
-                   .assertIsDisplayed()
-                   .performClick()
-
-           }
-       }
-    }
-
-    @Test
-    fun test4_changeColorMode() {
-        runBlocking {
-
-            with(composeRule) {
-
-                onNodeWithTag(TestTagSettingsScreenColorDropdown)
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
-
-                Thread.sleep(1000)
-
-                onNodeWithTag("${TestTagSettingsScreenColorDropdownItem}${1}")
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
+            if (route == Destination.LoginScreen.route) {
+                onNodeWithTag(TestTagLoginScreenForm).assertIsDisplayed()
+                onNodeWithTag(TestTagLoginScreenEmailInput).assertIsDisplayed()
+                onNodeWithTag(TestTagLoginScreenPasswordInput).assertIsDisplayed()
+                onNodeWithTag(TestTagLoginScreenSubmitButton).assertIsDisplayed()
+                onNodeWithTag(TestTagLoginScreenSignUpButton).assertIsDisplayed()
+                onNodeWithTag(TestTagLoginScreenForgottenPassword).assertIsDisplayed()
             }
         }
     }
 
     @Test
-    fun test5_changeCurrency() {
-        runBlocking {
+    fun test2_resetPasswordExists() {
+        with(composeRule) {
+            Thread.sleep(3000)
+            waitForIdle()
 
-            with(composeRule) {
+            val route = navController.currentDestination?.route
 
-                onNodeWithTag(TestTagSettingsScreenCurrencyDropdown)
-                    .assertExists()
+            if (route == Destination.LoginScreen.route) {
+                onNodeWithTag(TestTagLoginScreenForgottenPassword)
                     .assertIsDisplayed()
                     .performClick()
 
-                Thread.sleep(1000)
+                waitForIdle()
 
-                onNodeWithTag("${TestTagSettingsScreenCurrencyDropdown}${1}")
-                    .assertExists()
-                    .assertIsDisplayed()
-                    .performClick()
+                onNodeWithTag(TestTagResetPasswordScreenTitle).assertExists()
             }
         }
     }
 
     @Test
-    fun test6_userCanBeLoggedOut() {
+    fun test3_submitValidForm() {
         with(composeRule) {
-            onNodeWithTag(TestTagSettingsScreenLogOutButton)
-                .assertIsDisplayed()
-                .performClick()
+            Thread.sleep(3000)
+            waitForIdle()
+
+            val route = navController.currentDestination?.route
+
+            if (route == Destination.LoginScreen.route) {
+                onNodeWithTag(TestTagLoginScreenForgottenPassword)
+                    .assertIsDisplayed()
+                    .performClick()
+
+                waitForIdle()
+
+                onNodeWithTag(TestTagResetPasswordScreenTitle).assertExists()
+
+                onNodeWithTag(TestTagResetPasswordScreenEmailInput)
+                    .assertIsDisplayed()
+                    .performTextInput("xbabicko@mendelu.cz")
+
+                onNodeWithTag(TestTagResetPasswordScreenSubmitButton)
+                    .assertIsDisplayed()
+                    .performClick()
+
+                waitForIdle()
+
+                assertEquals(navController.currentDestination?.route, Destination.LoginScreen.route)
+            }
         }
     }
 
-    private fun launchLoginScreenWithNavigation() {
+    @Test
+    fun test4_submitInvalidForm() {
+        with(composeRule) {
+            Thread.sleep(3000)
+            waitForIdle()
+
+            val route = navController.currentDestination?.route
+
+            if (route == Destination.LoginScreen.route) {
+                onNodeWithTag(TestTagLoginScreenForgottenPassword)
+                    .assertIsDisplayed()
+                    .performClick()
+
+                waitForIdle()
+
+                onNodeWithTag(TestTagResetPasswordScreenSubmitButton)
+                    .assertIsDisplayed()
+                    .performClick()
+
+                waitForIdle()
+
+                assertEquals(navController.currentDestination?.route, Destination.ResetPasswordScreen.route)
+            }
+        }
+    }
+
+    private fun navigate(route: String) {
         composeRule.activity.setContent {
             MaterialTheme {
                 navController = rememberNavController()
-                NavGraph(navController = navController, startDestination = Destination.LoginScreen.route)
+                NavGraph(navController = navController, startDestination = route)
             }
         }
     }

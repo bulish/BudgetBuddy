@@ -7,15 +7,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.ui.theme.Black
 import com.example.budgetbuddy.ui.theme.Green
-import com.example.budgetbuddy.ui.theme.Red
 import com.example.budgetbuddy.ui.theme.White
+
+const val TestTagConfirmButton = "TestTagConfirmButton"
 
 @Composable
 fun CustomAlertDialog(
@@ -56,7 +59,8 @@ fun CustomAlertDialog(
                 },
                 colors = ButtonDefaults.textButtonColors(
                     containerColor = Green
-                )
+                ),
+                modifier = Modifier.testTag(TestTagConfirmButton)
             ) {
                 Text(
                     stringResource(id = R.string.alert_dialog_confirm),

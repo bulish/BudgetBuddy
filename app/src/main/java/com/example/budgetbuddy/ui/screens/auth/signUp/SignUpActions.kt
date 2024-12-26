@@ -6,4 +6,5 @@ interface SignUpActions {
     fun onUserPasswordAgainChanged(password: String)
     fun onUserUsernameChanged(username: String)
     fun saveUser()
+    fun loginUser()
 }

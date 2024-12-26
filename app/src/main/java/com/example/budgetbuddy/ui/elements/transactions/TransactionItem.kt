@@ -22,22 +22,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
-import com.example.budgetbuddy.extensions.toFormattedString
 import com.example.budgetbuddy.model.db.TransactionCategory
 import com.example.budgetbuddy.model.db.TransactionType
 import com.example.budgetbuddy.navigation.INavigationRouter
+import com.example.budgetbuddy.ui.screens.transactions.list.TransactionItemCategory
+import com.example.budgetbuddy.ui.screens.transactions.list.TransactionItemType
+import com.example.budgetbuddy.ui.screens.transactions.list.TransactionLazyList
+import com.example.budgetbuddy.ui.screens.transactions.list.TransactionLazyListItem
 import com.example.budgetbuddy.ui.theme.BasicMargin
 
 @Composable
 fun TransactionItem(
     transaction: Transaction,
     navigation: INavigationRouter,
-    transformPrice: () -> String
+    transformPrice: () -> String,
+    index: Int
 ) {
     val transactionCategory = TransactionCategory.fromString(transaction.category)
 
@@ -49,7 +56,8 @@ fun TransactionItem(
             .clickable {
                 navigation.navigateToTransactionDetailScreen(transaction.id)
             }
-            .padding(BasicMargin()),
+            .padding(BasicMargin())
+            .testTag(TransactionLazyList + index),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -71,19 +79,22 @@ fun TransactionItem(
 
         Column(modifier = Modifier
             .weight(1f)
-            .padding(start = HalfMargin())) {
+            .padding(start = HalfMargin())
+            .testTag(TransactionLazyListItem + index)) {
             Text(
                 text = stringResource(id = transactionCategory.getStringResource()),
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.semantics { testTag = TransactionItemCategory + index }
             )
 
             Text(
                 text = "${if (transaction.type == TransactionType.EXPENSE.value) "- " else ""}${transformPrice()}",
                 color = if (transaction.type == TransactionType.EXPENSE.value) Color.Red else MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.semantics { testTag = TransactionItemType + index }
             )
         }
 

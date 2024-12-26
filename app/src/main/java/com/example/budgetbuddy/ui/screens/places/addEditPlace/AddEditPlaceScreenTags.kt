@@ -1,0 +1,7 @@
+package com.example.budgetbuddy.ui.screens.places.addEditPlace
+
+const val TestTagAddEditPlaceScreenTitle = "TestTagAddEditPlaceScreenTitle"
+const val TestTagAddEditPlaceScreenNameInput = "TestTagAddEditPlaceScreenNameInput"
+const val TestTagAddEditPlaceScreenCategoryInput = "TestTagAddEditPlaceScreenCategoryInput"
+const val TestTagAddEditPlaceScreenAddressInput = "TestTagAddEditPlaceScreenAddressInput"
+const val TestTagAddEditPlaceScreenSaveInput = "TestTagAddEditPlaceScreenSaveInput"

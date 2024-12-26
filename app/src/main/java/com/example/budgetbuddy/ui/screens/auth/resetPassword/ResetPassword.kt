@@ -66,7 +66,8 @@ fun ResetPasswordScreen(
             )
         },
         isAuth = true,
-        navigation = navigationRouter
+        navigation = navigationRouter,
+        navigationTitleTestTag = TestTagResetPasswordScreenTitle
     ) {
         ResetPasswordContent(
             paddingValues = it,
