@@ -71,18 +71,6 @@ android {
             excludes += "META-INF/*"
         }
     }
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-            it.jvmArgs?.add("-javaagent:${rootDir}/libs/mockk-agent.jar")
-        }
-
-        packagingOptions {
-            jniLibs {
-                useLegacyPackaging = true
-            }
-        }
-    }
 }
 
 dependencies {
@@ -161,6 +149,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:4.0.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.mockito:mockito-inline:4.8.0")
 
     implementation(libs.text.recognition)
     implementation(libs.camera.core)
