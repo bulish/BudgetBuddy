@@ -74,10 +74,10 @@
     <string name="alert_dialog_confirm">Confirm</string>
     <string name="alert_dialog_dismiss">Dismiss</string>
     <string name="alert_dialog_icon">Dialog - icon</string>
-    <string name="alert_dialog_delete_title">Do you really want to delete this password?</string>
-    <string name="alert_dialog_delete_subtitle">After deletion, the password will be moved to the trash.</string>
-    <string name="alert_dialog_trash_title">Are you sure you want to permanently delete this password?</string>
-    <string name="alert_dialog_trash_subtitle">Once deleted, the password cannot be restored.</string>
+    <string name="alert_dialog_delete_title">Do you really want to delete this record?</string>
+    <string name="alert_dialog_delete_subtitle">After deletion, the record will be permanently deleted.</string>
+    <string name="alert_dialog_trash_title">Are you sure you want to permanently delete this record?</string>
+    <string name="alert_dialog_trash_subtitle">Once deleted, the record cannot be restored.</string>
     <string name="alert_dialog_add_edit_title">Are you sure you want to leave this screen?</string>
     <string name="alert_dialog_add_edit_subtitle">It will not be possible to renew the changes after leaving</string>
 
@@ -169,5 +169,6 @@
     <string name="next">Next</string>
     <string name="get_started">Get Started</string>
     <string name="skip">Skip</string>
+    <string name="sum">Sum:</string>
 
 </resources>

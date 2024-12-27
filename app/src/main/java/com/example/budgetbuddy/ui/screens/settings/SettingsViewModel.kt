@@ -51,6 +51,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreRepository.getCurrency().collect {
                 _activeCurrency.value = it
+                getCurrencyData()
             }
         }
 
@@ -81,11 +82,9 @@ class SettingsViewModel @Inject constructor(
 
     override fun changeCurrency(currency: String) {
         viewModelScope.launch {
-            _activeCurrency.update {
-                currency
-            }
-
+            _activeCurrency.update { currency }
             dataStoreRepository.setCurrency(activeCurrency.value)
+            getCurrencyData()
         }
     }
 

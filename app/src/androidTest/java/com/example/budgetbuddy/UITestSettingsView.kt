@@ -119,7 +119,7 @@ class UITestSettingsView {
     }
 
     @Test
-    fun test3_changeColorMode() {
+    fun test3_changeDarkMode() {
        runBlocking {
 
            with(composeRule) {

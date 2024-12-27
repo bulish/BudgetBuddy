@@ -13,7 +13,7 @@ properties.load(project.rootProject.file("local.properties").reader())
 
 var versionMajor = 1
 var versionMinor = 0
-var versionPatch = 1
+var versionPatch = 2
 
 android {
     namespace = "com.example.budgetbuddy"
@@ -135,22 +135,20 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
 
-    // required if you want to use Mockito for unit tests
     testImplementation(libs.mockito.core)
-    // required if you want to use Mockito for Android tests
     androidTestImplementation(libs.mockito.android)
 
-    androidTestImplementation("io.mockk:mockk:1.13.5")
-    androidTestImplementation("io.mockk:mockk-android:1.13.5")
-    testImplementation("io.mockk:mockk-agent:1.13.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
+    testImplementation(libs.mockk.agent)
+    testImplementation(libs.kotlinx.coroutines)
     implementation(libs.tracing)
-    implementation("com.google.firebase:firebase-auth:21.0.7")
-    testImplementation("org.mockito:mockito-core:4.0.0")
+    implementation(libs.firebase.auth.test)
+    testImplementation(libs.mockito.core)
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    androidTestImplementation(libs.webserver)
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-    testImplementation("org.mockito:mockito-inline:4.8.0")
+    testImplementation(libs.mockito.inline)
 
     implementation(libs.text.recognition)
     implementation(libs.camera.core)

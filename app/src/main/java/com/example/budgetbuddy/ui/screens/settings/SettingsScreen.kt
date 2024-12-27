@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -146,6 +147,12 @@ fun SettingsScreenContent(
     primaryColor: PrimaryColor,
     currencies: Map<String, Double>?
 ) {
+    val updatedCurrency = remember { mutableStateOf(currency) }
+
+    LaunchedEffect(updatedCurrency) {
+        actions.getCurrencyData()
+    }
+
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
@@ -196,8 +203,9 @@ fun SettingsScreenContent(
                         modifier = Modifier.weight(1.0f)
                     )
                     CurrencyDropdown(
-                        currency = currency,
+                        currency = updatedCurrency.value,
                         onChange = { selectedCurrency ->
+                            updatedCurrency.value = selectedCurrency
                             actions.changeCurrency(selectedCurrency)
                         },
                         isDark = true,

@@ -211,7 +211,7 @@ fun TransactionsListScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Sum:",
+                text = stringResource(id = R.string.sum),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.secondary

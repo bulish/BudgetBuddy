@@ -75,10 +75,10 @@
     <string name="alert_dialog_confirm">Potvrdit</string>
     <string name="alert_dialog_dismiss">Zavřít</string>
     <string name="alert_dialog_icon">Dialog - ikona</string>
-    <string name="alert_dialog_delete_title">Opravdu chcete smazat toto heslo?</string>
-    <string name="alert_dialog_delete_subtitle">Po smazání bude heslo přesunuto do koše.</string>
-    <string name="alert_dialog_trash_title">Jste si jistí, že chcete trvale smazat toto heslo?</string>
-    <string name="alert_dialog_trash_subtitle">Po smazání nebude možné heslo obnovit.</string>
+    <string name="alert_dialog_delete_title">Opravdu chcete smazat tento záznam?</string>
+    <string name="alert_dialog_delete_subtitle">Po smazání bude záznam trvale odstraněn.</string>
+    <string name="alert_dialog_trash_title">Jste si jistí, že chcete trvale smazat tento záznam?</string>
+    <string name="alert_dialog_trash_subtitle">Po smazání nebude možné záznam obnovit.</string>
     <string name="alert_dialog_add_edit_title">Opravdu chcete opustit tuto obrazovku?</string>
     <string name="alert_dialog_add_edit_subtitle">Po opuštění nebude možné obnovit změny</string>
 
@@ -170,4 +170,5 @@
     <string name="next">Další</string>
     <string name="get_started">Začít</string>
     <string name="skip">Přeskočit</string>
+    <string name="sum">Suma:</string>
 </resources>
