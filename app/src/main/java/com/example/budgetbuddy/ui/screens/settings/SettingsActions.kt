@@ -8,7 +8,6 @@ interface SettingsActions {
     fun changePrimaryColor(color: PrimaryColor)
     fun changeCurrency(currency: String)
     fun signOut()
-    fun getUserInformation()
     fun getCurrencyData()
 
 }

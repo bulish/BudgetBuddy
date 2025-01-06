@@ -61,11 +61,14 @@ class TransactionsListViewModel @Inject constructor(
                     }
 
                     val totalSumInCurrentCurrency = data.sumOf { transaction ->
-                        val activeRate = conversionRates?.get(currency) ?: 1.0
+                        val sourceRate = conversionRates?.get(transaction.currency) ?: 1.0
+                        val targetRate = conversionRates?.get(activeCurrency.value) ?: 1.0
+
+                        val conversionFactor = targetRate / sourceRate
 
                         when (transaction.type) {
-                            TransactionType.INCOME.value -> transaction.price * activeRate
-                            TransactionType.EXPENSE.value -> -transaction.price * activeRate
+                            TransactionType.INCOME.value -> transaction.price * conversionFactor
+                            TransactionType.EXPENSE.value -> -transaction.price * conversionFactor
                             else -> 0.0
                         }
                     }
@@ -84,14 +87,19 @@ class TransactionsListViewModel @Inject constructor(
 
     override fun transformTransactionPrice(transaction: Transaction): String {
         val conversionRates = _conversionRates.value
-        val currency = activeCurrency.value
+        val targetCurrency = activeCurrency.value
+        val sourceCurrency = transaction.currency
 
-        _activeCurrency.update {
-            currency
+        if (conversionRates == null) {
+            return "${transaction.price.toFormattedString()} $sourceCurrency"
         }
 
-        val activeRate = conversionRates?.get(currency) ?: 1.0
-        val value =  (transaction.price * activeRate).toFormattedString()
-        return "$value $currency"
+        val sourceRate = conversionRates[sourceCurrency] ?: 1.0
+        val targetRate = conversionRates[targetCurrency] ?: 1.0
+
+        val conversionFactor = targetRate / sourceRate
+        val convertedValue = (transaction.price * conversionFactor).toFormattedString()
+
+        return "$convertedValue $targetCurrency"
     }
 }

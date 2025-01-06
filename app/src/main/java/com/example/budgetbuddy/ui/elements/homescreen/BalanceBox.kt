@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.elements.homescreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,7 @@ fun BalanceBox(
 
     LaunchedEffect(currency) {
         updatedCurrency.value = currency
+        Log.d("currency", currency)
     }
 
     Column(

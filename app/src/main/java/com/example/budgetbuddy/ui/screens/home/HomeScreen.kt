@@ -1,5 +1,6 @@
 package com.example.budgetbuddy.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -122,9 +123,10 @@ fun HomeScreenContent(
 ) {
     val updatedCurrency = remember { mutableStateOf(currency) }
 
-    LaunchedEffect(updatedCurrency) {
+    LaunchedEffect(Unit) {
         actions.getCurrencyData()
         actions.loadTransactions()
+        updatedCurrency.value = currency
     }
 
     Column {

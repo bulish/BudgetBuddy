@@ -59,11 +59,9 @@ fun SettingsScreen(
     val currency = viewModel.activeCurrency.collectAsState()
     val isDarkMode = viewModel.isDarkMode.collectAsState()
     val primaryColor = viewModel.primaryColor.collectAsState()
+    val userData = viewModel.userInfo.collectAsState()
 
     var version = ""
-    var userData: MutableState<UserData?> = remember {
-        mutableStateOf(null)
-    }
 
     try {
         val pInfo: PackageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -82,12 +80,6 @@ fun SettingsScreen(
         when (it) {
             SettingsUIState.Loading -> {
                 loading = true
-                try {
-                    viewModel.getUserInformation()
-                } catch (e: Exception) {
-                    Log.e("SettingsScreen", "Error fetching user data", e)
-                }
-
             }
 
             is SettingsUIState.UserNotAuthorized -> {
@@ -102,7 +94,6 @@ fun SettingsScreen(
 
             is SettingsUIState.Success -> {
                 loading = false
-                userData.value = it.user
                 viewModel.getCurrencyData()
             }
 

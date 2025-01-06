@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,7 @@ fun CurrencyDropdown(
         mutableStateOf(false)
     }
 
-    val currencyKeys = currencies?.keys?.toList() ?: emptyList()
+    var currencyKeys = currencies?.keys?.toList() ?: emptyList()
 
     val itemPosition = remember {
         mutableIntStateOf(
@@ -46,10 +47,21 @@ fun CurrencyDropdown(
         )
     }
 
+    LaunchedEffect(currencies) {
+        currencyKeys = currencies?.keys?.toList() ?: emptyList()
+        itemPosition.intValue = if (currencyKeys.isNotEmpty()) {
+            currencyKeys.indexOf(currency).takeIf { it >= 0 } ?: 0
+        } else {
+            0
+        }
+    }
+
     Column(
-        modifier = Modifier.then(
-            if (isDark == false) Modifier.fillMaxWidth() else Modifier
-        ).testTag(testTag),
+        modifier = Modifier
+            .then(
+                if (isDark == false) Modifier.fillMaxWidth() else Modifier
+            )
+            .testTag(testTag),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

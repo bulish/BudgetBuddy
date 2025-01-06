@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.model.db.Place
+import com.example.budgetbuddy.model.db.PlaceCategory
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButton
 import com.example.budgetbuddy.ui.elements.shared.button.CustomButtonType
 import com.example.budgetbuddy.ui.elements.shared.button.getCustomButtonType
@@ -59,11 +60,12 @@ fun PlaceDetail(
                         .padding(horizontal = BasicMargin(), vertical = 0.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(modifier = Modifier.weight(1.0f)
+                    Row(modifier = Modifier
+                        .weight(1.0f)
                         .testTag(TestTagMapScreenDetailCategory),
                         verticalAlignment = Alignment.CenterVertically) {
                         PlaceDetailIcon(place = place.category)
-                        Text(text = place.category.name, color = MaterialTheme.colorScheme.secondary)
+                        Text(text = stringResource(id = PlaceCategory.fromString(place.category.name).getStringResource()), color = MaterialTheme.colorScheme.secondary)
                     }
                     IconButton(
                         onClick = { onClose() },

@@ -72,18 +72,27 @@ class HomeScreenViewModel @Inject constructor(
             viewModelScope.launch {
                 repository.getAllByUser(userId = userID, null).collect { transactions ->
                     val conversionRates = dataStoreRepository.getCurrencies().first()
-                    val totalSumInCurrentCurrency = transactions.sumOf { transaction ->
-                        val activeRate = conversionRates?.get(activeCurrency.value) ?: 1.0
+                    if (conversionRates != null) {
+                        val totalSumInCurrentCurrency = transactions.sumOf { transaction ->
+                            val sourceRate = conversionRates[transaction.currency] ?: 1.0
+                            val targetRate = conversionRates[activeCurrency.value] ?: 1.0
 
-                        when (transaction.type) {
-                            TransactionType.INCOME.value -> transaction.price * activeRate
-                            TransactionType.EXPENSE.value -> -transaction.price * activeRate
-                            else -> 0.0
+                            val conversionFactor = targetRate / sourceRate
+
+                            when (transaction.type) {
+                                TransactionType.INCOME.value -> transaction.price * conversionFactor
+                                TransactionType.EXPENSE.value -> -transaction.price * conversionFactor
+                                else -> 0.0
+                            }
                         }
-                    }
 
-                    _homeScreenUIState.update {
-                        HomeScreenUIState.Success(transactions, totalSumInCurrentCurrency)
+                        _homeScreenUIState.update {
+                            HomeScreenUIState.Success(transactions, totalSumInCurrentCurrency)
+                        }
+                    } else {
+                        _homeScreenUIState.update {
+                            HomeScreenUIState.Error(HomeScreenError(R.string.something_went_wrong))
+                        }
                     }
                 }
             }
@@ -146,14 +155,21 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     override fun transformTransactionPrice(transaction: Transaction): String {
-        val currency = activeCurrency.value
+        val conversionRates = _conversionRates.value
+        val targetCurrency = activeCurrency.value
+        val sourceCurrency = transaction.currency
 
-        _activeCurrency.update {
-            currency
+        if (conversionRates == null) {
+            return "${transaction.price.toFormattedString()} $sourceCurrency"
         }
 
-        val activeRate = _conversionRates.value?.get(currency) ?: 1.0
-        val value =  (transaction.price * activeRate).toFormattedString()
-        return "$value $currency"
+        val sourceRate = conversionRates[sourceCurrency] ?: 1.0
+        val targetRate = conversionRates[targetCurrency] ?: 1.0
+
+        val conversionFactor = targetRate / sourceRate
+        val convertedValue = (transaction.price * conversionFactor).toFormattedString()
+
+        return "$convertedValue $targetCurrency"
     }
+
 }

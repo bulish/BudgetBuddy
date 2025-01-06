@@ -9,7 +9,9 @@ import com.example.budgetbuddy.communication.IExchangeRateRemoteRepository
 import com.example.budgetbuddy.model.PrimaryColor
 import com.example.budgetbuddy.services.AuthService
 import com.example.budgetbuddy.services.IAuthService
+import com.example.budgetbuddy.services.UserData
 import com.example.budgetbuddy.services.datastore.IDataStoreRepository
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +43,14 @@ class SettingsViewModel @Inject constructor(
     private var _primaryColor = MutableStateFlow<PrimaryColor>(PrimaryColor.GREEN)
     val primaryColor: StateFlow<PrimaryColor> = _primaryColor
 
+    private var _userInfo = MutableStateFlow<UserData?>(null)
+    val userInfo: StateFlow<UserData?> = _userInfo
+
     init {
+        _settingsUIState.update {
+            SettingsUIState.Loading
+        }
+
         if (authService.getCurrentUser() == null) {
             _settingsUIState.update {
                 SettingsUIState.UserNotAuthorized(null)
@@ -66,6 +75,8 @@ class SettingsViewModel @Inject constructor(
                 _primaryColor.value = PrimaryColor.fromString(it)
             }
         }
+
+        _userInfo.value = authService.getCurrentUser()
     }
 
     override fun changeMode() {
@@ -78,7 +89,6 @@ class SettingsViewModel @Inject constructor(
             dataStoreRepository.setDarkTheme(updatedMode)
         }
     }
-
 
     override fun changeCurrency(currency: String) {
         viewModelScope.launch {
@@ -105,13 +115,8 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    override fun getUserInformation() {
-        _settingsUIState.update {
-            SettingsUIState.Success(authService.getCurrentUser())
-        }
-    }
-
     override fun getCurrencyData() {
+
         viewModelScope.launch {
             dataStoreRepository.getCurrencies().collect { dataStoreData ->
                 if (dataStoreData != null) {
